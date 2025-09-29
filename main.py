@@ -1,384 +1,274 @@
-from collections import defaultdict
+from typing import List, Tuple, Optional, Dict, Callable
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, Optional, Set
-import unicodedata, re, time
+from collections import defaultdict
+import unicodedata, re, os
+from rapidfuzz import fuzz, process
+# ============== VN Normalization & Helpers =================
 
-# -----------------------------
-# Normalization (VN-friendly)
-# -----------------------------
-def normalize(s: str) -> str:
+_WS_RE = re.compile(r"\s+")
+_PUNCT_AS_SPACE = re.compile(r"[^\w\s]", flags=re.UNICODE)
+
+# Designator tokens that may appear in the QUERY (never in your lists)
+_DESIGNATOR_TOKENS = {
+    # province/city
+    "tinh","thanh","pho","thanhpho","tp","t","t p","t p","tx","t x","thi","thi_xa","thi xa",
+    # district-level
+    "quan","q","huyen","h","thi_tran","thi tran","tt",
+    # ward-level
+    "phuong","p","xa","x",
+}
+
+_ALIAS_PATTERNS = {
+    # --- Numeric expansions ---
+    r"\bq\s*0*([1-9][0-9]?)\b": r"quan \1",        # Q3, Q.03 → quan 3
+    r"\bp\s*0*([1-9][0-9]?)\b": r"phuong \1",      # P1, P.01 → phuong 1
+    r"\btx\b": "thi xa",
+    r"\btt\b": "thi tran",
+    r"\btp\b": "thanh pho",
+
+    # --- Hồ Chí Minh ---
+    r"\b(tp\s*\.?\s*hcm|tphcm|hcm|sai\s*gon)\b": "ho chi minh",
+
+    # --- Thừa Thiên Huế ---
+    r"\b(thuathienhue|tt\s*hue|t\s*thien\s*hue|tth|t\s*t\s*h)\b": "thua thien hue",
+
+    # --- Hà Nội ---
+    r"\b(hn|tp\s*hn)\b": "ha noi",
+}
+
+def _strip_diacritics(s: str) -> str:
     s = unicodedata.normalize("NFD", s)
-    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn").lower()
-    s = re.sub(r"[^\w\s]", " ", s)       # drop punctuation
-    s = re.sub(r"\s+", " ", s).strip()
+    return "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
+
+def _normalize_core(s: str) -> str:
+    s = s.replace(".", " ")
+    s = _strip_diacritics(s).lower()
+    s = _PUNCT_AS_SPACE.sub(" ", s)
+    s = _WS_RE.sub(" ", s).strip()
     return s
 
-def ngrams(s: str, n: int = 3) -> List[str]:
-    s2 = f" {s} "  # boundary padding
+def _expand_aliases(s: str) -> str:
+    for pat, repl in _ALIAS_PATTERNS.items():
+        s = re.sub(pat, repl, s)
+    return s
+
+def _remove_designators(tokens: List[str]) -> List[str]:
+    return [t for t in tokens if t not in _DESIGNATOR_TOKENS]
+
+def _normalize_query_for_match(s: str) -> str:
+    s = _normalize_core(s)
+    s = _expand_aliases(s)           # <--- regex replacements
+    tokens = s.split()
+    toks = _remove_designators(tokens)
+    print(toks)
+    return " ".join(toks)
+
+def _normalize_catalog_name(s: str) -> str:
+    return _normalize_core(s)
+
+def _initials(s: str) -> str:
+    return "".join(tok[0] for tok in s.split() if tok)
+
+def _ngrams(s: str, n: int = 3) -> List[str]:
+    s2 = f" {s} "
     if len(s2) < n:
         return [s2]
     return [s2[i:i+n] for i in range(len(s2) - n + 1)]
 
-# --- RapidFuzz-style partial ratio (VN friendly) -----------------------------
+# =========================
+# N-gram index
+# =========================
 
-def seller_distance(pattern: str, text: str) -> int:
-    """
-    Correct Sellers (substring Levenshtein):
-    - D[0][j] = 0 for all j  (free to start anywhere in `text`)
-    - D[i][0] = i            (must consume all of `pattern`)
-    - answer = min over last row (free to end anywhere in `text`)
-    """
-    m, n = len(pattern), len(text)
-    if m == 0: 
-        return 0
-    if n == 0: 
-        return m
-
-    # FIRST ROW: all zeros (not 0..n!)
-    prev = [0] * (n + 1)
-
-    for i in range(1, m + 1):
-        # FIRST COLUMN: i
-        cur = [i] + [0] * n
-        pi = pattern[i - 1]
-        for j in range(1, n + 1):
-            cost = 0 if pi == text[j - 1] else 1
-            cur[j] = min(
-                prev[j] + 1,      # deletion in pattern
-                cur[j - 1] + 1,   # insertion in pattern
-                prev[j - 1] + cost
-            )
-        prev = cur
-
-    return min(prev)  # best substring end anywhere
-
-def partial_ratio(a: str, b: str) -> float:
-    """
-    RapidFuzz-like partial_ratio in [0, 100], but always using your normalize().
-    """
-    if not a and not b: return 100.0
-    if not a or not b:  return 0.0
-    # shorter is the needle
-    if len(a) <= len(b):
-        pat, txt = a, b
-    else:
-        pat, txt = b, a
-    dist = seller_distance(pat, txt)
-    return 100.0 * (1.0 - dist / max(1, len(pat)))
-
-
-# -----------------------------
-# N-gram index with metadata
-# -----------------------------
 @dataclass
-class Entry:
+class _Entry:
     id: int
-    name: str           # original
-    norm: str           # normalized
-    meta: dict          # e.g., {"province_id": 79}
+    name: str
+    norm: str
+    initials: str
 
-class NGramIndex:
+class _NGramIndex:
     def __init__(self, n: int = 3):
         self.n = n
-        self.inv: Dict[str, List[int]] = defaultdict(list)   # gram -> [sid]
-        self.entries: List[Entry] = []
-        self._cached_ngrams: List[Optional[Set[str]]] = []
+        self.entries: List[_Entry] = []
+        self.inv: Dict[str, List[int]] = defaultdict(list)
+        self._cached_ngrams: List[Optional[set]] = []
+        self._norm_list: List[str] = []
 
-    def add(self, name: str, meta: Optional[dict] = None) -> int:
+    def add(self, name: str) -> int:
         sid = len(self.entries)
-        ns = normalize(name)
-        self.entries.append(Entry(sid, name, ns, meta or {}))
-        grams = set(ngrams(ns, self.n))
+        ns = _normalize_catalog_name(name)
+        ins = _initials(ns)
+        self.entries.append(_Entry(sid, name, ns, ins))
+        self._norm_list.append(ns)
+        grams = set(_ngrams(ns, self.n))
         for g in grams:
             self.inv[g].append(sid)
         self._cached_ngrams.append(grams)
         return sid
 
-    def _dice(self, A: Set[str], B: Set[str]) -> float:
-        inter = len(A & B)
-        return 0.0 if inter == 0 else (2.0 * inter) / (len(A) + len(B))
-
-    def query(
-        self,
-        q: str,
-        shortlist: int = 300,
-        k: int = 10,
-        dice_min: float = 0.25,
-        max_dist: int = 2,
-        pr_min: float = 60.0,          # ### CHANGED: partial ratio minimum
-        allowed_ids: Optional[Set[int]] = None,
-        allowed_parent_key: Optional[str] = None,
-        allowed_parent_ids: Optional[Set[int]] = None,
-    ) -> List[Tuple[int, str, int, float]]:
-        """
-        Returns a list of (sid, original_name, dist_proxy, dice_score)
-        dist_proxy is derived from partial_ratio: round((1 - pr) * len(candidate))
-        """
-        nq = normalize(q)
-        if not nq:
-            return []
-
-        # stricter on tiny queries
-        if len(nq) <= 2:
-            dice_min = max(dice_min, 0.50)
-            pr_min = max(pr_min, 80.0)
-
-        qgrams = set(ngrams(nq, self.n))
-        # print("Checking grams:", qgrams)  # debug
-
-        # 1) Collect candidates by gram overlap (+ constraints)
-        counts: Dict[int, int] = defaultdict(int)
+    def shortlist(self, nq: str, limit: int, dice_min: float) -> List[int]:
+        qgrams = set(_ngrams(nq, self.n))
+        counts = defaultdict(int)
         for g in qgrams:
             for sid in self.inv.get(g, []):
-                if allowed_ids is not None and sid not in allowed_ids:
-                    continue
-                if allowed_parent_key and allowed_parent_ids is not None:
-                    if self.entries[sid].meta.get(allowed_parent_key) not in allowed_parent_ids:
-                        continue
                 counts[sid] += 1
         if not counts:
-            return []
+            return list(range(min(len(self.entries), limit)))
 
-        # 2) Dice prefilter
         pre = []
         for sid in counts.keys():
             sgrams = self._cached_ngrams[sid]
-            dsc = self._dice(qgrams, sgrams)
-            if dsc >= dice_min:
-                pre.append((sid, dsc))
+            inter = len(qgrams & sgrams)
+            dice = 0.0 if inter == 0 else (2.0 * inter) / (len(qgrams) + len(sgrams))
+            if dice >= dice_min:
+                pre.append((sid, dice))
         if not pre:
-            return []
-
+            return list(range(min(len(self.entries), limit)))
         pre.sort(key=lambda x: x[1], reverse=True)
-        pre = pre[:shortlist]
+        return [sid for sid, _ in pre[:limit]]
 
-        # 3) ### CHANGED: substring-aware similarity (partial_ratio)
-        finals = []
-        for sid, dsc in pre:
-            e = self.entries[sid]
-            pr = partial_ratio(e.norm, nq)  # 0..100
-            print("Checking", e.norm, "<>", nq,  "pr=", pr, "dice=", dsc)  # debug
-            # print(f"  {e.name}: pr={pr:.1f} dice={dsc:.2f}")  # debug
-            if pr < pr_min:
-                continue
-            dist_proxy = int(round((1.0 - pr / 100.0) * max(1, len(e.norm))))
-            is_pref = e.norm.startswith(nq) or nq.startswith(e.norm)
-            finals.append((sid, e.name, dist_proxy, dsc, len(e.norm), is_pref, pr))
-        print(finals)
-        if not finals:
-            return []
-
-        # Sort: higher pr, then lower dist, then higher dice, then prefix first, then shorter
-        finals.sort(key=lambda x: (-x[6], x[2], -x[3], not x[5], x[4]))
-        return [(sid, name, dist_proxy, dsc) for sid, name, dist_proxy, dsc, _, _, _ in finals[:k]]
-
-# ------------------------------------------
-# Demo data (tiny, illustrative, not full)
-# ------------------------------------------
-PROVINCES = [
-    (79, "TP Hồ Chí Minh"),
-    (82, "Tiền Giang"),
-    (46, "Thừa Thiên Huế"),
-    (49, "Quảng Nam"),
-]
-
-DISTRICTS = [
-    (760, "Quận 1", 79),
-    (761, "Quận 12", 79),
-    (815, "Châu Thành", 82),
-    (816, "Cai Lậy", 82),
-    (490, "Thành phố Huế", 46),
-    (502, "Hội An", 49),
-]
-
-WARDS = [
-    (26734, "Phường Bến Nghé", 760),
-    (26842, "Phường Thạnh Xuân", 761),
-    (28252, "Xã Vĩnh Kim", 815),
-    (28258, "Xã Tân Lý Đông", 815),
     
-    (20113, "Phường Phú Hội", 490),
-    (20545, "Phường Minh An", 502),
-]
+    def rf_extract_one(self, nq: str, choices: list[str], cutoff: float):
+        if not choices:
+            return None  # nothing to match
+        
+        res = process.extractOne(nq, choices, scorer=fuzz.partial_ratio, score_cutoff=cutoff)
+        if res is None:
+            return None
+        choice, score, idx = res
+        return choice, float(score), idx
 
-# ------------------------------------------
-# Build indices
-# ------------------------------------------
-province_idx = NGramIndex(n=3)
-district_idx = NGramIndex(n=3)
-ward_idx     = NGramIndex(n=3)
+    def extract_one(self, nq: str, pr_min: float, shortlist_sids: list[int]):
+        if not shortlist_sids:
+            return None
+        
+        choices = [self._norm_list[sid] for sid in shortlist_sids]
 
-prov_id_to_sid: Dict[int, int] = {}
-dist_id_to_sid: Dict[int, int] = {}
-ward_id_to_sid: Dict[int, int] = {}
+        # 1st try: strict cutoff
+        got = self.rf_extract_one(nq, choices, pr_min)
+        if got is None:
+            return None
 
-for pid, pname in PROVINCES:
-    sid = province_idx.add(pname, meta={"province_id": pid})
-    prov_id_to_sid[pid] = sid
+        choice, base, idx = got
+        sid = shortlist_sids[idx]
+        e = self.entries[sid]
+        return (sid, e.name, e.norm, base)
 
-for did, dname, pid in DISTRICTS:
-    sid = district_idx.add(dname, meta={"district_id": did, "province_id": pid})
-    dist_id_to_sid[did] = sid
+# =========================
+# Token removal
+# =========================
 
-for wid, wname, did in WARDS:
-    sid = ward_idx.add(wname, meta={"ward_id": wid, "district_id": did})
-    ward_id_to_sid[wid] = sid
 
-# ------------------------------------------
-# Hierarchical search
-# ------------------------------------------
-@dataclass
-class Match:
-    province_id: Optional[int]
-    district_id: Optional[int]
-    ward_id: Optional[int]
-    score: float
-    pieces: Dict[str, Tuple[str, int, float]]  # level -> (name, dist_proxy, dice)
-
-def combined_score(dist_len_pairs: List[Tuple[int, int]], weights: List[float]) -> float:
+def _remove_by_span(q_norm: str, cand_norm: str, *, cutoff: float = 60.0) -> str:
     """
-    Lower is better. Each component is (dist_proxy / (len + 1)) weighted.
-    dist_proxy comes from partial_ratio, so it scales with candidate length.
+    Remove the exact matched substring of `cand_norm` inside `q_norm`
+    using RapidFuzz alignment. Falls back to token-multiset removal if
+    no substring alignment meets cutoff.
     """
-    num = 0.0
-    den = max(1e-9, sum(weights))
-    for (dist_proxy, L), w in zip(dist_len_pairs, weights):
-        num += w * (dist_proxy / (L + 1))
-    return num / den
+    if not q_norm or not cand_norm:
+        return q_norm
 
-def search_address(
-    query: str,
-    topP: int = 5,
-    topD_per_P: int = 5,
-    topW_per_D: int = 5,
-) -> List[Match]:
-    """
-    Beam search: Province -> District (constrained) -> Ward (constrained)
-    Uses substring-aware NGramIndex.query so long free-text works.
-    """
-    results: List[Match] = []
+    # 1) Try substring alignment (precise start/end indices in the QUERY)
+    #    Works great for "tp hcm" vs "ho chi minh" AFTER alias expansion.
+    try:
+        result = fuzz.partial_ratio_alignment(q_norm, cand_norm, score_cutoff=cutoff)
+        # If we’re here, score >= cutoff and we have a concrete span [qs:qe)
+        new_q = (q_norm[:result.src_start] + " " + q_norm[result.src_end:]).strip()
+        return re.sub(r"\s+", " ", new_q)
+    except Exception as e:
+        print(e)
+        pass  # RF v2/v3 both have this; the try/except is just defensive
 
-    # Step 1: Province candidates
-    P = province_idx.query(query, k=topP, dice_min=0.20, max_dist=3, pr_min=55.0)
+    # 2) Fallback: remove by token multiset ONCE (order-insensitive)
+    q_tokens = q_norm.split()
+    need = {}
+    for t in cand_norm.split():
+        need[t] = need.get(t, 0) + 1
 
-    if not P:
-        P = []  # still try district-first
-
-    for sidP, pname, pdist, pdice in P:
-        prov = province_idx.entries[sidP]
-        pid = prov.meta["province_id"]
-
-        # Step 2: District candidates constrained by province
-        D = district_idx.query(
-            query,
-            k=topD_per_P,
-            dice_min=0.18, max_dist=3, pr_min=55.0,
-            allowed_parent_key="province_id",
-            allowed_parent_ids={pid},
-        )
-
-        if not D:
-            score = combined_score([(pdist, len(prov.norm))], weights=[1.0])
-            results.append(Match(pid, None, None, score, pieces={
-                "province": (pname, pdist, pdice)
-            }))
+    out = []
+    for t in q_tokens:
+        if need.get(t, 0) > 0:
+            need[t] -= 1
             continue
+        out.append(t)
+    return " ".join(out)
 
-        for sidD, dname, ddist, ddice in D:
-            dist_e = district_idx.entries[sidD]
-            did = dist_e.meta["district_id"]
+# =========================
+# Solution class
+# =========================
 
-            # Step 3: Ward candidates constrained by district
-            W = ward_idx.query(
-                query,
-                k=topW_per_D,
-                dice_min=0.15, max_dist=3, pr_min=55.0,
-                allowed_parent_key="district_id",
-                allowed_parent_ids={did},
-            )
+class Solution:
+    def __init__(self):
+        self.province_path = 'list_province.txt'
+        self.district_path = 'list_district.txt'
+        self.ward_path     = 'list_ward.txt'
 
-            if not W:
-                score = combined_score(
-                    [(pdist, len(prov.norm)), (ddist, len(dist_e.norm))],
-                    weights=[0.5, 0.5]
-                )
-                results.append(Match(pid, did, None, score, pieces={
-                    "province": (pname, pdist, pdice),
-                    "district": (dname, ddist, ddice),
-                }))
-                continue
+        self.province_idx = _NGramIndex(n=3)
+        self.district_idx = _NGramIndex(n=3)
+        self.ward_idx     = _NGramIndex(n=3)
 
-            for sidW, wname, wdist, wdice in W:
-                ward_e = ward_idx.entries[sidW]
-                score = combined_score(
-                    [
-                        (pdist, len(prov.norm)),
-                        (ddist, len(dist_e.norm)),
-                        (wdist, len(ward_e.norm))
-                    ],
-                    weights=[0.4, 0.35, 0.25]
-                )
-                results.append(Match(pid, did, ward_e.meta["ward_id"], score, pieces={
-                    "province": (pname, pdist, pdice),
-                    "district": (dname, ddist, ddice),
-                    "ward":     (wname, wdist, wdice),
-                }))
+        def _load_lines(path: str) -> List[str]:
+            if not os.path.exists(path):
+                return []
+            out, seen = [], set()
+            with open(path, "r", encoding="utf-8") as f:
+                for line in f:
+                    name = line.strip()
+                    if not name: continue
+                    key = _normalize_catalog_name(name)
+                    if key in seen: continue
+                    seen.add(key)
+                    out.append(name)
+            return out
 
-    # District-first start (helps when query mostly names a district/ward)
-    if not results:
-        D = district_idx.query(query, k=topD_per_P, dice_min=0.18, max_dist=3, pr_min=55.0)
-        for sidD, dname, ddist, ddice in D:
-            dist_e = district_idx.entries[sidD]
-            did = dist_e.meta["district_id"]
-            pid = dist_e.meta["province_id"]
+        for name in _load_lines(self.province_path):
+            self.province_idx.add(name)
+        for name in _load_lines(self.district_path):
+            self.district_idx.add(name)
+        for name in _load_lines(self.ward_path):
+            self.ward_idx.add(name)
 
-            W = ward_idx.query(
-                query,
-                k=topW_per_D,
-                dice_min=0.15, max_dist=3, pr_min=55.0,
-                allowed_parent_key="district_id",
-                allowed_parent_ids={did},
-            )
-            if not W:
-                score = combined_score([(ddist, len(dist_e.norm))], weights=[1.0])
-                results.append(Match(pid, did, None, score, pieces={
-                    "district": (dname, ddist, ddice)
-                }))
-            else:
-                for sidW, wname, wdist, wdice in W:
-                    ward_e = ward_idx.entries[sidW]
-                    score = combined_score(
-                        [(ddist, len(dist_e.norm)), (wdist, len(ward_e.norm))],
-                        weights=[0.6, 0.4]
-                    )
-                    results.append(Match(pid, did, ward_e.meta["ward_id"], score, pieces={
-                        "district": (dname, ddist, ddice),
-                        "ward":     (wname, wdist, wdice),
-                    }))
+        self.province_min = 68.0
+        self.district_min = 64.0
+        self.ward_min     = 60.0
 
-    results.sort(key=lambda m: (m.score, repr(m.pieces)))  # lower is better
-    return results[:10]
+    def _pick_one(self, idx: _NGramIndex, nq: str, pr_min: float, dice_min: float, short_lim: int):
+        sids = idx.shortlist(nq, limit=short_lim, dice_min=dice_min)
+        return idx.extract_one(nq, pr_min=pr_min, shortlist_sids=sids)
 
-# ------------------------------------------
-# Demo
-# ------------------------------------------
-if __name__ == "__main__":
-    tests = [
-        "105 Vĩnh Hoà, Vĩnh Kim, Châu Thành, Tiềz Giang",
-        "Tân Lý Đông, Cheo Thành, Tiền Gian"
-    ]
-    for q in tests:
-        print(f"\nQuery: {q}")
-        rs = search_address(q)
-        if not rs:
-            print("  (no results)")
-            continue
-        for m in rs[:3]:
-            def safe_name(piece): return piece[0] if piece else None
-            p = safe_name(m.pieces.get("province"))
-            d = safe_name(m.pieces.get("district"))
-            w = safe_name(m.pieces.get("ward"))
-            t0 = time.perf_counter()
-            print(f"  -> score={m.score:.4f} | Province={p} | District={d} | Ward={w}")
-            t1 = time.perf_counter()
-            print(f"     Time taken: {t1 - t0:.6f}s")
+    def process(self, s: str):
+        nq0 = _normalize_query_for_match(s)
+        print("Normalized query:", nq0)
+
+        # Province first (end of string)
+        pickP = self._pick_one(self.province_idx, nq0, self.province_min, 0.15, 200)
+        pname, nq1 = "", nq0
+        if pickP:
+            _, pname, pnorm, _ = pickP
+            nq1 = _remove_by_span(nq0, pnorm, cutoff=self.province_min)
+            print("  After province removal:", nq1)
+
+        # District second (middle)
+        pickD = self._pick_one(self.district_idx, nq1, self.district_min, 0.15, 400)
+        dname, nq2 = "", nq1
+        if pickD:
+            _, dname, dnorm, _ = pickD
+            nq2 = _remove_by_span(nq1, dnorm, cutoff=self.district_min)
+            print("  After district removal:", nq2)
+
+        # Ward last (front)
+        pickW = self._pick_one(self.ward_idx, nq2, self.ward_min, 0.12, 600)
+        wname = ""
+        if pickW:
+            _, wname, _, _ = pickW
+            print("  After ward removal: (not needed, just for debug)")
+
+        return {"province": pname or "", "district": dname or "", "ward": wname or ""}
+        
+    
+solution = Solution()
+import time
+start_time = time.perf_counter_ns()
+result = solution.process("TT Tân Bình Huyện Yên Sơn, Tuyên Quang")
+end_time = time.perf_counter_ns()
+print(f"Processing time: {(end_time - start_time) / 1_000_000} ms, result = {result}")

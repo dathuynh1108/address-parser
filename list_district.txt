@@ -1,0 +1,689 @@
+Chợ Gạo
+Ea H'leo
+Quan Hóa
+Biên Hòa
+Minh Hóa
+Sông Công
+Huế
+Hà Tiên
+Bình Sơn
+Thuận An
+Nga Sơn
+Cù Lao Dung
+Bắc Giang
+Yên Bái
+Pleiku
+Ninh Giang
+Tân Phú
+Kông Chro
+Phú Nhuận
+Mỹ Lộc
+Điện Biên Phủ
+Lạc Dương
+Việt Yên
+M'Đrắk
+Hương Khê
+Núi Thành
+Hiệp Đức
+Tri Tôn
+Châu Thành A
+Thị xã Trảng Bàng
+Bù Gia Mập
+Yên Dũng
+Tam Kỳ
+Thị xã Vĩnh Châu
+Khoái Châu
+Đức Linh
+Thạch Thất
+Yên Thủy
+Ý Yên
+Thống Nhất
+Hồng Ngự
+Quỳ Hợp
+Bình Xuyên
+Vũ Quang
+Côn Đảo
+Tân Biên
+Đồng Xoài
+Thị xã Ayun Pa
+Ninh Phước
+Kỳ Anh
+Thanh Oai
+Giồng Trôm
+Gia Lộc
+Hải Châu
+Tân Hồng
+Vĩnh Tường
+Bình Tân
+Hoài Ân
+Thuỷ Nguyên
+Bình Giang
+Thanh Xuân
+Sơn Hòa
+Mường La
+Ngọc Hiển
+Thị xã Điện Bàn
+Thị xã Cửa Lò
+Quảng Ninh
+Thuận Thành
+Hồng Dân
+Thị xã Hương Thủy
+Triệu Phong
+Tân Lạc
+Quỳnh Nhai
+Lào Cai
+10
+Đức Trọng
+Cư M'gar
+Phú Thiện
+Tân Kỳ
+Giồng Riềng
+Hoài Đức
+Đông Hà
+Yên Thế
+Đắk R'Lấp
+Krông Bông
+Ân Thi
+Thị xã Đông Hòa
+Bác Ái
+Trực Ninh
+Mù Căng Chải
+Lý Sơn
+Krông Pa
+Lập Thạch
+Krông Pắc
+Điện Biên
+Sóc Sơn
+Đức Cơ
+Thường Xuân
+Cái Bè
+Phước Sơn
+Cao Lãnh
+Vũ Thư
+Thị xã Đức Phổ
+Đa Krông
+Yên Mô
+Tháp Mười
+Đăk Đoa
+Quan Sơn
+Hồng Bàng
+Long Biên
+Bình Thạnh
+Chi Lăng
+Trấn Yên
+Chư Pưh
+Đan Phượng
+5
+Chương Mỹ
+Thuận Nam
+Mộc Hóa
+Bảo Lâm
+Buôn Đôn
+Hải Lăng
+Xuân Trường
+Đắk Hà
+Khánh Sơn
+Thuận Châu
+Thị xã Sa Pa
+Lý Nhân
+Bắc Sơn
+Thọ Xuân
+Lục Ngạn
+Mỏ Cày Bắc
+Chơn Thành
+Bắc Từ Liêm
+Nghĩa Hành
+Đồng Phú
+Mỹ Đức
+Rạch Giá
+Thị xã Kỳ Anh
+Trường Sa
+Mường Tè
+Bạc Liêu
+Đông Sơn
+Đơn Dương
+3
+Sơn Tây
+Văn Chấn
+Phú Lương
+Bù Đăng
+Quế Phong
+Mộ Đức
+Tiên Du
+Đà Bắc
+Thanh Hóa
+Tuyên Quang
+Xín Mần
+Lang Chánh
+Mường Lát
+Buôn Ma Thuột
+Tân Châu
+Vụ Bản
+Ngô Quyền
+Đồng Văn
+Long Thành
+Bố Trạch
+Gò Vấp
+Thị Xã Buôn Hồ
+Thị xã Kinh Môn
+Quế Võ
+Tiên Yên
+Thạnh Phú
+Lục Yên
+Hà Trung
+Hoàng Sa
+Kon Rẫy
+Duyên Hải
+Thị xã Hương Trà
+Tân Phú Đông
+Đồng Xuân
+Thị xã Bỉm Sơn
+Lạc Sơn
+Chiêm Hóa
+Gio Linh
+Quảng Trạch
+Thị xã Hoài Nhơn
+Phú Riềng
+Nhơn Trạch
+Khánh Vĩnh
+Văn Quan
+Thị Xã Mường Lay
+Thanh Ba
+Thanh Liêm
+Mang Thít
+Ninh Hải
+Hương Sơn
+Cẩm Mỹ
+Ba Bể
+Thị xã Đông Triều
+Trần Văn Thời
+Hóc Môn
+Thuận Bắc
+Thị xã Duy Tiên
+Di Linh
+Vĩnh Cửu
+Hưng Hà
+Chợ Lách
+Hà Tĩnh
+Tánh Linh
+Phúc Yên
+Cà Mau
+Phủ Lý
+Thị xã Từ Sơn
+Gia Lâm
+Tuy An
+Mường Khương
+Lạng Giang
+Châu Đức
+Lộc Hà
+Định Hóa
+Pác Nặm
+Tiền Hải
+Lâm Bình
+Phong Thổ
+Năm Căn
+Cờ Đỏ
+Thị xã Kiến Tường
+Đồng Hới
+Đồ Sơn
+Thị xã Long Mỹ
+Vĩnh Thuận
+Tân Yên
+Mường Chà
+Long Mỹ
+Thị xã Bến Cát
+Tuyên Hóa
+Cẩm Giàng
+Gia Viễn
+Lâm Hà
+Thị xã La Gi
+Bắc Quang
+Phú Hoà
+Nam Giang
+Phù Yên
+Thị xã Ngã Năm
+Đoan Hùng
+Kim Bảng
+Yên Bình
+Thị xã Giá Rai
+Tam Bình
+Sa Thầy
+Sốp Cộp
+Hoàng Su Phì
+Phù Mỹ
+Quỳnh Lưu
+Vĩnh Bảo
+Hàm Tân
+Mai Sơn
+Bảo Yên
+Đình Lập
+Yên Châu
+Hòa Vang
+Chí Linh
+Dầu Tiếng
+Thị xã Hoàng Mai
+Cao Phong
+Kiến Thuỵ
+Gia Bình
+Lục Nam
+Như Xuân
+Cái Nước
+Bình Chánh
+6
+Thoại Sơn
+Bình Tân
+Bình Gia
+Nam Từ Liêm
+An Phú
+Kế Sách
+8
+Đắk Tô
+Yên Lập
+Bình Lục
+Sìn Hồ
+Hàm Yên
+Đông Hải
+Giang Thành
+Phú Tân
+Nam Trực
+Na Rì
+Bến Lức
+Quy Nhơn
+Quảng Điền
+Củ Chi
+Hiệp Hòa
+Ô Môn
+Lương Sơn
+Quản Bạ
+4
+Cẩm Lệ
+Nha Trang
+Long Hồ
+Phú Lộc
+Ninh Sơn
+Sơn Hà
+Ba Vì
+Thị xã Ba Đồn
+Na Hang
+Cần Giuộc
+Tân Sơn
+Thị xã Quảng Trị
+Hậu Lộc
+Cao Lãnh
+Phước Long
+Cô Tô
+Thị xã Sơn Tây
+Châu Đốc
+Yên Sơn
+An Dương
+11
+Sơn Tịnh
+Mỹ Xuyên
+Gò Công Đông
+Thạch An
+Sa Đéc
+Tân Bình
+Tuy Phong
+Sóc Trăng
+Thanh Bình
+Đam Rông
+Thị xã Phú Thọ
+U Minh
+Kim Thành
+Long Điền
+Đầm Hà
+Thạnh Trị
+Thạch Thành
+Vị Xuyên
+Ba Tơ
+Con Cuông
+Cầu Ngang
+Thị xã Mỹ Hào
+Gò Công Tây
+Thủ Dầu Một
+Hải Hậu
+Cẩm Xuyên
+Thị xã Duyên Hải
+Tân Phước
+Quỳnh Phụ
+Tiên Phước
+Yên Khánh
+Tiên Lãng
+Tân Hiệp
+Hoà An
+Đắk Glei
+Lấp Vò
+Châu Phú
+Kiến An
+Bến Tre
+Hạ Lang
+Thường Tín
+Hai Bà Trưng
+Triệu Sơn
+Ia Grai
+Vĩnh Lợi
+Nam Trà My
+Đăk Pơ
+Nghĩa Hưng
+Trà Ôn
+Đạ Tẻh
+Tư Nghĩa
+Cẩm Thủy
+Tân Uyên
+Tu Mơ Rông
+Ngũ Hành Sơn
+Thiệu Hóa
+Hưng Nguyên
+Ninh Kiều
+Việt Trì
+Mỏ Cày Nam
+Bình Đại
+Phong Điền
+Vân Đồn
+Tràng Định
+Mèo Vạc
+Thị xã An Nhơn
+Lương Tài
+Mường Nhé
+Đông Giang
+Lắk
+Cam Lộ
+Tam Đảo
+Dương Kinh
+Hạ Long
+Thăng Bình
+Cầu Kè
+Vân Hồ
+Nông Cống
+Nậm Pồ
+Kon Tum
+Mê Linh
+Hoà Bình
+Phụng Hiệp
+Kiên Lương
+Quang Bình
+Bảo Lộc
+Krông A Na
+Vân Canh
+Tứ Kỳ
+Vĩnh Lộc
+Bạch Thông
+Hà Quảng
+Diên Khánh
+Kiên Hải
+Cát Hải
+Tây Ninh
+Lộc Ninh
+Hữu Lũng
+Kỳ Sơn
+Lạc Thủy
+1
+Vĩnh Thạnh
+Phù Ninh
+Thới Lai
+Thị xã Phước Long
+Đạ Huoai
+Hoằng Hóa
+Kim Sơn
+Tuy Phước
+Phúc Thọ
+Kiến Xương
+Tân An
+Tủa Chùa
+Yên Thành
+Gia Nghĩa
+Mai Châu
+Cao Bằng
+Đắk Song
+Thốt Nốt
+Đống Đa
+Bắc Bình
+Cẩm Khê
+Bến Cầu
+Thái Thụy
+Sông Hinh
+Mỹ Tú
+Trà Vinh
+Mang Yang
+Nông Sơn
+Ngã Bảy
+Lệ Thủy
+Ba Đình
+Phan Thiết
+Hoàn Kiếm
+Vĩnh Hưng
+Thị xã Tân Uyên
+Thanh Trì
+U Minh Thượng
+Ngân Sơn
+Thạch Hà
+Xuân Lộc
+Vĩnh Linh
+Tuần Giáo
+Ninh Bình
+Tam Dương
+Sầm Sơn
+Thị xã Quảng Yên
+Móng Cái
+Văn Yên
+Nguyên Bình
+Chợ Mới
+Nam Sách
+Đông Hưng
+Thị xã Hồng Lĩnh
+Đức Hòa
+Châu Thành
+Tây Giang
+Thị xã Bình Minh
+Chư Prông
+Giao Thủy
+Mộc Châu
+Vị Thanh
+Hàm Thuận Bắc
+Hà Đông
+Quế Sơn
+Dĩ An
+Chợ Đồn
+Thị xã An Khê
+Bảo Thắng
+7
+Bắc Ninh
+Hàm Thuận Nam
+Krông Nô
+Hướng Hóa
+Hải Hà
+Thị xã Gò Công
+Cát Tiên
+Ngọc Hồi
+Văn Giang
+Bình Thuỷ
+Thanh Chương
+Vĩnh Yên
+Trà Bồng
+Liên Chiểu
+Thị xã Nghĩa Lộ
+Diễn Châu
+Hòa Bình
+Duy Xuyên
+Trảng Bom
+Mỹ Tho
+An Minh
+Long Khánh
+Thị xã Thái Hoà
+Yên Mỹ
+Lê Chân
+Bắc Hà
+Chư Sê
+Thanh Thuỷ
+Tịnh Biên
+Vinh
+Nho Quan
+Nghi Xuân
+Trùng Khánh
+Tân Phú
+Tam Nông
+Đô Lương
+Bạch Long Vĩ
+Thị xã Bình Long
+Kim Bôi
+Quốc Oai
+Gò Dầu
+Yên Định
+Hoa Lư
+Ia H' Drai
+Uông Bí
+Tiên Lữ
+Phù Cát
+ Vũng Liêm
+Ứng Hòa
+Đồng Hỷ
+Đại Từ
+Hải Dương
+Phú Ninh
+Vị Thuỷ
+Phan Rang-Tháp Chàm
+Sơn Trà
+Mường Ảng
+Bắc Kạn
+Cam Lâm
+Thái Bình
+Krông Năng
+An Lão
+Lai Vung
+Đông Anh
+Yên Phong
+Phú Bình
+Xuyên Mộc
+Bắc Mê
+Hòn Đất
+Hội An
+Trần Đề
+Phú Giáo
+Lạng Sơn
+Trà Cú
+Cư Jút
+Kim Động
+Can Lộc
+Thới Bình
+Thị xã Sông Cầu
+Quỳ Châu
+Bà Rịa
+Kon Plông
+An Biên
+Bắc Trà My
+Đức Huệ
+Hồng Ngự
+Cồn Cỏ
+Tân Thạnh
+Tiểu Cần
+Long Phú
+Thị xã Tân Châu
+Ba Tri
+Thị xã Phú Mỹ
+Cai Lậy
+A Lưới
+Tuy Đức
+Cư Kuin
+Quảng Xương
+Cầu Giấy
+Sơn La
+Tam Đường
+Ba Chẽ
+Lâm Thao
+Hoàng Mai
+Cẩm Phả
+Tương Dương
+Đăk Glong
+Lai Châu
+Đức Thọ
+Điện Biên Đông
+Chư Păh
+Hải An
+Càng Long
+Ngọc Lặc
+Tam Điệp
+Thị xã Ninh Hòa
+Nam Đàn
+Thủ Đức
+Thị xã Nghi Sơn
+Tân Hưng
+Đà Lạt
+Ea Kar
+Tân Trụ
+Vũng Tàu
+Tây Hồ
+Nhà Bè
+Nghĩa Đàn
+Hớn Quản
+Thanh Sơn
+Cam Ranh
+Yên Lạc
+Thanh Miện
+Ea Súp
+Nam Đông
+Bàu Bàng
+Than Uyên
+Sơn Dương
+Cần Giờ
+Hưng Yên
+Bảo Lạc
+Phú Quốc
+Minh Long
+12
+Đất Đỏ
+Nam Định
+Sông Mã
+Đắk Mil
+Trạm Tấu
+Bù Đốp
+Thanh Hà
+Nậm Nhùn
+Nghi Lộc
+Tây Hoà
+Hạ Hoà
+Si Ma Cai
+Bá Thước
+Vĩnh Long
+Dương Minh Châu
+Bình Liêu
+Cao Lộc
+Long Xuyên
+Phú Quí
+Định Quán
+Phú Vang
+Anh Sơn
+Như Thanh
+Krông Búk
+Tây Sơn
+Sơn Động
+Hà Giang
+Thái Nguyên
+Tuy Hoà
+KBang
+Cái Răng
+Thanh Khê
+Thị xã Phổ Yên
+Quảng Hòa
+Cần Đước
+Đại Lộc
+Bắc Yên
+Lộc Bình
+Bát Xát
+Phú Xuyên
+Quảng Ngãi
+Thị xã Cai Lậy
+Võ Nhai
+Gò Quao
+Thủ Thừa
+Sông Lô
+Văn Lãng
+Yên Minh
+Đầm Dơi
+Thị xã Hòa Thành
+Phù Cừ
+Thạnh Hóa
+Văn Lâm
+Ia Pa
+Văn Bàn
+Bắc Tân Uyên
+Vạn Ninh
