@@ -36,6 +36,7 @@ class Solution:
 
         # Chuẩn hóa và tạo n-gram cho input
         inputStringStandard = self.StandardizeName(inputString)
+
         inputStringNgramList = self.GenerateNGrams(inputStringStandard)
 
         address = self.addressNode("", "", "")
@@ -70,19 +71,46 @@ class Solution:
 
         # Duyệt từng tỉnh
         for province_name, districts in data.items():
+
+            node = self.addressNode(province_name, "", "")
+            node.standardizedFullName = self.StandardizeName(node.fullName)
+            node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
+            self.addressNodeList.append(node)
+
             # Duyệt từng huyện
             for district_name, wards in districts.items():
+
+                node = self.addressNode("", district_name, "")
+                node.standardizedFullName = self.StandardizeName(node.fullName)
+                node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
+                self.addressNodeList.append(node)
+
+                node = self.addressNode(province_name, district_name, "")
+                node.standardizedFullName = self.StandardizeName(node.fullName)
+                node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
+                self.addressNodeList.append(node)
+
                 # Duyệt từng xã
                 for ward_name in wards:
-                    node = self.addressNode(province_name, district_name, ward_name)
 
-                    # Chuẩn hóa tên
+                    node = self.addressNode("", "", ward_name)
                     node.standardizedFullName = self.StandardizeName(node.fullName)
-
-                    # Sinh ngram cho node (nếu bạn có hàm này)
                     node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
+                    self.addressNodeList.append(node)
 
-                    # Thêm node vào list
+                    node = self.addressNode("", district_name, ward_name)
+                    node.standardizedFullName = self.StandardizeName(node.fullName) 
+                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
+                    self.addressNodeList.append(node)
+
+                    node = self.addressNode(province_name, "", ward_name)
+                    node.standardizedFullName = self.StandardizeName(node.fullName)
+                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
+                    self.addressNodeList.append(node)
+
+                    node = self.addressNode(province_name, district_name, ward_name)
+                    node.standardizedFullName = self.StandardizeName(node.fullName)
+                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
                     self.addressNodeList.append(node)
 
         # Tạo các từ điển hỗ trợ tìm kiếm nhanh
@@ -93,22 +121,36 @@ class Solution:
     def StandardizeName(self, name: str) -> str:
         if not name:
             return ""
-        # Đưa về chữ thường
+
+        # --- Bước 1: Đưa về chữ thường ---
         s = name.lower()
 
-        # Chuyển đ -> d
-        s = s.replace("đ", "d")
+        # --- Bước 2: Thay cụm từ thừa bằng space (thay chính xác 100%) ---
+        redundant_phrases = [
+            "thành phố","thành. phố", "thành.phố", "tp.", "tp ", "t.phố", "t. phố", "tỉnh", "t.", "t ",
+            "quận", "qận", "qun", "q.", "q ", "huyện", "h.", "h ", "thị xã", "thị.xã", "tx.", "tx ", "thị trấn", "thị.trấn", "tt.", "tt ",
+            "xã", "x.", "x ", "phường", "p.", "p ", "phường.", "phường "
+          
+        ]
 
-        # Tách dấu Unicode (NFD) rồi loại bỏ các ký tự dấu (Mn = Mark, Nonspacing)
+        for phrase in redundant_phrases:
+            s = s.replace(phrase, " ")
+
+        # --- Bước 3: Loại các cụm "tp" dính liền chữ, ví dụ "tpbao loc" → "bao loc" ---
+        s = re.sub(r"\btp([a-z0-9]+)", r"\1", s)
+
+        # --- Bước 4: Chuẩn hóa Unicode & bỏ dấu ---
+        s = s.replace("đ", "d")
         s = unicodedata.normalize("NFD", s)
         s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
 
-        # Giữ lại chỉ a-z, 0-9 và khoảng trắng
+        # --- Bước 5: Giữ lại a-z, 0-9, space ---
         s = re.sub(r"[^a-z0-9\s]+", " ", s)
 
-        # Gom nhiều khoảng trắng thành 1, bỏ khoảng trắng đầu cuối
+        # --- Bước 6: Gom space ---
         s = re.sub(r"\s+", " ", s).strip()
 
+        print(s)
         return s
 
     def GenerateNGrams(self, s: str, n : int = 4) -> list:
@@ -167,7 +209,7 @@ class Solution:
                 break
 
             if partialRatio > 75.0:
-                candidateList.append((addressIndex[0], partialRatio))
+                candidateList.append((addressIndex[0], partialRatio, self.addressNodeList[addressIndex[0]].fullName))
         
         candidateList.sort(key=lambda x: x[1], reverse=True)
 
@@ -175,58 +217,40 @@ class Solution:
 
         return candidateList
 
-    def MinDistanceSubstring(self, pattern: str, text: str) -> int:
-        """
-        Correct Sellers (substring Levenshtein):
-        - D[0][j] = 0 for all j  (free to start anywhere in `text`)
-        - D[i][0] = i            (must consume all of `pattern`)
-        - answer = min over last row (free to end anywhere in `text`)
-        """
-
-        m, n = len(pattern), len(text)
-        if m == 0: 
-            return 0
-        if n == 0: 
-            return m
-
-        # FIRST ROW: all zeros (not 0..n!)
-        prev = [0] * (n + 1)
-
-        for i in range(1, m + 1):
-            # FIRST COLUMN: i
-            cur = [i] + [0] * n
-            pi = pattern[i - 1]
-            for j in range(1, n + 1):
-                cost = 0 if pi == text[j - 1] else 1
-                cur[j] = min(
-                    prev[j] + 1,      # deletion in pattern
-                    cur[j - 1] + 1,   # insertion in pattern
-                    prev[j - 1] + cost
-                )
-            prev = cur
-
-        return min(prev)  # best substring end anywhere
-        
-    def PartialRatio(self, a: str, b: str) -> float:
-        """
-        RapidFuzz-like PartialRatio in [0, 100], but always using your normalize().
-        """
-        if not a and not b: return 100.0
-        if not a or not b:  return 0.0
-        # shorter is the needle
-        if len(a) <= len(b):
-            pat, txt = a, b
-        else:
-            pat, txt = b, a
-        dist = self.MinDistanceSubstring(pat, txt)
-        return 100.0 * (1.0 - dist / max(1, len(pat)))
 
 
+# solution = Solution()
+# inputString = "489/24A/18 Huỳnh Văn Bánh Phường 13, Phú Nhuận, TP. Hồ Chí Minh"
+# t0 = time.perf_counter()
+# print(solution.process(inputString))
+# t1 = time.perf_counter()
+# print(f"     Time taken: {t1 - t0:.6f}s")
+# print("End")
 
-TEAM_NAME = 'CTG'  # This should be your team nameword
+# !rm -rf test.json
+# # this link is public test
+# !gdown --fuzzy https://drive.google.com/file/d/1PBt3U9I3EH885CDhcXspebyKI5Vw6uLB/view?usp=sharing -O test.json
+
+
+groups_province = {}
+groups_district = {'hòa bình': ['Hoà Bình', 'Hòa Bình'], 'kbang': ['Kbang', 'KBang'], 'quy nhơn': ['Qui Nhơn', 'Quy Nhơn']}
+groups_ward = {'ái nghĩa': ['ái Nghĩa', 'Ái Nghĩa'], 'ái quốc': ['ái Quốc', 'Ái Quốc'], 'ái thượng': ['ái Thượng', 'Ái Thượng'], 'ái tử': ['ái Tử', 'Ái Tử'], 'ấm hạ': ['ấm Hạ', 'Ấm Hạ'], 'an ấp': ['An ấp', 'An Ấp'], 'ẳng cang': ['ẳng Cang', 'Ẳng Cang'], 'ẳng nưa': ['ẳng Nưa', 'Ẳng Nưa'], 'ẳng tở': ['ẳng Tở', 'Ẳng Tở'], 'an hòa': ['An Hoà', 'An Hòa'], 'ayun': ['Ayun', 'AYun'], 'bắc ái': ['Bắc ái', 'Bắc Ái'], 'bảo ái': ['Bảo ái', 'Bảo Ái'], 'bình hòa': ['Bình Hoà', 'Bình Hòa'], 'châu ổ': ['Châu ổ', 'Châu Ổ'], 'chư á': ['Chư á', 'Chư Á'], 'chư rcăm': ['Chư Rcăm', 'Chư RCăm'], 'cộng hòa': ['Cộng Hoà', 'Cộng Hòa'], 'cò nòi': ['Cò  Nòi', 'Cò Nòi'], 'đại ân 2': ['Đại Ân  2', 'Đại Ân 2'], 'đak ơ': ['Đak ơ', 'Đak Ơ'], "đạ m'ri": ["Đạ M'ri", "Đạ M'Ri"], 'đông hòa': ['Đông Hoà', 'Đông Hòa'], 'đồng ích': ['Đồng ích', 'Đồng Ích'], 'hải châu i': ['Hải Châu  I', 'Hải Châu I'], 'hải hòa': ['Hải Hoà', 'Hải Hòa'], 'hành tín đông': ['Hành Tín  Đông', 'Hành Tín Đông'], 'hiệp hòa': ['Hiệp Hoà', 'Hiệp Hòa'], 'hòa bắc': ['Hoà Bắc', 'Hòa Bắc'], 'hòa bình': ['Hoà Bình', 'Hòa Bình'], 'hòa châu': ['Hoà Châu', 'Hòa Châu'], 'hòa hải': ['Hoà Hải', 'Hòa Hải'], 'hòa hiệp trung': ['Hoà Hiệp Trung', 'Hòa Hiệp Trung'], 'hòa liên': ['Hoà Liên', 'Hòa Liên'], 'hòa lộc': ['Hoà Lộc', 'Hòa Lộc'], 'hòa lợi': ['Hoà Lợi', 'Hòa Lợi'], 'hòa long': ['Hoà Long', 'Hòa Long'], 'hòa mạc': ['Hoà Mạc', 'Hòa Mạc'], 'hòa minh': ['Hoà Minh', 'Hòa Minh'], 'hòa mỹ': ['Hoà Mỹ', 'Hòa Mỹ'], 'hòa phát': ['Hoà Phát', 'Hòa Phát'], 'hòa phong': ['Hoà Phong', 'Hòa Phong'], 'hòa phú': ['Hoà Phú', 'Hòa Phú'], 'hòa phước': ['Hoà Phước', 'Hòa Phước'], 'hòa sơn': ['Hoà Sơn', 'Hòa Sơn'], 'hòa tân': ['Hoà Tân', 'Hòa Tân'], 'hòa thuận': ['Hoà Thuận', 'Hòa Thuận'], 'hòa tiến': ['Hoà Tiến', 'Hòa Tiến'], 'hòa trạch': ['Hoà Trạch', 'Hòa Trạch'], 'hòa vinh': ['Hoà Vinh', 'Hòa Vinh'], 'hương hòa': ['Hương Hoà', 'Hương Hòa'], 'ích hậu': ['ích Hậu', 'Ích Hậu'], 'ít ong': ['ít Ong', 'Ít Ong'], 'khánh hòa': ['Khánh Hoà', 'Khánh Hòa'], 'krông á': ['Krông Á', 'KRông á'], 'lộc hòa': ['Lộc Hoà', 'Lộc Hòa'], 'minh hòa': ['Minh Hoà', 'Minh Hòa'], 'mường ải': ['Mường ải', 'Mường Ải'], 'mường ẳng': ['Mường ẳng', 'Mường Ẳng'], 'nậm ét': ['Nậm ét', 'Nậm Ét'], 'nam hòa': ['Nam Hoà', 'Nam Hòa'], 'na ư': ['Na ư', 'Na Ư'], 'ngã sáu': ['Ngã sáu', 'Ngã Sáu'], 'nghi hòa': ['Nghi Hoà', 'Nghi Hòa'], 'nguyễn úy': ['Nguyễn Uý', 'Nguyễn úy', 'Nguyễn Úy'], 'nhân hòa': ['Nhân Hoà', 'Nhân Hòa'], 'nhơn hòa': ['Nhơn Hoà', 'Nhơn Hòa'], 'nhơn nghĩa a': ['Nhơn nghĩa A', 'Nhơn Nghĩa A'], 'phúc ứng': ['Phúc ứng', 'Phúc Ứng'], 'phước hòa': ['Phước Hoà', 'Phước Hòa'], 'sơn hóa': ['Sơn Hoá', 'Sơn Hóa'], 'tạ an khương đông': ['Tạ An Khương  Đông', 'Tạ An Khương Đông'], 'tạ an khương nam': ['Tạ An Khương  Nam', 'Tạ An Khương Nam'], 'tăng hòa': ['Tăng Hoà', 'Tăng Hòa'], 'tân hòa': ['Tân Hoà', 'Tân Hòa'], 'tân hòa thành': ['Tân Hòa  Thành', 'Tân Hòa Thành'], 'tân khánh trung': ['Tân  Khánh Trung', 'Tân Khánh Trung'], 'tân lợi': ['Tân lợi', 'Tân Lợi'], 'thái hòa': ['Thái Hoà', 'Thái Hòa'], 'thiết ống': ['Thiết ống', 'Thiết Ống'], 'thuận hòa': ['Thuận Hoà', 'Thuận Hòa'], 'thượng ấm': ['Thượng ấm', 'Thượng Ấm'], 'thụy hương': ['Thuỵ Hương', 'Thụy Hương'], 'thủy xuân': ['Thuỷ Xuân', 'Thủy Xuân'], 'tịnh ấn đông': ['Tịnh ấn Đông', 'Tịnh Ấn Đông'], 'tịnh ấn tây': ['Tịnh ấn Tây', 'Tịnh Ấn Tây'], 'triệu ái': ['Triệu ái', 'Triệu Ái'], 'triệu ẩu': ['Triệu ẩu', 'Triệu Ẩu'], 'trung hòa': ['Trung Hoà', 'Trung Hòa'], 'trung ý': ['Trung ý', 'Trung Ý'], 'tùng ảnh': ['Tùng ảnh', 'Tùng Ảnh'], 'úc kỳ': ['úc Kỳ', 'Úc Kỳ'], 'ứng hòe': ['ứng Hoè', 'Ứng Hoè'], 'vĩnh hòa': ['Vĩnh Hoà', 'Vĩnh Hòa'], 'vũ hòa': ['Vũ Hoà', 'Vũ Hòa'], 'xuân ái': ['Xuân ái', 'Xuân Ái'], 'xuân áng': ['Xuân áng', 'Xuân Áng'], 'xuân hòa': ['Xuân Hoà', 'Xuân Hòa'], 'xuất hóa': ['Xuất Hoá', 'Xuất Hóa'], 'ỷ la': ['ỷ La', 'Ỷ La']}
+groups_ward.update({1: ['1', '01'], 2: ['2', '02'], 3: ['3', '03'], 4: ['4', '04'], 5: ['5', '05'], 6: ['6', '06'], 7: ['7', '07'], 8: ['8', '08'], 9: ['9', '09']})
+def to_same(groups):
+    same = {ele: k for k, v in groups.items() for ele in v}
+    return same
+same_province = to_same(groups_province)
+same_district = to_same(groups_district)
+same_ward = to_same(groups_ward)
+def normalize(text, same_dict):
+    return same_dict.get(text, text)
+
+TEAM_NAME = 'CTG'
 EXCEL_FILE = f'{TEAM_NAME}.xlsx'
 
-with open('test.json', 'r', encoding='utf-8') as f:
+import json
+import time
+with open("test.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 summary_only = True
@@ -239,40 +263,64 @@ for test_idx, data_point in enumerate(data):
 
     ok = 0
     try:
+        answer = data_point["result"]
+        answer["province_normalized"] = normalize(answer["province"], same_province)
+        answer["district_normalized"] = normalize(answer["district"], same_district)
+        answer["ward_normalized"] = normalize(answer["ward"], same_ward)
+
         start = time.perf_counter_ns()
         result = solution.process(address)
-        answer = data_point["result"]
         finish = time.perf_counter_ns()
         timer.append(finish - start)
-        ok += int(answer["province"] == result["province"])
-        ok += int(answer["district"] == result["district"])
-        ok += int(answer["ward"] == result["ward"])
+        result["province_normalized"] = normalize(result["province"], same_province)
+        result["district_normalized"] = normalize(result["district"], same_district)
+        result["ward_normalized"] = normalize(result["ward"], same_ward)
+
+        province_correct = int(answer["province_normalized"] == result["province_normalized"])
+        district_correct = int(answer["district_normalized"] == result["district_normalized"])
+        ward_correct = int(answer["ward_normalized"] == result["ward_normalized"])
+        ok = province_correct + district_correct + ward_correct
+
         df.append([
             test_idx,
             address,
             answer["province"],
             result["province"],
-            int(answer["province"] == result["province"]),
+            answer["province_normalized"],
+            result["province_normalized"],
+            province_correct,
             answer["district"],
             result["district"],
-            int(answer["district"] == result["district"]),
+            answer["district_normalized"],
+            result["district_normalized"],
+            district_correct,
             answer["ward"],
             result["ward"],
-            int(answer["ward"] == result["ward"]),
-            ok, 
+            answer["ward_normalized"],
+            result["ward_normalized"],
+            ward_correct,
+            ok,
             timer[-1] / 1_000_000_000,
         ])
     except Exception as e:
+        print(f"{answer = }")
+        print(f"{result = }")
         df.append([
             test_idx,
             address,
             answer["province"],
             "EXCEPTION",
+            answer["province_normalized"],
+            "EXCEPTION",
             0,
             answer["district"],
             "EXCEPTION",
+            answer["district_normalized"],
+            "EXCEPTION",
             0,
             answer["ward"],
+            "EXCEPTION",
+            answer["ward_normalized"],
             "EXCEPTION",
             0,
             0,
@@ -310,12 +358,18 @@ columns = [
     'text',
     'province',
     'province_student',
+    'province_normalized',
+    'province_student_normalized',
     'province_correct',
     'district',
     'district_student',
+    'district_normalized',
+    'district_student_normalized',
     'district_correct',
     'ward',
     'ward_student',
+    'ward_normalized',
+    'ward_student_normalized',
     'ward_correct',
     'total_correct',
     'time_sec',
