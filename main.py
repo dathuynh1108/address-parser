@@ -6,10 +6,30 @@ import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 from rapidfuzz.fuzz import partial_ratio
 from rapidfuzz import process as rf_process
+
+
+_HINT_STOP_TOKENS = {
+    "tinh",
+    "thanh",
+    "pho",
+    "thanhpho",
+    "tp",
+    "quan",
+    "q",
+    "huyen",
+    "h",
+    "thi",
+    "xa",
+    "phuong",
+    "p",
+    "tt",
+    "thi",
+    "thon",
+}
 
 
 def _strip_diacritics(text: str) -> str:
@@ -193,6 +213,161 @@ class Solution:
             )
         )
 
+    def _remove_once_by_tokens(self, query_std: str, pattern_std: str) -> str:
+        if not query_std or not pattern_std:
+            return query_std
+        q_tokens = query_std.split()
+        need = Counter(pattern_std.split())
+        if not need:
+            return query_std
+        out: List[str] = []
+        for token in q_tokens:
+            if need[token] > 0:
+                need[token] -= 1
+            else:
+                out.append(token)
+        return " ".join(out)
+
+    def _extract_prefixed_number(
+        self, raw_text: str, prefixes: Tuple[str, ...]
+    ) -> Optional[str]:
+        if not raw_text:
+            return None
+        raw = raw_text.lower()
+        raw = _strip_diacritics(raw)
+        raw = re.sub(r"[^a-z0-9\s]+", " ", raw)
+        tokens = _collapse_spaces(raw).split()
+        for idx, token in enumerate(tokens):
+            for pref in prefixes:
+                if token.startswith(pref) and len(token) > len(pref):
+                    suffix = token[len(pref) :]
+                    if suffix.isdigit():
+                        return str(int(suffix)) if suffix.lstrip("0") else "0"
+                if token.isdigit() and idx > 0 and tokens[idx - 1] == pref:
+                    return str(int(token)) if token.lstrip("0") else "0"
+        return None
+
+    def _extract_phrase_after_prefix(
+        self, raw_text: str, prefixes: Tuple[str, ...], max_words: int = 3
+    ) -> Optional[str]:
+        if not raw_text:
+            return None
+        raw = raw_text.lower()
+        raw = _strip_diacritics(raw)
+        raw = re.sub(r"[^a-z0-9\s]+", " ", raw)
+        raw = _collapse_spaces(raw)
+        for pref in prefixes:
+            pattern_prefix = pref.replace(" ", r"\s+")
+            pattern = re.compile(
+                rf"\b{pattern_prefix}\s+([a-z0-9]+(?:\s+[a-z0-9]+){{0,{max_words-1}}})"
+            )
+            match = pattern.search(raw)
+            if match:
+                phrase = match.group(1).strip()
+                if phrase:
+                    tokens = phrase.split()
+                    trimmed: List[str] = []
+                    for token in tokens:
+                        if token in _HINT_STOP_TOKENS:
+                            break
+                        trimmed.append(token)
+                    if trimmed:
+                        return " ".join(trimmed)
+        return None
+
+    def _hierarchical_hint(
+        self, normalized_query: str, raw_text: str
+    ) -> Tuple[str, str, str]:
+        province = district = ward = ""
+
+        prov_keys = list(self.province_lookup.keys())
+        prov_hint = rf_process.extractOne(
+            normalized_query,
+            prov_keys,
+            scorer=partial_ratio,
+            score_cutoff=65.0,
+        )
+        if not prov_hint:
+            return province, district, ward
+
+        prov_std = prov_hint[0]
+        province = self._map_to_reference(prov_std, self.province_lookup)
+        nq_after_province = self._remove_once_by_tokens(normalized_query, prov_std)
+
+        d_candidates = list(self.province_to_districts.get(prov_std, ()))
+        district_std = ""
+        if d_candidates:
+            preferred = self._extract_prefixed_number(raw_text, ("q", "quan"))
+            if preferred and preferred in d_candidates:
+                district_std = preferred
+            else:
+                phrase_hint = self._extract_phrase_after_prefix(
+                    raw_text, ("quan", "huyen", "thi xa"), max_words=3
+                )
+                if phrase_hint:
+                    phrase_std = self.standardize_name(phrase_hint)
+                    if phrase_std in d_candidates:
+                        district_std = phrase_std
+                if not district_std:
+                    dist_hint = rf_process.extractOne(
+                        nq_after_province,
+                        d_candidates,
+                        scorer=partial_ratio,
+                        score_cutoff=60.0,
+                    )
+                    if dist_hint:
+                        district_std = dist_hint[0]
+
+        nq_after_district = nq_after_province
+        if district_std:
+            district = self._map_to_reference(district_std, self.district_lookup)
+            nq_after_district = self._remove_once_by_tokens(
+                nq_after_province, district_std
+            )
+
+            w_candidates = list(
+                self.provdist_to_wards.get((prov_std, district_std), ())
+            )
+            if w_candidates:
+                ward_std = ""
+                preferred_ward = self._extract_prefixed_number(
+                    raw_text, ("p", "phuong", "xa")
+                )
+                if preferred_ward and preferred_ward in w_candidates:
+                    ward_std = preferred_ward
+                else:
+                    phrase_hint = self._extract_phrase_after_prefix(
+                        raw_text,
+                        ("tt", "thi tran", "phuong", "xa", "thon"),
+                        max_words=4,
+                    )
+                    if phrase_hint:
+                        phrase_std = self.standardize_name(phrase_hint)
+                        if phrase_std in w_candidates:
+                            ward_std = phrase_std
+                        else:
+                            phrase_match = rf_process.extractOne(
+                                phrase_std,
+                                w_candidates,
+                                scorer=partial_ratio,
+                                score_cutoff=58.0,
+                            )
+                            if phrase_match:
+                                ward_std = phrase_match[0]
+                if not ward_std:
+                    ward_hint = rf_process.extractOne(
+                        nq_after_district,
+                        w_candidates,
+                        scorer=partial_ratio,
+                        score_cutoff=58.0,
+                    )
+                    ward_std = ward_hint[0] if ward_hint else ""
+                if ward_std:
+                    ward = self._map_to_reference(ward_std, self.ward_lookup)
+
+        province, district, ward = self._validate_hierarchy(province, district, ward)
+        return province, district, ward
+
     # ------------------------------------------------------------------
     # Candidate generation helpers
     # ------------------------------------------------------------------
@@ -372,7 +547,36 @@ class Solution:
             if filled == 3:
                 break
 
-        return best_output
+        hint_province, hint_district, hint_ward = self._hierarchical_hint(
+            normalized_query, text
+        )
+        hint_output = {
+            "province": hint_province,
+            "district": hint_district,
+            "ward": hint_ward,
+        }
+
+        final_output = best_output.copy()
+        if not final_output["province"] and hint_output["province"]:
+            final_output["province"] = hint_output["province"]
+        if not final_output["district"] and hint_output["district"]:
+            final_output["district"] = hint_output["district"]
+        if not final_output["ward"] and hint_output["ward"]:
+            final_output["ward"] = hint_output["ward"]
+
+        (
+            final_output["province"],
+            final_output["district"],
+            final_output["ward"],
+        ) = self._validate_hierarchy(
+            final_output["province"],
+            final_output["district"],
+            final_output["ward"],
+        )
+
+        if final_output["province"] or final_output["district"] or final_output["ward"]:
+            return final_output
+        return hint_output
 
 
 if __name__ == "__main__":
