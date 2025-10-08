@@ -2,6 +2,7 @@ from typing import List, Tuple, Optional, Dict, Callable
 from dataclasses import dataclass
 from collections import defaultdict
 import unicodedata, re, os
+import json
 from rapidfuzz import fuzz, process
 # ============== VN Normalization & Helpers =================
 
@@ -232,6 +233,40 @@ class Solution:
         self.district_min = 64.0
         self.ward_min     = 60.0
 
+        # --- Load hierarchy from JSON for post-checks ---
+        self._prov_to_dists: Dict[str, set] = {}
+        self._provdist_to_wards: Dict[tuple, set] = {}
+
+        def _norm_no_designators(s: str) -> str:
+            core = _normalize_core(s)
+            toks = _remove_designators(core.split())
+            return " ".join(toks)
+
+        self._norm_no_designators = _norm_no_designators  # reuse in process()
+
+        json_path = 'list_address.json'
+        if os.path.exists(json_path):
+            try:
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                for prov_name, dist_map in data.items():
+                    pkey = _norm_no_designators(prov_name)
+                    if not isinstance(dist_map, dict):
+                        continue
+                    dset = self._prov_to_dists.setdefault(pkey, set())
+                    for dist_name, wards in dist_map.items():
+                        dkey = _norm_no_designators(dist_name)
+                        dset.add(dkey)
+                        pw_key = (pkey, dkey)
+                        wset = self._provdist_to_wards.setdefault(pw_key, set())
+                        if isinstance(wards, list):
+                            for wname in wards:
+                                wkey = _norm_no_designators(wname)
+                                if wkey:
+                                    wset.add(wkey)
+            except Exception as e:
+                print("Failed to load hierarchy JSON:", e)
+
     def _pick_one(self, idx: _NGramIndex, nq: str, pr_min: float, dice_min: float, short_lim: int):
         sids = idx.shortlist(nq, limit=short_lim, dice_min=dice_min)
         return idx.extract_one(nq, pr_min=pr_min, shortlist_sids=sids)
@@ -242,26 +277,56 @@ class Solution:
 
         # Province first (end of string)
         pickP = self._pick_one(self.province_idx, nq0, self.province_min, 0.15, 200)
-        pname, nq1 = "", nq0
+        pname, pnorm_sel, nq1 = "", "", nq0
         if pickP:
-            _, pname, pnorm, _ = pickP
-            nq1 = _remove_by_span(nq0, pnorm, cutoff=self.province_min)
+            _, pname, pnorm_sel, _ = pickP
+            nq1 = _remove_by_span(nq0, pnorm_sel, cutoff=self.province_min)
             print("  After province removal:", nq1)
 
         # District second (middle)
         pickD = self._pick_one(self.district_idx, nq1, self.district_min, 0.15, 400)
-        dname, nq2 = "", nq1
+        dname, dnorm_sel, nq2 = "", "", nq1
         if pickD:
-            _, dname, dnorm, _ = pickD
-            nq2 = _remove_by_span(nq1, dnorm, cutoff=self.district_min)
+            _, dname, dnorm_sel, _ = pickD
+            nq2 = _remove_by_span(nq1, dnorm_sel, cutoff=self.district_min)
             print("  After district removal:", nq2)
 
         # Ward last (front)
         pickW = self._pick_one(self.ward_idx, nq2, self.ward_min, 0.12, 600)
-        wname = ""
+        wname, wnorm_sel = "", ""
         if pickW:
-            _, wname, _, _ = pickW
+            _, wname, wnorm_sel, _ = pickW
             print("  After ward removal: (not needed, just for debug)")
+
+        # --- Post-check with hierarchy; clear invalids ---
+        # Use versions without designators to compare with JSON map
+        pkey = self._norm_no_designators(pname) if pname else ""
+        dkey = self._norm_no_designators(dname) if dname else ""
+        wkey = self._norm_no_designators(wname) if wname else ""
+
+        # If both province and district detected, verify relationship
+        if pkey and dkey:
+            dset = self._prov_to_dists.get(pkey)
+            if not dset or dkey not in dset:
+                print(f"  Hierarchy post-check: district '{dname}' not under province '{pname}', clearing district")
+                dname = ""
+                dkey = ""
+                # Without a verified district, ward cannot be trusted either
+                if wname:
+                    print("  Hierarchy post-check: clearing ward because district is not verified")
+                    wname = ""
+
+        # If province+district present and ward detected, verify ward under that district
+        if pkey and dkey and wkey:
+            wset = self._provdist_to_wards.get((pkey, dkey))
+            if not wset or wkey not in wset:
+                print(f"  Hierarchy post-check: ward '{wname}' not under district '{dname}', clearing ward")
+                wname = ""
+
+        # If province present but district missing, do not return ward (cannot validate parent)
+        if pkey and not dkey and wname:
+            print("  Hierarchy post-check: province known but district missing → clearing ward")
+            wname = ""
 
         return {"province": pname or "", "district": dname or "", "ward": wname or ""}
         
