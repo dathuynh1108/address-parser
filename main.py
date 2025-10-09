@@ -108,6 +108,8 @@ class Solution:
         partial_cutoff: float = 75.0,
         max_rf_results: int = 12,
         ngram_size: int = 4,
+        max_ngrams: int = 42,
+        ngram_frequency_cap: Optional[int] = None,
     ) -> None:
         self.reference_province_path = Path("list_province.txt")
         self.reference_district_path = Path("list_district.txt")
@@ -124,6 +126,7 @@ class Solution:
         self.inverted_index_lists: Dict[str, Tuple[int, ...]] = {}
         self.province_candidates: Dict[str, Tuple[str, ...]] = {}
         self.provdist_candidates: Dict[Tuple[str, str], Tuple[str, ...]] = {}
+        self.ngram_frequencies: Dict[str, int] = {}
 
         self.province_lookup = self._load_reference_lookup(self.reference_province_path)
         self.district_lookup = self._load_reference_lookup(self.reference_district_path)
@@ -134,6 +137,11 @@ class Solution:
         self.PARTIAL_CUTOFF = partial_cutoff
         self.MAX_RF_RESULTS = max_rf_results
         self.NGRAM_SIZE = max(1, ngram_size)
+        self.MAX_NGRAMS = max(1, max_ngrams)
+        self.NGRAM_FREQ_CUTOFF = (
+            ngram_frequency_cap if (ngram_frequency_cap or 0) > 0 else None
+        )
+        self.ANCHOR_NGRAMS = min(12, self.MAX_NGRAMS)
 
         self._preprocess_reference_addresses()
         self._finalize_indexes()
@@ -267,6 +275,9 @@ class Solution:
         self.inverted_index_lists = {
             gram: tuple(sorted(indices))
             for gram, indices in self.inverted_index.items()
+        }
+        self.ngram_frequencies = {
+            gram: len(indices) for gram, indices in self.inverted_index_lists.items()
         }
         self.province_candidates = {
             prov: tuple(sorted(districts))
@@ -451,23 +462,71 @@ class Solution:
     def _shortlist_by_ngrams(
         self, input_ngrams: Sequence[str], top_k: int
     ) -> List[Tuple[int, int]]:
-        counter = Counter()
+        counter: Dict[int, int] = defaultdict(int)
         seen: Set[str] = set()
-        unique_ngrams: List[str] = []
+        original_order: List[str] = []
         for gram in input_ngrams:
             if gram in seen:
                 continue
             seen.add(gram)
-            unique_ngrams.append(gram)
-        for gram in unique_ngrams:
+            original_order.append(gram)
+
+        ranked_ngrams = original_order
+        if len(ranked_ngrams) > 1:
+            ranked_ngrams = sorted(
+                ranked_ngrams,
+                key=lambda gram: self.ngram_frequencies.get(gram, 0),
+            )
+
+        if self.NGRAM_FREQ_CUTOFF is not None and ranked_ngrams:
+            filtered: List[str] = []
+            heavy: List[str] = []
+            for gram in ranked_ngrams:
+                freq = self.ngram_frequencies.get(gram, 0)
+                if freq and freq > self.NGRAM_FREQ_CUTOFF:
+                    heavy.append(gram)
+                else:
+                    filtered.append(gram)
+            if filtered:
+                ranked_ngrams = filtered
+            elif heavy:
+                ranked_ngrams = heavy
+
+        final_ngrams: List[str] = []
+        seen_final: Set[str] = set()
+        anchor_limit = self.ANCHOR_NGRAMS
+        for gram in original_order[:anchor_limit]:
+            if gram not in seen_final:
+                final_ngrams.append(gram)
+                seen_final.add(gram)
+                if len(final_ngrams) >= self.MAX_NGRAMS:
+                    break
+
+        if len(final_ngrams) < self.MAX_NGRAMS:
+            for gram in ranked_ngrams:
+                if gram in seen_final:
+                    continue
+                final_ngrams.append(gram)
+                seen_final.add(gram)
+                if len(final_ngrams) >= self.MAX_NGRAMS:
+                    break
+
+        if len(final_ngrams) < self.MAX_NGRAMS:
+            for gram in original_order:
+                if gram in seen_final:
+                    continue
+                final_ngrams.append(gram)
+                if len(final_ngrams) >= self.MAX_NGRAMS:
+                    break
+
+        for gram in final_ngrams:
             for idx in self.inverted_index_lists.get(gram, ()):
                 counter[idx] += 1
-        ranked = counter.most_common(top_k)
-        if not ranked:
-            return ranked
+        if not counter:
+            return []
 
         bucketed: Dict[int, List[int]] = defaultdict(list)
-        for idx, count in ranked:
+        for idx, count in counter.items():
             bucketed[count].append(idx)
 
         ordered: List[Tuple[int, int]] = []
@@ -678,9 +737,15 @@ class Solution:
                 part_lower = part.lower()
                 if part_lower in text_lower:
                     return weight * 2
+                core_lower = _strip_admin_prefix(part).lower()
+                if core_lower and core_lower in text_lower:
+                    return weight * 2 - 1
                 part_ascii = _strip_diacritics(part_lower)
                 if part_ascii and part_ascii in text_ascii:
                     return weight
+                core_ascii = _strip_diacritics(core_lower) if core_lower else ""
+                if core_ascii and core_ascii in text_ascii:
+                    return weight - 1
                 return 0
 
             presence_score = (
