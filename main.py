@@ -6,7 +6,7 @@ import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Set, Tuple
+from typing import Dict, List, Optional, Pattern, Sequence, Set, Tuple
 
 from rapidfuzz.fuzz import partial_ratio
 from rapidfuzz import process as rf_process
@@ -31,6 +31,22 @@ _HINT_STOP_TOKENS = {
     "thon",
 }
 
+_SPECIAL_REPLACE = {
+    # Add any special replacements if needed
+    't.t.h': 'thua thien hue',  
+    'tth': 'thua thien hue',
+    'tphcm': 'thanh pho ho chi minh',
+    'tp hcm': 'thanh pho ho chi minh',
+    'hcm': 'ho chi minh',
+    'hn': 'ha noi',
+}
+
+_ADMIN_PREFIX_PATTERN = re.compile(
+    r"^(thành phố trực thuộc trung ương|thành phố trực thuộc tw|"
+    r"thành phố thuộc tỉnh|thành phố|tp\.?|tỉnh|quận|q\.?|huyện|h\.?|"
+    r"thị xã|tx\.?|thị trấn|tt\.?|phường|p\.?|xã|x\.?|thôn)\s+",
+    re.IGNORECASE,
+)
 
 def _strip_diacritics(text: str) -> str:
     text = unicodedata.normalize("NFD", text)
@@ -39,6 +55,38 @@ def _strip_diacritics(text: str) -> str:
 
 def _collapse_spaces(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
+
+
+def _normalize_special_key(key: str) -> str:
+    base = _strip_diacritics(key.lower())
+    return re.sub(r"[^a-z0-9]", "", base)
+
+
+def _build_special_replace_patterns() -> List[Tuple[Pattern[str], str]]:
+    patterns: List[Tuple[Pattern[str], str]] = []
+    separator = r"[\s./-]*"
+    for source, target in _SPECIAL_REPLACE.items():
+        normalized = _normalize_special_key(source)
+        if not normalized:
+            continue
+        pattern = r"\b" + separator.join(normalized) + r"\b"
+        patterns.append((re.compile(pattern), target))
+    return patterns
+
+
+_SPECIAL_REPLACE_PATTERNS = _build_special_replace_patterns()
+
+
+def _strip_admin_prefix(name: str) -> str:
+    if not name:
+        return ""
+    current = name.strip()
+    while True:
+        match = _ADMIN_PREFIX_PATTERN.match(current)
+        if not match:
+            break
+        current = current[match.end():].lstrip()
+    return current
 
 
 @dataclass
@@ -52,7 +100,15 @@ class AddressNode:
 
 
 class Solution:
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        topk_candidates: int = 600,
+        dice_gate: float = 0.52,
+        partial_cutoff: float = 75.0,
+        max_rf_results: int = 12,
+        ngram_size: int = 4,
+    ) -> None:
         self.reference_province_path = Path("list_province.txt")
         self.reference_district_path = Path("list_district.txt")
         self.reference_ward_path = Path("list_ward.txt")
@@ -65,17 +121,22 @@ class Solution:
         self.provdist_to_wards: Dict[Tuple[str, str], set[str]] = defaultdict(set)
         self.district_to_provinces: Dict[str, set[str]] = defaultdict(set)
         self.ward_to_parents: Dict[str, List[Tuple[str, str]]] = defaultdict(list)
+        self.inverted_index_lists: Dict[str, Tuple[int, ...]] = {}
+        self.province_candidates: Dict[str, Tuple[str, ...]] = {}
+        self.provdist_candidates: Dict[Tuple[str, str], Tuple[str, ...]] = {}
 
         self.province_lookup = self._load_reference_lookup(self.reference_province_path)
         self.district_lookup = self._load_reference_lookup(self.reference_district_path)
         self.ward_lookup = self._load_reference_lookup(self.reference_ward_path)
 
-        self.TOPK_CANDIDATES = 600
-        self.DICE_GATE = 0.52
-        self.PARTIAL_CUTOFF = 75.0
-        self.MAX_RF_RESULTS = 12
+        self.TOPK_CANDIDATES = topk_candidates
+        self.DICE_GATE = dice_gate
+        self.PARTIAL_CUTOFF = partial_cutoff
+        self.MAX_RF_RESULTS = max_rf_results
+        self.NGRAM_SIZE = max(1, ngram_size)
 
         self._preprocess_reference_addresses()
+        self._finalize_indexes()
 
     # ------------------------------------------------------------------
     # Standardisation & loading helpers
@@ -84,6 +145,9 @@ class Solution:
         if not text:
             return ""
         text = text.lower()
+        for pattern, replacement in _SPECIAL_REPLACE_PATTERNS:
+            text = pattern.sub(replacement, text)
+        
         redundant_tokens = [
             "thành phố",
             "thành. phố",
@@ -128,7 +192,8 @@ class Solution:
         text = re.sub(r"[^a-z0-9\s]+", " ", text)
         return _collapse_spaces(text)
 
-    def generate_ngrams(self, text: str, n: int = 4) -> List[str]:
+    def generate_ngrams(self, text: str, n: Optional[int] = None) -> List[str]:
+        n = n or self.NGRAM_SIZE
         wrapped = f" {text} "
         if len(wrapped) < n:
             return [wrapped]
@@ -197,6 +262,20 @@ class Solution:
         for idx, node in enumerate(self.address_nodes):
             for gram in node.ngrams:
                 self.inverted_index[gram].add(idx)
+
+    def _finalize_indexes(self) -> None:
+        self.inverted_index_lists = {
+            gram: tuple(sorted(indices))
+            for gram, indices in self.inverted_index.items()
+        }
+        self.province_candidates = {
+            prov: tuple(sorted(districts))
+            for prov, districts in self.province_to_districts.items()
+        }
+        self.provdist_candidates = {
+            key: tuple(sorted(wards))
+            for key, wards in self.provdist_to_wards.items()
+        }
 
     def _add_node(self, province: str, district: str, ward: str) -> None:
         full_name_std = self.standardize_name(f"{ward} {district} {province}")
@@ -291,10 +370,10 @@ class Solution:
             return province, district, ward
 
         prov_std = prov_hint[0]
-        province = self._map_to_reference(prov_std, self.province_lookup)
+        province = self._map_to_reference(prov_std, self.province_lookup, raw_text)
         nq_after_province = self._remove_once_by_tokens(normalized_query, prov_std)
 
-        d_candidates = list(self.province_to_districts.get(prov_std, ()))
+        d_candidates = self.province_candidates.get(prov_std, ())
         district_std = ""
         if d_candidates:
             preferred = self._extract_prefixed_number(raw_text, ("q", "quan"))
@@ -320,14 +399,12 @@ class Solution:
 
         nq_after_district = nq_after_province
         if district_std:
-            district = self._map_to_reference(district_std, self.district_lookup)
+            district = self._map_to_reference(district_std, self.district_lookup, raw_text)
             nq_after_district = self._remove_once_by_tokens(
                 nq_after_province, district_std
             )
 
-            w_candidates = list(
-                self.provdist_to_wards.get((prov_std, district_std), ())
-            )
+            w_candidates = self.provdist_candidates.get((prov_std, district_std), ())
             if w_candidates:
                 ward_std = ""
                 preferred_ward = self._extract_prefixed_number(
@@ -363,7 +440,7 @@ class Solution:
                     )
                     ward_std = ward_hint[0] if ward_hint else ""
                 if ward_std:
-                    ward = self._map_to_reference(ward_std, self.ward_lookup)
+                    ward = self._map_to_reference(ward_std, self.ward_lookup, raw_text)
 
         province, district, ward = self._validate_hierarchy(province, district, ward)
         return province, district, ward
@@ -375,10 +452,33 @@ class Solution:
         self, input_ngrams: Sequence[str], top_k: int
     ) -> List[Tuple[int, int]]:
         counter = Counter()
-        for gram in set(input_ngrams):
-            for idx in self.inverted_index.get(gram, () ):
+        seen: Set[str] = set()
+        unique_ngrams: List[str] = []
+        for gram in input_ngrams:
+            if gram in seen:
+                continue
+            seen.add(gram)
+            unique_ngrams.append(gram)
+        for gram in unique_ngrams:
+            for idx in self.inverted_index_lists.get(gram, ()):
                 counter[idx] += 1
-        return counter.most_common(top_k)
+        ranked = counter.most_common(top_k)
+        if not ranked:
+            return ranked
+
+        bucketed: Dict[int, List[int]] = defaultdict(list)
+        for idx, count in ranked:
+            bucketed[count].append(idx)
+
+        ordered: List[Tuple[int, int]] = []
+        for count in sorted(bucketed.keys(), reverse=True):
+            candidates = bucketed[count]
+            candidates.sort(key=lambda i: (-self.address_nodes[i].info_level, i))
+            for idx in candidates:
+                ordered.append((idx, count))
+                if len(ordered) == top_k:
+                    return ordered
+        return ordered
 
     def _filter_by_dice(
         self,
@@ -387,13 +487,17 @@ class Solution:
     ) -> List[int]:
         filtered: List[int] = []
         len_a = len(input_ngrams)
+        if len_a == 0:
+            return filtered
+
         for idx, _ in candidates:
             node = self.address_nodes[idx]
             grams = node.ngrams
             if not grams:
                 continue
             inter = sum(1 for gram in input_ngrams if gram in grams)
-            dice = (2 * inter) / (len_a + len(grams)) if (len_a + len(grams)) else 0.0
+            denominator = len_a + len(grams)
+            dice = (2 * inter) / denominator if denominator else 0.0
             if dice >= self.DICE_GATE:
                 filtered.append(idx)
             else:
@@ -469,16 +573,32 @@ class Solution:
 
         return province, district, ward
 
-    def _map_to_reference(self, name: str, lookup: Dict[str, List[str]]) -> str:
+    def _map_to_reference(
+        self,
+        name: str,
+        lookup: Dict[str, List[str]],
+        raw_text: str = "",
+    ) -> str:
         if not name:
             return ""
         key = self.standardize_name(name)
         options = lookup.get(key)
         if not options:
             return ""
+        lower_name = name.lower()
         for option in options:
-            if option.lower() == name.lower():
+            if option.lower() == lower_name:
                 return option
+        if raw_text:
+            raw_lower = raw_text.lower()
+            best_option = max(
+                options,
+                key=lambda opt: (
+                    partial_ratio(opt.lower(), raw_lower),
+                    opt.lower() == lower_name,
+                ),
+            )
+            return best_option
         return options[0]
 
     def _validate_hierarchy(
@@ -523,15 +643,22 @@ class Solution:
         )
 
         best_output = {"province": "", "district": "", "ward": ""}
-        best_rank = (-1, -1.0)
+        best_rank: Tuple[float, float, float, float] = (
+            -1.0,
+            -1.0,
+            -1.0,
+            float("-inf"),
+        )
+        text_lower = text.lower()
+        text_ascii = _strip_diacritics(text_lower)
 
         for position, idx in enumerate(candidate_indices):
             node = self.address_nodes[idx]
             province, district, ward = self._resolve_node_fields(node)
 
-            province = self._map_to_reference(province, self.province_lookup)
-            district = self._map_to_reference(district, self.district_lookup)
-            ward = self._map_to_reference(ward, self.ward_lookup)
+            province = self._map_to_reference(province, self.province_lookup, text)
+            district = self._map_to_reference(district, self.district_lookup, text)
+            ward = self._map_to_reference(ward, self.ward_lookup, text)
 
             province, district, ward = self._validate_hierarchy(province, district, ward)
 
@@ -539,12 +666,35 @@ class Solution:
             if filled == 0:
                 continue
 
-            rank = (filled, -position)
+            candidate_raw = " ".join(
+                part for part in (ward, district, province) if part
+            )
+            raw_score = (
+                partial_ratio(candidate_raw.lower(), text.lower()) if candidate_raw else 0.0
+            )
+            def presence_value(part: str, weight: int) -> int:
+                if not part:
+                    return 0
+                part_lower = part.lower()
+                if part_lower in text_lower:
+                    return weight * 2
+                part_ascii = _strip_diacritics(part_lower)
+                if part_ascii and part_ascii in text_ascii:
+                    return weight
+                return 0
+
+            presence_score = (
+                presence_value(province, 1)
+                + presence_value(district, 3)
+                + presence_value(ward, 5)
+            )
+
+            rank = (filled, float(presence_score), raw_score, -float(position))
             if rank > best_rank:
                 best_rank = rank
                 best_output = {"province": province, "district": district, "ward": ward}
 
-            if filled == 3:
+            if filled == 3 and raw_score >= 100.0 and presence_score >= 8:
                 break
 
         hint_province, hint_district, hint_ward = self._hierarchical_hint(
@@ -574,12 +724,17 @@ class Solution:
             final_output["ward"],
         )
 
+        for key in ("province", "district", "ward"):
+            final_output[key] = _strip_admin_prefix(final_output[key])
+
         if final_output["province"] or final_output["district"] or final_output["ward"]:
             return final_output
+        for key in ("province", "district", "ward"):
+            hint_output[key] = _strip_admin_prefix(hint_output[key])
         return hint_output
 
 
 if __name__ == "__main__":
     solver = Solution()
-    sample = "284DBis Ng Văn Giáo, P3, Mỹ Tho, T.Giang."
+    sample = ", Nam Đông,T. T.T.H"
     print(solver.process(sample))
