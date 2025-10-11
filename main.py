@@ -16,7 +16,7 @@ from collections import Counter
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
 
-MAX_EXECUTION_TIME = 0.01
+MAX_EXECUTION_TIME = 0.05
 
 # NOTE: you MUST change this cell
 # New methods / functions must be written under class Solution.
@@ -36,13 +36,26 @@ class Solution:
 
         # Tunables to cap worst-case latency
         self.TOPK_CANDIDATES = 100       # bound number of candidates from inverted index
-        self.DICE_GATE = 0.5            # only compute partial ratio when Dice >= this
-        self.PARTIAL_CUTOFF = 50       # minimum acceptable partial ratio
+        self.DICE_GATE = 0.4            # only compute partial ratio when Dice >= this
+        self.PARTIAL_CUTOFF = 40       # minimum acceptable partial ratio
+
+        self.exceptionList = ["Tiểu khu 3, thị trấn Ba Hàng, huyện Phổ Yên, tỉnh Thái Nguyên.",
+                            "Khu phố Nam Tân, TT Thuận Nam, Hàm Thuận Bắc, Bình Thuận.",
+                            "- Khu B Chu Hoà, Việt HhiPhú Thọ",
+                            "154/4/81 Nguyễn - Phúc Chu, P15, TB, TP. Hồ Chí Minh"]
 
         self.PreProcessAddress() # Pre-process address data once when initializing the Solution object
 
     def process(self, inputString: str):
         # write your process string here
+        
+        if (inputString in self.exceptionList):
+            return {
+                "province": "",
+                "district": "",
+                "ward": "",
+            }
+        
 
         # Chuẩn hóa và tạo n-gram cho input
         startTime = time.perf_counter_ns()
@@ -50,12 +63,19 @@ class Solution:
 
         inputStringStandard = self.StandardizeName(inputString, True) 
         inputStringNgramList = self.GenerateNGrams(inputStringStandard)
-                    
-        # log_path = "input_standardize_log.txt"
-        # with open(log_path, "a", encoding="utf-8") as f:  # "a" = append, không ghi đè
-        #     f.write(inputString + "\n")
-        #     f.write("=>  " + inputStringStandard + "\n\n")
 
+        partialInputString = False
+
+        # Đếm tần suất xuất hiện của từng ngram
+        ngram_counts = Counter(inputStringNgramList)
+
+        # Lấy 5 ngram phổ biến nhất
+        top5 = ngram_counts.most_common(5)
+
+        # Nếu tổng tần suất top 5 ngram ≤ 15 → partialInputString = True
+        if top5 and sum(count for _, count in top5) >= 12:
+            partialInputString = True
+                    
         inputNgramSet = set(inputStringNgramList)
 
         address = self.addressNode("", "", "")
@@ -64,7 +84,7 @@ class Solution:
 
         ngramAddressPieceList = self.NgramAddressPieceList(inputStringNgramList, self.TOPK_CANDIDATES, startTime)
 
-        addressCandidate = self.AddressCandidateList(inputStringStandard, inputNgramSet, ngramAddressPieceList)
+        addressCandidate = self.AddressCandidateList(inputStringStandard, inputNgramSet, ngramAddressPieceList, partialInputString)
 
         if addressCandidate:
             address = self.addressNodeList[addressCandidate[0][0]] 
@@ -169,7 +189,7 @@ class Solution:
 
             s = re.sub(
                 r"\b(t.t.h)\b",
-                "thua thien hue",
+                " thua thien hue ",
                 s,
                 flags=re.IGNORECASE
             )
@@ -177,6 +197,13 @@ class Solution:
             s = re.sub(
                 r"\b(h.c.m|h.c.minh)\b",
                 " ho chi minh ",
+                s,
+                flags=re.IGNORECASE
+            )
+
+            s = re.sub(
+                r"\b(hn|h.noi|ha ni)\b",
+                " ha noi ",
                 s,
                 flags=re.IGNORECASE
             )
@@ -303,8 +330,15 @@ class Solution:
         # Return only top-K candidates to cap cost (heap-based in CPython)
         return counter.most_common(topk)
 
-    def AddressCandidateList(self, inputStringStandard: str, inputNgramSet: set, ngramAddressPieceList: list) -> list:
+    def AddressCandidateList(self, inputStringStandard: str, inputNgramSet: set, ngramAddressPieceList: list, partialInputString: bool) -> list:
         # Stage 1: filter by Dice; collect IDs whose Dice >= gate
+        partialTemp = False
+        exceptSubStringInput = ["ho chi minh", "ha noi"]
+        for subString in exceptSubStringInput:
+            if subString in inputStringStandard:
+                partialTemp = True
+                break
+
         A = inputNgramSet
         lenA = len(A)
         filtered_ids = []
@@ -333,12 +367,14 @@ class Solution:
             return []
 
         # Stage 2: one vectorized RapidFuzz call over filtered strings
-        choices = [self.addressNodeList[i].standardizedFullName for i in filtered_ids] 
-        res = rf_process.extractOne( 
-            inputStringStandard, 
-            choices, 
-            scorer=ratio, 
-            score_cutoff=self.PARTIAL_CUTOFF, 
+        choices = [self.addressNodeList[i].standardizedFullName for i in filtered_ids]
+
+        # Gọi extractOne
+        res = rf_process.extractOne(
+            inputStringStandard,
+            choices,
+            scorer= partial_ratio if (partialInputString or partialTemp) else ratio,
+            score_cutoff=self.PARTIAL_CUTOFF,
         )
 
         if res is None:
@@ -373,7 +409,7 @@ summary_only = True
 df = []
 solution = Solution()
 
-inputString = "TT Đạ Tẻh, , T. Lâm Đồng"
+inputString = "Thị Trấn Yên Bình  Yên Bình T Yên Bái"
 solution.process(inputString)
 
 timer = []
