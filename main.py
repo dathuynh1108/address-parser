@@ -29,7 +29,7 @@ class Solution:
         self.reference_district_path = 'list_district.txt'
         self.reference_ward_path = 'list_ward.txt'
         
-        self.standard_address_list_path = 'list_address.json'
+        self.standard_address_list_path = 'merged_addresses.json'
 
         self.addressNodeList = []
         self.invertNgramToIndexFullNameDict = {}
