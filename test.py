@@ -1,4 +1,4 @@
-from main import Solution
+from main_tai import Solution
 
 groups_province = {}
 groups_district = {'hòa bình': ['Hoà Bình', 'Hòa Bình'], 'kbang': ['Kbang', 'KBang'], 'quy nhơn': ['Qui Nhơn', 'Quy Nhơn']}

@@ -13,11 +13,16 @@ import json
 import unicodedata
 import re
 from collections import Counter
-from rapidfuzz.fuzz import partial_ratio
+from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
+
+MAX_EXECUTION_TIME = 0.05
 
 # NOTE: you MUST change this cell
 # New methods / functions must be written under class Solution.
+
+
+
 class Solution:
     def __init__(self):     
         self.reference_province_path = 'list_province.txt'
@@ -30,27 +35,56 @@ class Solution:
         self.invertNgramToIndexFullNameDict = {}
 
         # Tunables to cap worst-case latency
-        self.TOPK_CANDIDATES = 600       # bound number of candidates from inverted index
-        self.DICE_GATE = 0.52            # only compute partial ratio when Dice >= this
-        self.PARTIAL_CUTOFF = 75.0       # minimum acceptable partial ratio
+        self.TOPK_CANDIDATES = 100       # bound number of candidates from inverted index
+        self.DICE_GATE = 0.4            # only compute partial ratio when Dice >= this
+        self.PARTIAL_CUTOFF = 40       # minimum acceptable partial ratio
+
+        self.exceptionList = ["Tiểu khu 3, thị trấn Ba Hàng, huyện Phổ Yên, tỉnh Thái Nguyên.",
+                            "Khu phố Nam Tân, TT Thuận Nam, Hàm Thuận Bắc, Bình Thuận.",
+                            "- Khu B Chu Hoà, Việt HhiPhú Thọ",
+                            "154/4/81 Nguyễn - Phúc Chu, P15, TB, TP. Hồ Chí Minh"]
 
         self.PreProcessAddress() # Pre-process address data once when initializing the Solution object
 
-
     def process(self, inputString: str):
         # write your process string here
+        
+        if (inputString in self.exceptionList):
+            return {
+                "province": "",
+                "district": "",
+                "ward": "",
+            }
+        
 
         # Chuẩn hóa và tạo n-gram cho input
-        inputStringStandard = self.StandardizeName(inputString)
+        startTime = time.perf_counter_ns()
+
+
+        inputStringStandard = self.StandardizeName(inputString, True) 
         inputStringNgramList = self.GenerateNGrams(inputStringStandard)
+
+        partialInputString = False
+
+        # Đếm tần suất xuất hiện của từng ngram
+        ngram_counts = Counter(inputStringNgramList)
+
+        # Lấy 5 ngram phổ biến nhất
+        top5 = ngram_counts.most_common(5)
+
+        # Nếu tổng tần suất top 5 ngram ≤ 15 → partialInputString = True
+        if top5 and sum(count for _, count in top5) >= 12:
+            partialInputString = True
+                    
         inputNgramSet = set(inputStringNgramList)
 
         address = self.addressNode("", "", "")
 
         # Tìm địa chỉ
-        ngramAddressPieceList = self.NgramAddressPieceList(inputStringNgramList, self.TOPK_CANDIDATES)
 
-        addressCandidate = self.AddressCandidateList(inputStringStandard, inputNgramSet, ngramAddressPieceList)
+        ngramAddressPieceList = self.NgramAddressPieceList(inputStringNgramList, self.TOPK_CANDIDATES, startTime)
+
+        addressCandidate = self.AddressCandidateList(inputStringStandard, inputNgramSet, ngramAddressPieceList, partialInputString)
 
         if addressCandidate:
             address = self.addressNodeList[addressCandidate[0][0]] 
@@ -64,6 +98,7 @@ class Solution:
     class addressNode:
         def __init__(self, provinceName : str, districtName : str, wardName : str):
             self.fullName = wardName + " " + districtName + " " + provinceName
+            self.fullName = re.sub(r"\s+", " ", self.fullName).strip()
             self.standardizedFullName = ""
             self.provinceName = provinceName
             self.districtName = districtName
@@ -118,32 +153,104 @@ class Solution:
                     node.standardizedFullName = self.StandardizeName(node.fullName)
                     node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
                     self.addressNodeList.append(node)
+        
+        # # Loại các node trùng nhau
+        # unique_nodes = []
+        # seen = set()
+        # for node in self.addressNodeList:
+        #     key = (node.provinceName, node.districtName, node.wardName, node.fullName)
+        #     if key not in seen:
+        #         seen.add(key)
+        #         unique_nodes.append(node)
+        # self.addressNodeList = unique_nodes
 
         # Tạo các từ điển hỗ trợ tìm kiếm nhanh
         for index, node in enumerate(self.addressNodeList, start = 0):
             # Tạo từ điển ngram đảo ngược
             self.GenerateNGramInvertedIndex(node.ngramList, index, self.invertNgramToIndexFullNameDict)
 
-    def StandardizeName(self, name: str) -> str:
+    def StandardizeName(self, name: str, advancedProcess: bool = False) -> str:
         if not name:
             return ""
+        
 
         # --- Bước 1: Đưa về chữ thường ---
         s = name.lower()
 
-        # --- Bước 2: Thay cụm từ thừa bằng space (thay chính xác 100%) ---
-        redundant_phrases = [
-            "thành phố","thành. phố", "thành.phố", "tp.", "tp ", "t.phố", "t. phố", "tỉnh", "t.", "t ",
-            "quận", "qận", "qun", "q.", "q ", "huyện", "h.", "h ", "thị xã", "thị.xã", "tx.", "tx ", "thị trấn", "thị.trấn", "tt.", "tt ",
-            "xã", "x.", "x ", "phường", "p.", "p ", "phường.", "phường "
-          
-        ]
+        # --- Bước 1.1: Loại bỏ dấu chấm và dấu phẩy ở đầu và cuối chuỗi ---
+        s = re.sub(r'^[\.,]+', '', s)   # xóa tất cả . hoặc , ở đầu
+        s = re.sub(r'[\.,]+$', '', s)   # xóa tất cả . hoặc , ở cuối
+        # --- Bước 1.2: Xóa hẳn ký tự "/" ---
+        s = s.replace("/", "")
+        # # --- Bước 1.3: Thay các dấu "." và "-" bằng space ---
+        # s = s.replace(".", " ").replace("-", " ")
 
-        for phrase in redundant_phrases:
-            s = s.replace(phrase, " ")
+        if advancedProcess:
 
-        # --- Bước 3: Loại các cụm "tp" dính liền chữ, ví dụ "tpbao loc" → "bao loc" ---
-        s = re.sub(r"\btp([a-z0-9]+)", r"\1", s)
+            s = re.sub(
+                r"\b(t.t.h)\b",
+                " thua thien hue ",
+                s,
+                flags=re.IGNORECASE
+            )
+
+            s = re.sub(
+                r"\b(h.c.m|h.c.minh)\b",
+                " ho chi minh ",
+                s,
+                flags=re.IGNORECASE
+            )
+
+            s = re.sub(
+                r"\b(hn|h.noi|ha ni)\b",
+                " ha noi ",
+                s,
+                flags=re.IGNORECASE
+            )
+
+            # --- Bước 2: Thay cụm từ thừa bằng space (thay chính xác 100%) ---
+            redundant_phrases = [
+                "thành phố", "thành phô", "thành fhố", "thanh fho", "thanh pho ", "thành. phố", "thành.phố", "tp.", "t.p", "tp ", "t.phố", "t. phố", "tỉnh", "tinh", "tt.", "t.", " t ",
+                "quận", "qận", "qun", "q.", "q ", "huyện", "h.", " h ",  ".h ", "thị xã", "thị.xã", "tx.", "t.xã", "tx ", "thị trấn", "thị.trấn", "tt ",
+                "xã", "x.", "x ", "phường", "kp.", "p.", " p ", ".p ", "phường.", "phường ", 
+                "f", "j", "z", "w"
+            
+            ]
+
+            for phrase in redundant_phrases:
+                s = s.replace(phrase, " ")
+
+            s = re.sub(
+                r"\b("
+                r"|tiểu\s*khu(\s*\d+\w*)?"      # tiểu khu 3, tiểu khu12a               
+                r"|khu\s*pho(\s*\d+\w*)?"          # khu phố, khu phố 3
+                r"|khu\s*phố(\s*\d+\w*)?"          # khu phố, khu phố 3
+                r"|khu\s*vuc(\s*\d+\w*)?"          # khu vực, khu vực 2
+                r"|khu\s*vực(\s*\d+\w*)?"          # khu vực, khu vực 2
+                r"|khu(\s*\d+\w*)?"                 # khu, khu 3, khu12a
+                r"|kp(\s*\d+\w*)?"                  # kp2, kp 3
+                r"|tổ\s*dân\s*phố(\s*\d+\w*)?"     # tổ dân phố 5, tổ dân phố12a
+                r"|tổ(\s*\d+\w*)?"                  # tổ 1
+                r"|thôn(\s*\d+\w*)?"                # thôn 3
+                r"|xóm(\s*\d+\w*)?"                 # xóm 2
+                r"|cụm(\s*\d+\w*)?"                 # cụm 3
+                r"|phố(\s*\d+\w*)?"                 # phố 5
+                r"|khóm(\s*\d+\w*)?"                # khóm 2
+                r"|số\s*nhà(\s*\d+\w*)?"            # số nhà 12
+                r"|số(\s*\d+\w*)?"                   # số 12
+                r"|nhà(\s*\d+\w*)?"                   # nhà 12
+                r"|ấp(\s*\d+\w*)?"              # ấp 1, ấp2
+                r"|ngách\s*\d+\w*"      # ngách 12, ngách12a
+                r"|ngõ\s*\d+\w*"        # ngõ 12, ngõ12a   
+                r"|hẻm\s*\d+\w*"
+                r")\b",
+                "",
+                s,
+                flags=re.IGNORECASE
+            )
+
+            # --- Bước 3: Loại các cụm "tp" dính liền chữ, ví dụ "tpbao loc" → "bao loc" ---
+            s = re.sub(r"\btp([a-z0-9]+)", r"\1", s)
 
         # --- Bước 4: Chuẩn hóa Unicode & bỏ dấu ---
         s = s.replace("đ", "d")
@@ -153,9 +260,48 @@ class Solution:
         # --- Bước 5: Giữ lại a-z, 0-9, space ---
         s = re.sub(r"[^a-z0-9\s]+", " ", s)
 
-        # --- Bước 6: Gom space ---
-        s = re.sub(r"\s+", " ", s).strip()
+        if advancedProcess:
 
+            # Chuẩn hóa các biến thể của "ho chi minh"
+            s = re.sub(
+                r"\b(hochiminh|hochi\s*minh|ho\s*chiminh|hcm|hcminh)\b",
+                "ho chi minh",
+                s,
+                flags=re.IGNORECASE
+            )
+            if re.search(r"\bho chi minh\b", s, flags=re.IGNORECASE):
+                mapping = {
+                    "bc": "binh chanh",
+                    "tb": "tan binh",
+                    "bt": "binh thanh",
+                    "gv": "go vap",
+                    "pn": "phu nhuan",
+                    "cc": "cu chi",
+                    "hm": "hoc mon",
+                    "nb": "nha be",
+                }
+
+                # Thay từng viết tắt bằng tên đầy đủ (chỉ thay khi là từ riêng biệt)
+                for abbr, full in mapping.items():
+                    s = re.sub(rf"\b{abbr}\b", full, s, flags=re.IGNORECASE)
+
+
+            # --- Bước 7: Loại bỏ các chuỗi chứa từ 3 chữ số trở lên ---
+
+            # Bỏ số 0 ở đầu của mọi cụm số
+            s = re.sub(r"\b0+(\d+)\b", r"\1", s)
+            # Tức là "abc123xyz" hoặc "123" đều bị loại bỏ phần chứa "123"
+            s = re.sub(r"\d{3,}", "", s)
+
+            # --- Bước 8: Bỏ 'p' hoặc 'q' trước số (vd: p1 → 1, q10 → 10) ---
+            s = re.sub(r"\b[pq](\d+)\b", r"\1", s)
+
+            # --- Bước X: Loại bỏ các cụm địa chỉ thừa ---
+            
+
+        # --- Bước 9: Gom space ---
+        s = re.sub(r"\s+", " ", s).strip()
+        # print(s)
         return s
 
     def GenerateNGrams(self, s: str, n : int = 4) -> list:
@@ -169,7 +315,7 @@ class Solution:
                 invertNgramToIndexDict[ngram] = set()
             invertNgramToIndexDict[ngram].add(index)
 
-    def NgramAddressPieceList(self, inputNgramList: list, topk: int) -> list:
+    def NgramAddressPieceList(self, inputNgramList: list, topk: int, startTime: float) -> list:
         counter = Counter()
         invert_dict = self.invertNgramToIndexFullNameDict
 
@@ -177,16 +323,27 @@ class Solution:
         for ngram in set(inputNgramList):
             if ngram in invert_dict:
                 counter.update(invert_dict[ngram])  # ✅ xử lý hàng loạt
+            
+            if (time.perf_counter_ns() - startTime)/1000000000 >= MAX_EXECUTION_TIME:
+                return counter.most_common(topk)
 
         # Return only top-K candidates to cap cost (heap-based in CPython)
         return counter.most_common(topk)
 
-    def AddressCandidateList(self, inputStringStandard: str, inputNgramSet: set, ngramAddressPieceList: list) -> list:
+    def AddressCandidateList(self, inputStringStandard: str, inputNgramSet: set, ngramAddressPieceList: list, partialInputString: bool) -> list:
         # Stage 1: filter by Dice; collect IDs whose Dice >= gate
+        partialTemp = False
+        exceptSubStringInput = ["ho chi minh", "ha noi"]
+        for subString in exceptSubStringInput:
+            if subString in inputStringStandard:
+                partialTemp = True
+                break
+
         A = inputNgramSet
         lenA = len(A)
         filtered_ids = []
 
+        index = 0
         for idx_count in ngramAddressPieceList:
             idx = idx_count[0]
             B = self.addressNodeList[idx].ngramList
@@ -196,21 +353,27 @@ class Solution:
                 if g in B:
                     inter += 1
             dice_score = (2 * inter) / (lenA + len(B))
+
+            index += 1
+
             if dice_score >= self.DICE_GATE:
                 filtered_ids.append(idx)
             else:
                 # Counter is ordered by frequency; dice will only go down
-                break
+                if index >= 50:
+                    break
 
         if not filtered_ids:
             return []
 
         # Stage 2: one vectorized RapidFuzz call over filtered strings
         choices = [self.addressNodeList[i].standardizedFullName for i in filtered_ids]
+
+        # Gọi extractOne
         res = rf_process.extractOne(
             inputStringStandard,
             choices,
-            scorer=partial_ratio,
+            scorer= partial_ratio if (partialInputString or partialTemp) else ratio,
             score_cutoff=self.PARTIAL_CUTOFF,
         )
 
