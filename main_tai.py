@@ -23,95 +23,111 @@ MAX_EXECUTION_TIME = 0.05
 # New methods / functions must be written under class Solution.
 
 
-
 class Solution:
-    def __init__(self):     
-        self.reference_province_path = 'list_province.txt'
-        self.reference_district_path = 'list_district.txt'
-        self.reference_ward_path = 'list_ward.txt'
-        
-        self.standard_address_list_path = 'list_address.json'
+    class AddressNode:
+        def __init__(self, province_name: str, district_name: str, ward_name: str):
+            self.full_name = f"{ward_name} {district_name} {province_name}"
+            self.full_name = re.sub(r"\s+", " ", self.full_name).strip()
+            self.standardized_full_name = ""
+            self.province_name = province_name
+            self.district_name = district_name
+            self.ward_name = ward_name
+            self.ngram_list: Set[str] = set()  # List of n-grams for fuzzy matching
 
-        self.province_reference_map, self.province_reference_choices = self._load_reference_names(self.reference_province_path)
-        self.district_reference_map, self.district_reference_choices = self._load_reference_names(self.reference_district_path)
-        self.ward_reference_map, self.ward_reference_choices = self._load_reference_names(self.reference_ward_path)
+    def __init__(self):
+        self.reference_province_path = "list_province.txt"
+        self.reference_district_path = "list_district.txt"
+        self.reference_ward_path = "list_ward.txt"
 
-        self.addressNodeList = []
-        self.invertNgramToIndexFullNameDict = {}
+        self.standard_address_list_path = "list_address.json"
+
+        (
+            self.province_reference_map,
+            self.province_reference_choices,
+        ) = self._load_reference_names(self.reference_province_path)
+        (
+            self.district_reference_map,
+            self.district_reference_choices,
+        ) = self._load_reference_names(self.reference_district_path)
+        (
+            self.ward_reference_map,
+            self.ward_reference_choices,
+        ) = self._load_reference_names(self.reference_ward_path)
+
+        self.address_node_list: List[Solution.AddressNode] = []
+        self.invert_ngrams_idx: dict[str, Set[int]] = {}
 
         # Tunables to cap worst-case latency
-        self.TOPK_CANDIDATES = 100       # bound number of candidates from inverted index
-        self.DICE_GATE = 0.4            # only compute partial ratio when Dice >= this
-        self.PARTIAL_CUTOFF = 40       # minimum acceptable partial ratio
-        self.REFERENCE_ACCEPT_RATIO = 90  # minimum ratio to accept a reference override
+        self.top_k_candidates = 100  # bound number of candidates from inverted index
+        self.dice_gate = 0.4  # only compute partial ratio when Dice >= this
+        self.partial_cutoff = 40  # minimum acceptable partial ratio
+        self.reference_accept_ratio = 90  # minimum ratio to accept a reference override
 
-        self.exceptionList = ["Tiểu khu 3, thị trấn Ba Hàng, huyện Phổ Yên, tỉnh Thái Nguyên.",
-                            "Khu phố Nam Tân, TT Thuận Nam, Hàm Thuận Bắc, Bình Thuận.",
-                            "- Khu B Chu Hoà, Việt HhiPhú Thọ",
-                            "154/4/81 Nguyễn - Phúc Chu, P15, TB, TP. Hồ Chí Minh"]
+        self.exception_list = [
+            "Tiểu khu 3, thị trấn Ba Hàng, huyện Phổ Yên, tỉnh Thái Nguyên.",
+            "Khu phố Nam Tân, TT Thuận Nam, Hàm Thuận Bắc, Bình Thuận.",
+            "- Khu B Chu Hoà, Việt HhiPhú Thọ",
+            "154/4/81 Nguyễn - Phúc Chu, P15, TB, TP. Hồ Chí Minh",
+        ]
 
-        self.PreProcessAddress() # Pre-process address data once when initializing the Solution object
+        # Pre-process address data once when initializing the Solution object
+        self.preprocess_address()
 
-    def process(self, inputString: str):
+    def process(self, input_string: str):
         # write your process string here
-        
-        if (inputString in self.exceptionList):
+
+        if input_string in self.exception_list:
             return {
                 "province": "",
                 "district": "",
                 "ward": "",
             }
-        
 
         # Chuẩn hóa và tạo n-gram cho input
-        startTime = time.perf_counter_ns()
+        start_time = time.perf_counter_ns()
 
+        input_string_standard = self.standardize_name(input_string, True)
+        input_string_ngram_list = self.generate_ngrams(input_string_standard)
 
-        inputStringStandard = self.StandardizeName(inputString, True) 
-        inputStringNgramList = self.GenerateNGrams(inputStringStandard)
-
-        partialInputString = False
+        partial_input_string = False
 
         # Đếm tần suất xuất hiện của từng ngram
-        ngram_counts = Counter(inputStringNgramList)
+        ngram_counts = Counter(input_string_ngram_list)
 
         # Lấy 5 ngram phổ biến nhất
-        top5 = ngram_counts.most_common(5)
+        top_5 = ngram_counts.most_common(5)
 
-        # Nếu tổng tần suất top 5 ngram ≤ 15 → partialInputString = True
-        if top5 and sum(count for _, count in top5) >= 12:
-            partialInputString = True
-                    
-        inputNgramSet = set(inputStringNgramList)
+        # Nếu tổng tần suất top 5 ngram ≤ 15 → partial_input_string = True
+        if top_5 and sum(count for _, count in top_5) >= 12:
+            partial_input_string = True
 
-        address = self.addressNode("", "", "")
+        input_ngram_set = set(input_string_ngram_list)
+
+        address = self.AddressNode("", "", "")
 
         # Tìm địa chỉ
 
-        ngramAddressPieceList = self.NgramAddressPieceList(inputStringNgramList, self.TOPK_CANDIDATES, startTime)
+        ngram_address_piece_list = self.ngram_address_piece_list(
+            input_string_ngram_list, self.top_k_candidates, start_time
+        )
 
-        addressCandidate = self.AddressCandidateList(inputStringStandard, inputNgramSet, ngramAddressPieceList, partialInputString)
+        address_candidate = self.address_candidate_list(
+            input_string_standard,
+            input_ngram_set,
+            ngram_address_piece_list,
+            partial_input_string,
+        )
 
-        if addressCandidate:
-            address = self.addressNodeList[addressCandidate[0][0]] 
+        if address_candidate:
+            address = self.address_node_list[address_candidate[0][0]]
 
         return {
-            "province": address.provinceName,
-            "district": address.districtName,
-            "ward": address.wardName,
+            "province": address.province_name,
+            "district": address.district_name,
+            "ward": address.ward_name,
         }
 
-    class addressNode:
-        def __init__(self, provinceName : str, districtName : str, wardName : str):
-            self.fullName = wardName + " " + districtName + " " + provinceName
-            self.fullName = re.sub(r"\s+", " ", self.fullName).strip()
-            self.standardizedFullName = ""
-            self.provinceName = provinceName
-            self.districtName = districtName
-            self.wardName = wardName
-            self.ngramList = []  # List of n-grams for fuzzy matching
-
-    def PreProcessAddress(self):
+    def preprocess_address(self):
         # Đọc file JSON
         with open(self.standard_address_list_path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -125,7 +141,7 @@ class Solution:
 
         # Duyệt từng tỉnh
         for province_name, districts in data.items():
-            province_std = self.StandardizeName(province_name)
+            province_std = self.standardize_name(province_name)
             province_match_name, province_in_reference = self._match_reference(
                 province_std,
                 province_map,
@@ -134,10 +150,14 @@ class Solution:
                 raw_value=province_name,
             )
             province_output_name = (
-                province_match_name if province_in_reference and province_match_name else province_name
+                province_match_name
+                if province_in_reference and province_match_name
+                else province_name
             )
-            province_aliases = self._collect_aliases(province_output_name, province_name)
-            province_node = self.addressNode(province_output_name, "", "")
+            province_aliases = self._collect_aliases(
+                province_output_name, province_name
+            )
+            province_node = self.AddressNode(province_output_name, "", "")
             std_name, ngrams = self._build_node_search_profile(
                 province_aliases,
                 [],
@@ -147,13 +167,13 @@ class Solution:
                 include_ward=False,
             )
 
-            province_node.standardizedFullName = std_name
-            province_node.ngramList = ngrams
-            self.addressNodeList.append(province_node)
+            province_node.standardized_full_name = std_name
+            province_node.ngram_list = ngrams
+            self.address_node_list.append(province_node)
 
             # Duyệt từng huyện
             for district_name, wards in districts.items():
-                district_std = self.StandardizeName(district_name)
+                district_std = self.standardize_name(district_name)
                 district_match_name, district_in_reference = self._match_reference(
                     district_std,
                     district_map,
@@ -165,11 +185,15 @@ class Solution:
                     continue
 
                 district_output_name = (
-                    district_match_name if district_in_reference and district_match_name else district_name
+                    district_match_name
+                    if district_in_reference and district_match_name
+                    else district_name
                 )
-                district_aliases = self._collect_aliases(district_output_name, district_name)
+                district_aliases = self._collect_aliases(
+                    district_output_name, district_name
+                )
 
-                district_node = self.addressNode("", district_output_name, "")
+                district_node = self.AddressNode("", district_output_name, "")
                 std_name, ngrams = self._build_node_search_profile(
                     province_aliases,
                     district_aliases,
@@ -178,11 +202,13 @@ class Solution:
                     include_district=True,
                     include_ward=False,
                 )
-                district_node.standardizedFullName = std_name
-                district_node.ngramList = ngrams
-                self.addressNodeList.append(district_node)
+                district_node.standardized_full_name = std_name
+                district_node.ngram_list = ngrams
+                self.address_node_list.append(district_node)
 
-                province_district_node = self.addressNode(province_output_name, district_output_name, "")
+                province_district_node = self.AddressNode(
+                    province_output_name, district_output_name, ""
+                )
                 std_name, ngrams = self._build_node_search_profile(
                     province_aliases,
                     district_aliases,
@@ -192,13 +218,13 @@ class Solution:
                     include_ward=False,
                 )
 
-                province_district_node.standardizedFullName = std_name
-                province_district_node.ngramList = ngrams
-                self.addressNodeList.append(province_district_node)
+                province_district_node.standardized_full_name = std_name
+                province_district_node.ngram_list = ngrams
+                self.address_node_list.append(province_district_node)
 
                 # Duyệt từng xã
                 for ward_name in wards:
-                    ward_std = self.StandardizeName(ward_name)
+                    ward_std = self.standardize_name(ward_name)
                     if not ward_std:
                         continue
 
@@ -213,11 +239,13 @@ class Solution:
                         continue
 
                     ward_output_name = (
-                        ward_match_name if ward_in_reference and ward_match_name else ward_name
+                        ward_match_name
+                        if ward_in_reference and ward_match_name
+                        else ward_name
                     )
                     ward_aliases = self._collect_aliases(ward_output_name, ward_name)
 
-                    ward_node = self.addressNode("", "", ward_output_name)
+                    ward_node = self.AddressNode("", "", ward_output_name)
                     std_name, ngrams = self._build_node_search_profile(
                         province_aliases,
                         district_aliases,
@@ -226,11 +254,13 @@ class Solution:
                         include_district=False,
                         include_ward=True,
                     )
-                    ward_node.standardizedFullName = std_name
-                    ward_node.ngramList = ngrams
-                    self.addressNodeList.append(ward_node)
+                    ward_node.standardized_full_name = std_name
+                    ward_node.ngram_list = ngrams
+                    self.address_node_list.append(ward_node)
 
-                    district_ward_node = self.addressNode("", district_output_name, ward_output_name)
+                    district_ward_node = self.AddressNode(
+                        "", district_output_name, ward_output_name
+                    )
                     std_name, ngrams = self._build_node_search_profile(
                         province_aliases,
                         district_aliases,
@@ -239,11 +269,13 @@ class Solution:
                         include_district=True,
                         include_ward=True,
                     )
-                    district_ward_node.standardizedFullName = std_name
-                    district_ward_node.ngramList = ngrams
-                    self.addressNodeList.append(district_ward_node)
+                    district_ward_node.standardized_full_name = std_name
+                    district_ward_node.ngram_list = ngrams
+                    self.address_node_list.append(district_ward_node)
 
-                    province_ward_node = self.addressNode(province_output_name, "", ward_output_name)
+                    province_ward_node = self.AddressNode(
+                        province_output_name, "", ward_output_name
+                    )
                     std_name, ngrams = self._build_node_search_profile(
                         province_aliases,
                         district_aliases,
@@ -252,11 +284,11 @@ class Solution:
                         include_district=False,
                         include_ward=True,
                     )
-                    province_ward_node.standardizedFullName = std_name
-                    province_ward_node.ngramList = ngrams
-                    self.addressNodeList.append(province_ward_node)
+                    province_ward_node.standardized_full_name = std_name
+                    province_ward_node.ngram_list = ngrams
+                    self.address_node_list.append(province_ward_node)
 
-                    province_district_ward_node = self.addressNode(
+                    province_district_ward_node = self.AddressNode(
                         province_output_name, district_output_name, ward_output_name
                     )
                     std_name, ngrams = self._build_node_search_profile(
@@ -267,13 +299,15 @@ class Solution:
                         include_district=True,
                         include_ward=True,
                     )
-                    province_district_ward_node.standardizedFullName = std_name
-                    province_district_ward_node.ngramList = ngrams
-                    self.addressNodeList.append(province_district_ward_node)
+                    province_district_ward_node.standardized_full_name = std_name
+                    province_district_ward_node.ngram_list = ngrams
+                    self.address_node_list.append(province_district_ward_node)
 
         # Tạo các từ điển hỗ trợ tìm kiếm nhanh
-        for index, node in enumerate(self.addressNodeList, start=0):
-            self.GenerateNGramInvertedIndex(node.ngramList, index, self.invertNgramToIndexFullNameDict)
+        for index, node in enumerate(self.address_node_list, start=0):
+            self.generate_ngram_inverted_index(
+                node.ngram_list, index, self.invert_ngrams_idx
+            )
 
     def _load_reference_names(self, path: str):
         reference_map = {}
@@ -282,12 +316,14 @@ class Solution:
                 raw_name = line.strip()
                 if not raw_name:
                     continue
-                standardized_name = self.StandardizeName(raw_name)
+                standardized_name = self.standardize_name(raw_name)
                 if standardized_name:
                     reference_map.setdefault(standardized_name, []).append(raw_name)
         return reference_map, list(reference_map.keys())
 
-    def _select_reference_candidate(self, candidates: List[str], raw_value: Optional[str]) -> Tuple[Optional[str], float]:
+    def _select_reference_candidate(
+        self, candidates: List[str], raw_value: Optional[str]
+    ) -> Tuple[Optional[str], float]:
         if not candidates:
             return None, 0.0
         if not raw_value:
@@ -316,10 +352,12 @@ class Solution:
 
         direct_candidates = reference_map.get(standardized_value)
         if direct_candidates:
-            candidate, score = self._select_reference_candidate(direct_candidates, raw_value)
+            candidate, score = self._select_reference_candidate(
+                direct_candidates, raw_value
+            )
             if candidate is None:
                 return (raw_value if raw_value else None, False)
-            if raw_value is not None and score < self.REFERENCE_ACCEPT_RATIO:
+            if raw_value is not None and score < self.reference_accept_ratio:
                 return raw_value, False
             return candidate, True
 
@@ -337,11 +375,13 @@ class Solution:
         candidate, score = self._select_reference_candidate(candidates, raw_value)
         if candidate is None:
             return (raw_value if raw_value else None, False)
-        if raw_value is not None and score < self.REFERENCE_ACCEPT_RATIO:
+        if raw_value is not None and score < self.reference_accept_ratio:
             return raw_value, False
         return candidate, True
 
-    def _collect_aliases(self, primary: Optional[str], raw_value: Optional[str]) -> List[str]:
+    def _collect_aliases(
+        self, primary: Optional[str], raw_value: Optional[str]
+    ) -> List[str]:
         aliases: List[str] = []
         if primary:
             aliases.append(primary)
@@ -367,7 +407,7 @@ class Solution:
         if include_province and province_aliases:
             primary_parts.append(province_aliases[0])
         primary_string = " ".join(part for part in primary_parts if part)
-        primary_standardized = self.StandardizeName(primary_string)
+        primary_standardized = self.standardize_name(primary_string)
 
         province_candidates = province_aliases if include_province else [""]
         district_candidates = district_aliases if include_district else [""]
@@ -378,65 +418,94 @@ class Solution:
             for district_name in district_candidates:
                 for province_name in province_candidates:
                     combined = " ".join(
-                        part for part in [ward_name, district_name, province_name] if part
+                        part
+                        for part in [ward_name, district_name, province_name]
+                        if part
                     )
                     if not combined:
                         continue
-                    standardized = self.StandardizeName(combined)
+                    standardized = self.standardize_name(combined)
                     if standardized:
-                        ngram_set.update(self.GenerateNGrams(standardized))
+                        ngram_set.update(self.generate_ngrams(standardized))
 
         if not ngram_set and primary_standardized:
-            ngram_set.update(self.GenerateNGrams(primary_standardized))
+            ngram_set.update(self.generate_ngrams(primary_standardized))
 
         return primary_standardized, ngram_set
 
-    def StandardizeName(self, name: str, advancedProcess: bool = False) -> str:
+    def standardize_name(self, name: str, advanced_process: bool = False) -> str:
         if not name:
             return ""
-        
 
         # --- Bước 1: Đưa về chữ thường ---
         s = name.lower()
 
         # --- Bước 1.1: Loại bỏ dấu chấm và dấu phẩy ở đầu và cuối chuỗi ---
-        s = re.sub(r'^[\.,]+', '', s)   # xóa tất cả . hoặc , ở đầu
-        s = re.sub(r'[\.,]+$', '', s)   # xóa tất cả . hoặc , ở cuối
+        s = re.sub(r"^[\.,]+", "", s)  # xóa tất cả . hoặc , ở đầu
+        s = re.sub(r"[\.,]+$", "", s)  # xóa tất cả . hoặc , ở cuối
         # --- Bước 1.2: Xóa hẳn ký tự "/" ---
         s = s.replace("/", "")
         # # --- Bước 1.3: Thay các dấu "." và "-" bằng space ---
         # s = s.replace(".", " ").replace("-", " ")
 
-        if advancedProcess:
+        if advanced_process:
 
-            s = re.sub(
-                r"\b(t.t.h)\b",
-                " thua thien hue ",
-                s,
-                flags=re.IGNORECASE
-            )
+            s = re.sub(r"\b(t.t.h)\b", " thua thien hue ", s, flags=re.IGNORECASE)
 
-            s = re.sub(
-                r"\b(h.c.m|h.c.minh)\b",
-                " ho chi minh ",
-                s,
-                flags=re.IGNORECASE
-            )
+            s = re.sub(r"\b(h.c.m|h.c.minh)\b", " ho chi minh ", s, flags=re.IGNORECASE)
 
-            s = re.sub(
-                r"\b(hn|h.noi|ha ni)\b",
-                " ha noi ",
-                s,
-                flags=re.IGNORECASE
-            )
+            s = re.sub(r"\b(hn|h.noi|ha ni)\b", " ha noi ", s, flags=re.IGNORECASE)
 
             # --- Bước 2: Thay cụm từ thừa bằng space (thay chính xác 100%) ---
             redundant_phrases = [
-                "thành phố", "thành phô", "thành fhố", "thanh fho", "thanh pho ", "thành. phố", "thành.phố", "tp.", "t.p", "tp ", "t.phố", "t. phố", "tỉnh", "tinh", "tt.", "t.", " t ",
-                "quận", "qận", "qun", "q.", "q ", "huyện", "h.", " h ",  ".h ", "thị xã", "thị.xã", "tx.", "t.xã", "tx ", "thị trấn", "thị.trấn", "tt ",
-                "xã", "x.", "x ", "phường", "kp.", "p.", " p ", ".p ", "phường.", "phường ", 
-                "f", "j", "z", "w"
-            
+                "thành phố",
+                "thành phô",
+                "thành fhố",
+                "thanh fho",
+                "thanh pho ",
+                "thành. phố",
+                "thành.phố",
+                "tp.",
+                "t.p",
+                "tp ",
+                "t.phố",
+                "t. phố",
+                "tỉnh",
+                "tinh",
+                "tt.",
+                "t.",
+                " t ",
+                "quận",
+                "qận",
+                "qun",
+                "q.",
+                "q ",
+                "huyện",
+                "h.",
+                " h ",
+                ".h ",
+                "thị xã",
+                "thị.xã",
+                "tx.",
+                "t.xã",
+                "tx ",
+                "thị trấn",
+                "thị.trấn",
+                "tt ",
+                "xã",
+                "x.",
+                "x ",
+                "phường",
+                "kp.",
+                "p.",
+                " p ",
+                ".p ",
+                "phường.",
+                "phường ",
+                "f",
+                "j",
+                "z",
+                "w",
             ]
 
             for phrase in redundant_phrases:
@@ -444,31 +513,31 @@ class Solution:
 
             s = re.sub(
                 r"\b("
-                r"|tiểu\s*khu(\s*\d+\w*)?"      # tiểu khu 3, tiểu khu12a               
-                r"|khu\s*pho(\s*\d+\w*)?"          # khu phố, khu phố 3
-                r"|khu\s*phố(\s*\d+\w*)?"          # khu phố, khu phố 3
-                r"|khu\s*vuc(\s*\d+\w*)?"          # khu vực, khu vực 2
-                r"|khu\s*vực(\s*\d+\w*)?"          # khu vực, khu vực 2
-                r"|khu(\s*\d+\w*)?"                 # khu, khu 3, khu12a
-                r"|kp(\s*\d+\w*)?"                  # kp2, kp 3
-                r"|tổ\s*dân\s*phố(\s*\d+\w*)?"     # tổ dân phố 5, tổ dân phố12a
-                r"|tổ(\s*\d+\w*)?"                  # tổ 1
-                r"|thôn(\s*\d+\w*)?"                # thôn 3
-                r"|xóm(\s*\d+\w*)?"                 # xóm 2
-                r"|cụm(\s*\d+\w*)?"                 # cụm 3
-                r"|phố(\s*\d+\w*)?"                 # phố 5
-                r"|khóm(\s*\d+\w*)?"                # khóm 2
-                r"|số\s*nhà(\s*\d+\w*)?"            # số nhà 12
-                r"|số(\s*\d+\w*)?"                   # số 12
-                r"|nhà(\s*\d+\w*)?"                   # nhà 12
-                r"|ấp(\s*\d+\w*)?"              # ấp 1, ấp2
-                r"|ngách\s*\d+\w*"      # ngách 12, ngách12a
-                r"|ngõ\s*\d+\w*"        # ngõ 12, ngõ12a   
+                r"|tiểu\s*khu(\s*\d+\w*)?"  # tiểu khu 3, tiểu khu12a
+                r"|khu\s*pho(\s*\d+\w*)?"  # khu phố, khu phố 3
+                r"|khu\s*phố(\s*\d+\w*)?"  # khu phố, khu phố 3
+                r"|khu\s*vuc(\s*\d+\w*)?"  # khu vực, khu vực 2
+                r"|khu\s*vực(\s*\d+\w*)?"  # khu vực, khu vực 2
+                r"|khu(\s*\d+\w*)?"  # khu, khu 3, khu12a
+                r"|kp(\s*\d+\w*)?"  # kp2, kp 3
+                r"|tổ\s*dân\s*phố(\s*\d+\w*)?"  # tổ dân phố 5, tổ dân phố12a
+                r"|tổ(\s*\d+\w*)?"  # tổ 1
+                r"|thôn(\s*\d+\w*)?"  # thôn 3
+                r"|xóm(\s*\d+\w*)?"  # xóm 2
+                r"|cụm(\s*\d+\w*)?"  # cụm 3
+                r"|phố(\s*\d+\w*)?"  # phố 5
+                r"|khóm(\s*\d+\w*)?"  # khóm 2
+                r"|số\s*nhà(\s*\d+\w*)?"  # số nhà 12
+                r"|số(\s*\d+\w*)?"  # số 12
+                r"|nhà(\s*\d+\w*)?"  # nhà 12
+                r"|ấp(\s*\d+\w*)?"  # ấp 1, ấp2
+                r"|ngách\s*\d+\w*"  # ngách 12, ngách12a
+                r"|ngõ\s*\d+\w*"  # ngõ 12, ngõ12a
                 r"|hẻm\s*\d+\w*"
                 r")\b",
                 "",
                 s,
-                flags=re.IGNORECASE
+                flags=re.IGNORECASE,
             )
 
             # --- Bước 3: Loại các cụm "tp" dính liền chữ, ví dụ "tpbao loc" → "bao loc" ---
@@ -482,14 +551,14 @@ class Solution:
         # --- Bước 5: Giữ lại a-z, 0-9, space ---
         s = re.sub(r"[^a-z0-9\s]+", " ", s)
 
-        if advancedProcess:
+        if advanced_process:
 
             # Chuẩn hóa các biến thể của "ho chi minh"
             s = re.sub(
                 r"\b(hochiminh|hochi\s*minh|ho\s*chiminh|hcm|hcminh)\b",
                 "ho chi minh",
                 s,
-                flags=re.IGNORECASE
+                flags=re.IGNORECASE,
             )
             if re.search(r"\bho chi minh\b", s, flags=re.IGNORECASE):
                 mapping = {
@@ -507,7 +576,6 @@ class Solution:
                 for abbr, full in mapping.items():
                     s = re.sub(rf"\b{abbr}\b", full, s, flags=re.IGNORECASE)
 
-
             # --- Bước 7: Loại bỏ các chuỗi chứa từ 3 chữ số trở lên ---
 
             # Bỏ số 0 ở đầu của mọi cụm số
@@ -519,89 +587,101 @@ class Solution:
             s = re.sub(r"\b[pq](\d+)\b", r"\1", s)
 
             # --- Bước X: Loại bỏ các cụm địa chỉ thừa ---
-            
 
         # --- Bước 9: Gom space ---
         s = re.sub(r"\s+", " ", s).strip()
         # print(s)
         return s
 
-    def GenerateNGrams(self, s: str, n : int = 4) -> list:
+    def generate_ngrams(self, s: str, n: int = 4) -> list:
         s = f" {s} "  # Thêm khoảng trắng ở đầu và cuối để tạo n-gram chính xác
-        ngrams = [s[i:i+n] for i in range(len(s)-n+1)]
+        ngrams = [s[i : i + n] for i in range(len(s) - n + 1)]
         return ngrams
 
-    def GenerateNGramInvertedIndex(self, ngramList: list, index: int, invertNgramToIndexDict: dict):
-        for ngram in ngramList:
-            if ngram not in invertNgramToIndexDict:
-                invertNgramToIndexDict[ngram] = set()
-            invertNgramToIndexDict[ngram].add(index)
+    def generate_ngram_inverted_index(
+        self, ngram_list: list, index: int, invert_ngram_to_index_dict: dict
+    ):
+        for ngram in ngram_list:
+            if ngram not in invert_ngram_to_index_dict:
+                invert_ngram_to_index_dict[ngram] = set()
+            invert_ngram_to_index_dict[ngram].add(index)
 
-    def NgramAddressPieceList(self, inputNgramList: list, topk: int, startTime: float) -> list:
+    def ngram_address_piece_list(
+        self, input_ngram_list: list, top_k: int, start_time: float
+    ) -> list:
         counter = Counter()
-        invert_dict = self.invertNgramToIndexFullNameDict
+        invert_dict = self.invert_ngrams_idx
 
         # Iterate unique ngrams to avoid redundant counting
-        for ngram in set(inputNgramList):
+        for ngram in set(input_ngram_list):
             if ngram in invert_dict:
                 counter.update(invert_dict[ngram])  # ✅ xử lý hàng loạt
-            
-            if (time.perf_counter_ns() - startTime)/1000000000 >= MAX_EXECUTION_TIME:
-                return counter.most_common(topk)
+
+            if (time.perf_counter_ns() - start_time) / 1000000000 >= MAX_EXECUTION_TIME:
+                return counter.most_common(top_k)
 
         # Return only top-K candidates to cap cost (heap-based in CPython)
-        return counter.most_common(topk)
+        return counter.most_common(top_k)
 
-    def AddressCandidateList(self, inputStringStandard: str, inputNgramSet: set, ngramAddressPieceList: list, partialInputString: bool) -> list:
+    def address_candidate_list(
+        self,
+        input_string_standard: str,
+        input_ngram_set: set,
+        ngram_address_piece_list: list,
+        partial_input_string: bool,
+    ) -> list:
         # Stage 1: filter by Dice; collect IDs whose Dice >= gate
-        partialTemp = False
-        exceptSubStringInput = ["ho chi minh", "ha noi"]
-        for subString in exceptSubStringInput:
-            if subString in inputStringStandard:
-                partialTemp = True
+        partial_temp = False
+        exception_substrings = ["ho chi minh", "ha noi"]
+        for substring in exception_substrings:
+            if substring in input_string_standard:
+                partial_temp = True
                 break
 
-        A = inputNgramSet
-        lenA = len(A)
-        filtered_ids = []
+        input_set = input_ngram_set
+        input_set_length = len(input_set)
+        filtered_ids: list[int] = []
 
         index = 0
-        for idx_count in ngramAddressPieceList:
+        for idx_count in ngram_address_piece_list:
             idx = idx_count[0]
-            B = self.addressNodeList[idx].ngramList
-            inter = 0
-            # Fast overlap count without building set
-            for g in A:
-                if g in B:
-                    inter += 1
-            dice_score = (2 * inter) / (lenA + len(B))
+            candidate_ngrams = self.address_node_list[idx].ngram_list
 
+            # Fast overlap count without building set
+            intersection = 0
+            for gram in input_set:
+                if gram in candidate_ngrams:
+                    intersection += 1
+
+            dice_score = (2 * intersection) / (input_set_length + len(candidate_ngrams))
             index += 1
 
-            if dice_score >= self.DICE_GATE:
+            if dice_score >= self.dice_gate:
                 filtered_ids.append(idx)
-            else:
-                # Counter is ordered by frequency; dice will only go down
-                if index >= 50:
-                    break
+            elif index >= 50:
+                # Counter is ordered by frequency; dice will only go down after this point
+                break
 
         if not filtered_ids:
             return []
 
         # Stage 2: one vectorized RapidFuzz call over filtered strings
-        choices = [self.addressNodeList[i].standardizedFullName for i in filtered_ids]
+        choices = [
+            self.address_node_list[i].standardized_full_name for i in filtered_ids
+        ]
 
-        # Gọi extractOne
-        res = rf_process.extractOne(
-            inputStringStandard,
+        result = rf_process.extractOne(
+            input_string_standard,
             choices,
-            scorer= partial_ratio if (partialInputString or partialTemp) else ratio,
-            score_cutoff=self.PARTIAL_CUTOFF,
+            scorer=partial_ratio if (partial_input_string or partial_temp) else ratio,
+            score_cutoff=self.partial_cutoff,
         )
 
-        if res is None:
+        if result is None:
             return []
 
-        choice_str, score, rel_idx = res
-        best_abs_idx = filtered_ids[rel_idx]
-        return [(best_abs_idx, float(score), self.addressNodeList[best_abs_idx].fullName)]
+        _, score, relative_index = result
+        best_abs_idx = filtered_ids[relative_index]
+        return [
+            (best_abs_idx, float(score), self.address_node_list[best_abs_idx].full_name)
+        ]
