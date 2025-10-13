@@ -12,7 +12,7 @@ import time
 import json
 import unicodedata
 import re
-from typing import Optional
+from typing import List, Optional, Tuple, Set
 from collections import Counter
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
@@ -43,6 +43,7 @@ class Solution:
         self.TOPK_CANDIDATES = 100       # bound number of candidates from inverted index
         self.DICE_GATE = 0.4            # only compute partial ratio when Dice >= this
         self.PARTIAL_CUTOFF = 40       # minimum acceptable partial ratio
+        self.REFERENCE_ACCEPT_RATIO = 90  # minimum ratio to accept a reference override
 
         self.exceptionList = ["Tiểu khu 3, thị trấn Ba Hàng, huyện Phổ Yên, tỉnh Thái Nguyên.",
                             "Khu phố Nam Tân, TT Thuận Nam, Hàm Thuận Bắc, Bình Thuận.",
@@ -124,78 +125,154 @@ class Solution:
 
         # Duyệt từng tỉnh
         for province_name, districts in data.items():
-
             province_std = self.StandardizeName(province_name)
-            province_match_key = self._match_reference(province_std, province_map, province_choices, score_cutoff=90)
-            if not province_match_key:
-                continue
-                
-            node = self.addressNode(province_name, "", "")
-            node.standardizedFullName = self.StandardizeName(node.fullName)
-            node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-            self.addressNodeList.append(node)
+            province_match_name, province_in_reference = self._match_reference(
+                province_std,
+                province_map,
+                province_choices,
+                score_cutoff=90,
+                raw_value=province_name,
+            )
+            province_output_name = (
+                province_match_name if province_in_reference and province_match_name else province_name
+            )
+            province_aliases = self._collect_aliases(province_output_name, province_name)
+            province_node = self.addressNode(province_output_name, "", "")
+            std_name, ngrams = self._build_node_search_profile(
+                province_aliases,
+                [],
+                [],
+                include_province=True,
+                include_district=False,
+                include_ward=False,
+            )
+
+            province_node.standardizedFullName = std_name
+            province_node.ngramList = ngrams
+            self.addressNodeList.append(province_node)
 
             # Duyệt từng huyện
             for district_name, wards in districts.items():
-
                 district_std = self.StandardizeName(district_name)
-                district_match_key = self._match_reference(district_std, district_map, district_choices, score_cutoff=5)
-                if not district_match_key:
+                district_match_name, district_in_reference = self._match_reference(
+                    district_std,
+                    district_map,
+                    district_choices,
+                    score_cutoff=5,
+                    raw_value=district_name,
+                )
+                if not district_match_name:
                     continue
 
-                node = self.addressNode("", district_name, "")
-                node.standardizedFullName = self.StandardizeName(node.fullName)
-                node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-                self.addressNodeList.append(node)
+                district_output_name = (
+                    district_match_name if district_in_reference and district_match_name else district_name
+                )
+                district_aliases = self._collect_aliases(district_output_name, district_name)
 
-                node = self.addressNode(province_name, district_name, "")
-                node.standardizedFullName = self.StandardizeName(node.fullName)
-                node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-                self.addressNodeList.append(node)
+                district_node = self.addressNode("", district_output_name, "")
+                std_name, ngrams = self._build_node_search_profile(
+                    province_aliases,
+                    district_aliases,
+                    [],
+                    include_province=False,
+                    include_district=True,
+                    include_ward=False,
+                )
+                district_node.standardizedFullName = std_name
+                district_node.ngramList = ngrams
+                self.addressNodeList.append(district_node)
+
+                province_district_node = self.addressNode(province_output_name, district_output_name, "")
+                std_name, ngrams = self._build_node_search_profile(
+                    province_aliases,
+                    district_aliases,
+                    [],
+                    include_province=True,
+                    include_district=True,
+                    include_ward=False,
+                )
+
+                province_district_node.standardizedFullName = std_name
+                province_district_node.ngramList = ngrams
+                self.addressNodeList.append(province_district_node)
 
                 # Duyệt từng xã
                 for ward_name in wards:
                     ward_std = self.StandardizeName(ward_name)
                     if not ward_std:
                         continue
-                    
-                    ward_match_key = self._match_reference(ward_std, ward_map, ward_choices, score_cutoff=75)
-                    if not ward_match_key:
+
+                    ward_match_name, ward_in_reference = self._match_reference(
+                        ward_std,
+                        ward_map,
+                        ward_choices,
+                        score_cutoff=75,
+                        raw_value=ward_name,
+                    )
+                    if not ward_match_name:
                         continue
 
-                    node = self.addressNode("", "", ward_name)
-                    node.standardizedFullName = self.StandardizeName(node.fullName)
-                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-                    self.addressNodeList.append(node)
+                    ward_output_name = (
+                        ward_match_name if ward_in_reference and ward_match_name else ward_name
+                    )
+                    ward_aliases = self._collect_aliases(ward_output_name, ward_name)
 
-                    node = self.addressNode("", district_name, ward_name)
-                    node.standardizedFullName = self.StandardizeName(node.fullName) 
-                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-                    self.addressNodeList.append(node)
+                    ward_node = self.addressNode("", "", ward_output_name)
+                    std_name, ngrams = self._build_node_search_profile(
+                        province_aliases,
+                        district_aliases,
+                        ward_aliases,
+                        include_province=False,
+                        include_district=False,
+                        include_ward=True,
+                    )
+                    ward_node.standardizedFullName = std_name
+                    ward_node.ngramList = ngrams
+                    self.addressNodeList.append(ward_node)
 
-                    node = self.addressNode(province_name, "", ward_name)
-                    node.standardizedFullName = self.StandardizeName(node.fullName)
-                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-                    self.addressNodeList.append(node)
+                    district_ward_node = self.addressNode("", district_output_name, ward_output_name)
+                    std_name, ngrams = self._build_node_search_profile(
+                        province_aliases,
+                        district_aliases,
+                        ward_aliases,
+                        include_province=False,
+                        include_district=True,
+                        include_ward=True,
+                    )
+                    district_ward_node.standardizedFullName = std_name
+                    district_ward_node.ngramList = ngrams
+                    self.addressNodeList.append(district_ward_node)
 
-                    node = self.addressNode(province_name, district_name, ward_name)
-                    node.standardizedFullName = self.StandardizeName(node.fullName)
-                    node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
-                    self.addressNodeList.append(node)
-        
-        # # Loại các node trùng nhau
-        # unique_nodes = []
-        # seen = set()
-        # for node in self.addressNodeList:
-        #     key = (node.provinceName, node.districtName, node.wardName, node.fullName)
-        #     if key not in seen:
-        #         seen.add(key)
-        #         unique_nodes.append(node)
-        # self.addressNodeList = unique_nodes
+                    province_ward_node = self.addressNode(province_output_name, "", ward_output_name)
+                    std_name, ngrams = self._build_node_search_profile(
+                        province_aliases,
+                        district_aliases,
+                        ward_aliases,
+                        include_province=True,
+                        include_district=False,
+                        include_ward=True,
+                    )
+                    province_ward_node.standardizedFullName = std_name
+                    province_ward_node.ngramList = ngrams
+                    self.addressNodeList.append(province_ward_node)
+
+                    province_district_ward_node = self.addressNode(
+                        province_output_name, district_output_name, ward_output_name
+                    )
+                    std_name, ngrams = self._build_node_search_profile(
+                        province_aliases,
+                        district_aliases,
+                        ward_aliases,
+                        include_province=True,
+                        include_district=True,
+                        include_ward=True,
+                    )
+                    province_district_ward_node.standardizedFullName = std_name
+                    province_district_ward_node.ngramList = ngrams
+                    self.addressNodeList.append(province_district_ward_node)
 
         # Tạo các từ điển hỗ trợ tìm kiếm nhanh
-        for index, node in enumerate(self.addressNodeList, start = 0):
-            # Tạo từ điển ngram đảo ngược
+        for index, node in enumerate(self.addressNodeList, start=0):
             self.GenerateNGramInvertedIndex(node.ngramList, index, self.invertNgramToIndexFullNameDict)
 
     def _load_reference_names(self, path: str):
@@ -207,15 +284,44 @@ class Solution:
                     continue
                 standardized_name = self.StandardizeName(raw_name)
                 if standardized_name:
-                    reference_map.setdefault(standardized_name, raw_name)
+                    reference_map.setdefault(standardized_name, []).append(raw_name)
         return reference_map, list(reference_map.keys())
 
-    def _match_reference(self, standardized_value: str, reference_map: dict, reference_choices: list, score_cutoff: int) -> Optional[str]:
-        if not standardized_value or not reference_choices:
-            return None
+    def _select_reference_candidate(self, candidates: List[str], raw_value: Optional[str]) -> Tuple[Optional[str], float]:
+        if not candidates:
+            return None, 0.0
+        if not raw_value:
+            return candidates[0], 100.0
 
-        if standardized_value in reference_map:
-            return standardized_value
+        normalized_raw = raw_value.casefold()
+        best_candidate = None
+        best_score = -1.0
+        for candidate in candidates:
+            score = ratio(normalized_raw, candidate.casefold())
+            if score > best_score:
+                best_candidate = candidate
+                best_score = score
+        return best_candidate, best_score
+
+    def _match_reference(
+        self,
+        standardized_value: str,
+        reference_map: dict,
+        reference_choices: list,
+        score_cutoff: int,
+        raw_value: Optional[str] = None,
+    ) -> Tuple[Optional[str], bool]:
+        if not standardized_value or not reference_choices:
+            return (raw_value if raw_value else None, False)
+
+        direct_candidates = reference_map.get(standardized_value)
+        if direct_candidates:
+            candidate, score = self._select_reference_candidate(direct_candidates, raw_value)
+            if candidate is None:
+                return (raw_value if raw_value else None, False)
+            if raw_value is not None and score < self.REFERENCE_ACCEPT_RATIO:
+                return raw_value, False
+            return candidate, True
 
         result = rf_process.extractOne(
             standardized_value,
@@ -224,9 +330,66 @@ class Solution:
             score_cutoff=score_cutoff,
         )
         if result is None:
-            return None
-        match_key, score, _ = result
-        return match_key if match_key in reference_map else None
+            return (raw_value if raw_value else None, False)
+
+        match_key, _, _ = result
+        candidates = reference_map.get(match_key, [])
+        candidate, score = self._select_reference_candidate(candidates, raw_value)
+        if candidate is None:
+            return (raw_value if raw_value else None, False)
+        if raw_value is not None and score < self.REFERENCE_ACCEPT_RATIO:
+            return raw_value, False
+        return candidate, True
+
+    def _collect_aliases(self, primary: Optional[str], raw_value: Optional[str]) -> List[str]:
+        aliases: List[str] = []
+        if primary:
+            aliases.append(primary)
+        if raw_value and raw_value not in aliases:
+            aliases.append(raw_value)
+        return aliases or [""]
+
+    def _build_node_search_profile(
+        self,
+        province_aliases: List[str],
+        district_aliases: List[str],
+        ward_aliases: List[str],
+        *,
+        include_province: bool,
+        include_district: bool,
+        include_ward: bool,
+    ) -> Tuple[str, Set[str]]:
+        primary_parts: List[str] = []
+        if include_ward and ward_aliases:
+            primary_parts.append(ward_aliases[0])
+        if include_district and district_aliases:
+            primary_parts.append(district_aliases[0])
+        if include_province and province_aliases:
+            primary_parts.append(province_aliases[0])
+        primary_string = " ".join(part for part in primary_parts if part)
+        primary_standardized = self.StandardizeName(primary_string)
+
+        province_candidates = province_aliases if include_province else [""]
+        district_candidates = district_aliases if include_district else [""]
+        ward_candidates = ward_aliases if include_ward else [""]
+
+        ngram_set: Set[str] = set()
+        for ward_name in ward_candidates:
+            for district_name in district_candidates:
+                for province_name in province_candidates:
+                    combined = " ".join(
+                        part for part in [ward_name, district_name, province_name] if part
+                    )
+                    if not combined:
+                        continue
+                    standardized = self.StandardizeName(combined)
+                    if standardized:
+                        ngram_set.update(self.GenerateNGrams(standardized))
+
+        if not ngram_set and primary_standardized:
+            ngram_set.update(self.GenerateNGrams(primary_standardized))
+
+        return primary_standardized, ngram_set
 
     def StandardizeName(self, name: str, advancedProcess: bool = False) -> str:
         if not name:
