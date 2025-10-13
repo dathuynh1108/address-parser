@@ -27,11 +27,11 @@ Núi Thành
 Hiệp Đức
 Tri Tôn
 Châu Thành A
-Thị xã Trảng Bàng
+Trảng Bàng
 Bù Gia Mập
 Yên Dũng
 Tam Kỳ
-Thị xã Vĩnh Châu
+Vĩnh Châu
 Khoái Châu
 Đức Linh
 Thạch Thất
@@ -45,7 +45,7 @@ Vũ Quang
 Côn Đảo
 Tân Biên
 Đồng Xoài
-Thị xã Ayun Pa
+Ayun Pa
 Ninh Phước
 Kỳ Anh
 Thanh Oai
@@ -62,12 +62,12 @@ Thanh Xuân
 Sơn Hòa
 Mường La
 Ngọc Hiển
-Thị xã Điện Bàn
-Thị xã Cửa Lò
+Điện Bàn
+Cửa Lò
 Quảng Ninh
 Thuận Thành
 Hồng Dân
-Thị xã Hương Thủy
+Hương Thủy
 Triệu Phong
 Tân Lạc
 Quỳnh Nhai
@@ -84,7 +84,7 @@ Yên Thế
 Đắk R'Lấp
 Krông Bông
 Ân Thi
-Thị xã Đông Hòa
+Đông Hòa
 Bác Ái
 Trực Ninh
 Mù Căng Chải
@@ -100,7 +100,7 @@ Cái Bè
 Phước Sơn
 Cao Lãnh
 Vũ Thư
-Thị xã Đức Phổ
+Đức Phổ
 Đa Krông
 Yên Mô
 Tháp Mười
@@ -124,7 +124,7 @@ Xuân Trường
 Đắk Hà
 Khánh Sơn
 Thuận Châu
-Thị xã Sa Pa
+Sa Pa
 Lý Nhân
 Bắc Sơn
 Thọ Xuân
@@ -136,7 +136,7 @@ Nghĩa Hành
 Đồng Phú
 Mỹ Đức
 Rạch Giá
-Thị xã Kỳ Anh
+Kỳ Anh
 Trường Sa
 Mường Tè
 Bạc Liêu
@@ -164,8 +164,8 @@ Ngô Quyền
 Long Thành
 Bố Trạch
 Gò Vấp
-Thị Xã Buôn Hồ
-Thị xã Kinh Môn
+Buôn Hồ
+Kinh Môn
 Quế Võ
 Tiên Yên
 Thạnh Phú
@@ -174,20 +174,20 @@ Hà Trung
 Hoàng Sa
 Kon Rẫy
 Duyên Hải
-Thị xã Hương Trà
+Hương Trà
 Tân Phú Đông
 Đồng Xuân
-Thị xã Bỉm Sơn
+Bỉm Sơn
 Lạc Sơn
 Chiêm Hóa
 Gio Linh
 Quảng Trạch
-Thị xã Hoài Nhơn
+Hoài Nhơn
 Phú Riềng
 Nhơn Trạch
 Khánh Vĩnh
 Văn Quan
-Thị Xã Mường Lay
+Mường Lay
 Thanh Ba
 Thanh Liêm
 Mang Thít
@@ -195,11 +195,11 @@ Ninh Hải
 Hương Sơn
 Cẩm Mỹ
 Ba Bể
-Thị xã Đông Triều
+Đông Triều
 Trần Văn Thời
 Hóc Môn
 Thuận Bắc
-Thị xã Duy Tiên
+Duy Tiên
 Di Linh
 Vĩnh Cửu
 Hưng Hà
@@ -209,7 +209,7 @@ Tánh Linh
 Phúc Yên
 Cà Mau
 Phủ Lý
-Thị xã Từ Sơn
+Từ Sơn
 Gia Lâm
 Tuy An
 Mường Khương
@@ -223,29 +223,29 @@ Lâm Bình
 Phong Thổ
 Năm Căn
 Cờ Đỏ
-Thị xã Kiến Tường
+Kiến Tường
 Đồng Hới
 Đồ Sơn
-Thị xã Long Mỹ
+Long Mỹ
 Vĩnh Thuận
 Tân Yên
 Mường Chà
 Long Mỹ
-Thị xã Bến Cát
+Bến Cát
 Tuyên Hóa
 Cẩm Giàng
 Gia Viễn
 Lâm Hà
-Thị xã La Gi
+La Gi
 Bắc Quang
 Phú Hoà
 Nam Giang
 Phù Yên
-Thị xã Ngã Năm
+Ngã Năm
 Đoan Hùng
 Kim Bảng
 Yên Bình
-Thị xã Giá Rai
+Giá Rai
 Tam Bình
 Sa Thầy
 Sốp Cộp
@@ -261,7 +261,7 @@ Yên Châu
 Hòa Vang
 Chí Linh
 Dầu Tiếng
-Thị xã Hoàng Mai
+Hoàng Mai
 Cao Phong
 Kiến Thuỵ
 Gia Bình
@@ -303,16 +303,16 @@ Phú Lộc
 Ninh Sơn
 Sơn Hà
 Ba Vì
-Thị xã Ba Đồn
+Ba Đồn
 Na Hang
 Cần Giuộc
 Tân Sơn
-Thị xã Quảng Trị
+Quảng Trị
 Hậu Lộc
 Cao Lãnh
 Phước Long
 Cô Tô
-Thị xã Sơn Tây
+Sơn Tây
 Châu Đốc
 Yên Sơn
 An Dương
@@ -328,7 +328,7 @@ Tuy Phong
 Sóc Trăng
 Thanh Bình
 Đam Rông
-Thị xã Phú Thọ
+Phú Thọ
 U Minh
 Kim Thành
 Long Điền
@@ -339,12 +339,12 @@ Vị Xuyên
 Ba Tơ
 Con Cuông
 Cầu Ngang
-Thị xã Mỹ Hào
+Mỹ Hào
 Gò Công Tây
 Thủ Dầu Một
 Hải Hậu
 Cẩm Xuyên
-Thị xã Duyên Hải
+Duyên Hải
 Tân Phước
 Quỳnh Phụ
 Tiên Phước
@@ -383,7 +383,7 @@ Phong Điền
 Vân Đồn
 Tràng Định
 Mèo Vạc
-Thị xã An Nhơn
+An Nhơn
 Lương Tài
 Mường Nhé
 Đông Giang
@@ -422,7 +422,7 @@ Lạc Thủy
 Vĩnh Thạnh
 Phù Ninh
 Thới Lai
-Thị xã Phước Long
+Phước Long
 Đạ Huoai
 Hoằng Hóa
 Kim Sơn
@@ -453,7 +453,7 @@ Ba Đình
 Phan Thiết
 Hoàn Kiếm
 Vĩnh Hưng
-Thị xã Tân Uyên
+Tân Uyên
 Thanh Trì
 U Minh Thượng
 Ngân Sơn
@@ -464,18 +464,18 @@ Tuần Giáo
 Ninh Bình
 Tam Dương
 Sầm Sơn
-Thị xã Quảng Yên
+Quảng Yên
 Móng Cái
 Văn Yên
 Nguyên Bình
 Chợ Mới
 Nam Sách
 Đông Hưng
-Thị xã Hồng Lĩnh
+Hồng Lĩnh
 Đức Hòa
 Châu Thành
 Tây Giang
-Thị xã Bình Minh
+Bình Minh
 Chư Prông
 Giao Thủy
 Mộc Châu
@@ -485,7 +485,7 @@ Hà Đông
 Quế Sơn
 Dĩ An
 Chợ Đồn
-Thị xã An Khê
+An Khê
 Bảo Thắng
 7
 Bắc Ninh
@@ -493,7 +493,7 @@ Hàm Thuận Nam
 Krông Nô
 Hướng Hóa
 Hải Hà
-Thị xã Gò Công
+Gò Công
 Cát Tiên
 Ngọc Hồi
 Văn Giang
@@ -502,7 +502,7 @@ Thanh Chương
 Vĩnh Yên
 Trà Bồng
 Liên Chiểu
-Thị xã Nghĩa Lộ
+Nghĩa Lộ
 Diễn Châu
 Hòa Bình
 Duy Xuyên
@@ -510,7 +510,7 @@ Trảng Bom
 Mỹ Tho
 An Minh
 Long Khánh
-Thị xã Thái Hoà
+Thái Hoà
 Yên Mỹ
 Lê Chân
 Bắc Hà
@@ -525,7 +525,7 @@ Tân Phú
 Tam Nông
 Đô Lương
 Bạch Long Vĩ
-Thị xã Bình Long
+Bình Long
 Kim Bôi
 Quốc Oai
 Gò Dầu
@@ -566,7 +566,7 @@ Cư Jút
 Kim Động
 Can Lộc
 Thới Bình
-Thị xã Sông Cầu
+Sông Cầu
 Quỳ Châu
 Bà Rịa
 Kon Plông
@@ -578,9 +578,9 @@ Cồn Cỏ
 Tân Thạnh
 Tiểu Cần
 Long Phú
-Thị xã Tân Châu
+Tân Châu
 Ba Tri
-Thị xã Phú Mỹ
+Phú Mỹ
 Cai Lậy
 A Lưới
 Tuy Đức
@@ -603,10 +603,10 @@ Hải An
 Càng Long
 Ngọc Lặc
 Tam Điệp
-Thị xã Ninh Hòa
+Ninh Hòa
 Nam Đàn
 Thủ Đức
-Thị xã Nghi Sơn
+Nghi Sơn
 Tân Hưng
 Đà Lạt
 Ea Kar
@@ -663,7 +663,7 @@ Tuy Hoà
 KBang
 Cái Răng
 Thanh Khê
-Thị xã Phổ Yên
+Phổ Yên
 Quảng Hòa
 Cần Đước
 Đại Lộc
@@ -672,7 +672,7 @@ Lộc Bình
 Bát Xát
 Phú Xuyên
 Quảng Ngãi
-Thị xã Cai Lậy
+Cai Lậy
 Võ Nhai
 Gò Quao
 Thủ Thừa
@@ -680,7 +680,7 @@ Sông Lô
 Văn Lãng
 Yên Minh
 Đầm Dơi
-Thị xã Hòa Thành
+Hòa Thành
 Phù Cừ
 Thạnh Hóa
 Văn Lâm

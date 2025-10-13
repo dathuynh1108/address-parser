@@ -12,6 +12,7 @@ import time
 import json
 import unicodedata
 import re
+from typing import Optional
 from collections import Counter
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
@@ -30,6 +31,10 @@ class Solution:
         self.reference_ward_path = 'list_ward.txt'
         
         self.standard_address_list_path = 'list_address.json'
+
+        self.province_reference_map, self.province_reference_choices = self._load_reference_names(self.reference_province_path)
+        self.district_reference_map, self.district_reference_choices = self._load_reference_names(self.reference_district_path)
+        self.ward_reference_map, self.ward_reference_choices = self._load_reference_names(self.reference_ward_path)
 
         self.addressNodeList = []
         self.invertNgramToIndexFullNameDict = {}
@@ -110,9 +115,21 @@ class Solution:
         with open(self.standard_address_list_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
+        province_map = self.province_reference_map
+        province_choices = self.province_reference_choices
+        district_map = self.district_reference_map
+        district_choices = self.district_reference_choices
+        ward_map = self.ward_reference_map
+        ward_choices = self.ward_reference_choices
+
         # Duyệt từng tỉnh
         for province_name, districts in data.items():
 
+            province_std = self.StandardizeName(province_name)
+            province_match_key = self._match_reference(province_std, province_map, province_choices, score_cutoff=90)
+            if not province_match_key:
+                continue
+                
             node = self.addressNode(province_name, "", "")
             node.standardizedFullName = self.StandardizeName(node.fullName)
             node.ngramList = set(self.GenerateNGrams(node.standardizedFullName))
@@ -120,6 +137,11 @@ class Solution:
 
             # Duyệt từng huyện
             for district_name, wards in districts.items():
+
+                district_std = self.StandardizeName(district_name)
+                district_match_key = self._match_reference(district_std, district_map, district_choices, score_cutoff=5)
+                if not district_match_key:
+                    continue
 
                 node = self.addressNode("", district_name, "")
                 node.standardizedFullName = self.StandardizeName(node.fullName)
@@ -133,6 +155,13 @@ class Solution:
 
                 # Duyệt từng xã
                 for ward_name in wards:
+                    ward_std = self.StandardizeName(ward_name)
+                    if not ward_std:
+                        continue
+                    
+                    ward_match_key = self._match_reference(ward_std, ward_map, ward_choices, score_cutoff=75)
+                    if not ward_match_key:
+                        continue
 
                     node = self.addressNode("", "", ward_name)
                     node.standardizedFullName = self.StandardizeName(node.fullName)
@@ -168,6 +197,36 @@ class Solution:
         for index, node in enumerate(self.addressNodeList, start = 0):
             # Tạo từ điển ngram đảo ngược
             self.GenerateNGramInvertedIndex(node.ngramList, index, self.invertNgramToIndexFullNameDict)
+
+    def _load_reference_names(self, path: str):
+        reference_map = {}
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                raw_name = line.strip()
+                if not raw_name:
+                    continue
+                standardized_name = self.StandardizeName(raw_name)
+                if standardized_name:
+                    reference_map.setdefault(standardized_name, raw_name)
+        return reference_map, list(reference_map.keys())
+
+    def _match_reference(self, standardized_value: str, reference_map: dict, reference_choices: list, score_cutoff: int) -> Optional[str]:
+        if not standardized_value or not reference_choices:
+            return None
+
+        if standardized_value in reference_map:
+            return standardized_value
+
+        result = rf_process.extractOne(
+            standardized_value,
+            reference_choices,
+            scorer=ratio,
+            score_cutoff=score_cutoff,
+        )
+        if result is None:
+            return None
+        match_key, score, _ = result
+        return match_key if match_key in reference_map else None
 
     def StandardizeName(self, name: str, advancedProcess: bool = False) -> str:
         if not name:
