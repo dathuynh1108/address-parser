@@ -6,6 +6,7 @@ from typing import Any, List, Optional, Tuple, Set, Dict
 from collections import Counter, defaultdict
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
+from rapidfuzz import fuzz as rf_fuzz
 
 
 class AddressParser:
@@ -61,7 +62,9 @@ class AddressParser:
 
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.standard_address_list_path = os.path.join(base_dir, "inexus_list_address.json")
+        self.standard_address_list_path = os.path.join(base_dir, "list_addresses.json")
+
+        # Skip loading reference TXT lists; we trust list_addresses.json in this repo.
 
         self.address_node_list: List[AddressParser.AddressNode] = []
         self.invert_ngrams_idx: dict[str, Set[int]] = {}
@@ -89,9 +92,8 @@ class AddressParser:
         # Chuẩn hóa và tạo n-gram cho input
         input_string_standard = self.standardize_name(input_string, True)
         input_string_basic = self.standardize_name(input_string, False)
-        
         input_string_ngram_list = self.generate_ngrams(input_string_standard)
-    
+
         partial_input_string = False
 
         # Đếm tần suất xuất hiện của từng ngram
@@ -107,6 +109,7 @@ class AddressParser:
 
         address = self.AddressNode("", "", "")
 
+        detected_components = self._detect_by_prefix(input_string_basic)
         ngram_address_piece_list = self.ngram_address_piece_list(
             input_string_ngram_list, self.TOPK_CANDIDATES
         )
@@ -116,6 +119,7 @@ class AddressParser:
             input_ngram_set,
             ngram_address_piece_list,
             partial_input_string,
+            detected_components,
         )
 
         if address_candidate:
@@ -738,6 +742,7 @@ class AddressParser:
                     "norm": norm,
                 }
             )
+
         token_count = len(tokens)
         if token_count == 0:
             return original.strip()
@@ -951,14 +956,29 @@ class AddressParser:
         input_ngram_set: set,
         ngram_address_piece_list: list,
         partial_input_string: bool,
+        detected_components: Tuple[Optional[str], Optional[str], Optional[str]],
     ) -> list:
         # Stage 1: filter by Dice; collect IDs whose Dice >= gate
-        # Use partial scorer only when the input seems truncated
-        partial_temp = False  # deprecated heuristic; keep variable for readability
+        detected_prov, detected_dist, detected_ward = (
+            detected_components if detected_components else (None, None, None)
+        )
+
+        def _validate_detection(value: Optional[str], lookup: Dict[str, Set[int]]) -> Optional[str]:
+            if not value:
+                return None
+            if len(value) < 2:
+                return None
+            if value not in lookup:
+                return None
+            return value
+
+        detected_ward = _validate_detection(detected_ward, self.invert_ward_to_indices)
+        detected_dist = _validate_detection(detected_dist, self.invert_district_to_indices)
+        detected_prov = _validate_detection(detected_prov, self.invert_province_to_indices)
 
         input_set = input_ngram_set
         input_set_length = len(input_set)
-        filtered_ids: list[int] = []
+        filtered_entries: list[Tuple[int, float]] = []
 
         index = 0
         for idx_count in ngram_address_piece_list:
@@ -975,44 +995,123 @@ class AddressParser:
             index += 1
 
             if dice_score >= self.DICE_GATE:
-                filtered_ids.append(idx)
+                filtered_entries.append((idx, dice_score))
             elif index >= 50:
                 # Counter is ordered by frequency; dice will only go down after this point
                 break
-
-        if not filtered_ids:
+        if not filtered_entries:
             return []
 
-        # Prefer more specific nodes (more filled components, then longer string)
-        def _specificity_key(idx: int):
+        # Optional prefix-based filtering to favour nodes aligned with detected components
+        prefix_filter: Optional[Set[int]] = None
+        if detected_ward:
+            prefix_filter = set(self.invert_ward_to_indices.get(detected_ward, set()))
+        if detected_dist:
+            dist_set = set(self.invert_district_to_indices.get(detected_dist, set()))
+            prefix_filter = dist_set if prefix_filter is None else prefix_filter & dist_set
+        if detected_prov:
+            prov_set = set(self.invert_province_to_indices.get(detected_prov, set()))
+            prefix_filter = prov_set if prefix_filter is None else prefix_filter & prov_set
+
+        if prefix_filter:
+            prioritized = [entry for entry in filtered_entries if entry[0] in prefix_filter]
+            if prioritized:
+                nonprior = [entry for entry in filtered_entries if entry[0] not in prefix_filter]
+                filtered_entries = prioritized + nonprior
+
+        # Stage 2: richer scoring per-candidate
+        scored_candidates = []
+
+        def _component_boost(
+            candidate_value: Optional[str],
+            detected_value: Optional[str],
+            exact_bonus: float,
+            fuzzy_bonus: float,
+            missing_penalty: float,
+        ) -> float:
+            if not detected_value:
+                return 0.0
+            if not candidate_value:
+                return missing_penalty
+            cand_std = self.standardize_name(candidate_value, False)
+            if not cand_std:
+                return missing_penalty
+            if cand_std == detected_value:
+                return exact_bonus
+            similarity = ratio(cand_std, detected_value)
+            if similarity >= 90:
+                return fuzzy_bonus
+            if similarity >= 80:
+                return fuzzy_bonus / 2
+            return -abs(missing_penalty) / 2
+
+        max_candidates = 120
+        input_len = max(len(input_string_standard), 1)
+        for idx, dice_score in filtered_entries[:max_candidates]:
             node = self.address_node_list[idx]
+            candidate_string = node.standardized_full_name
+            if not candidate_string:
+                continue
+
+            base_score = ratio(input_string_standard, candidate_string)
+            partial_score = partial_ratio(input_string_standard, candidate_string)
+            wratio_score = rf_fuzz.WRatio(input_string_standard, candidate_string)
+
+            length_ratio = input_len / max(len(candidate_string), 1)
+            use_partial = partial_input_string or length_ratio >= 1.25
+
+            combined = max(base_score, wratio_score)
+            if use_partial:
+                combined = max(combined, partial_score)
+            elif base_score < 80 and partial_score >= 90:
+                combined = max(combined, partial_score * 0.95)
+
+            # Blend scores to favour balanced matches
+            blended = (0.6 * base_score) + (0.4 * wratio_score)
+            combined = max(combined, blended)
+
+            boost = 0.0
+            boost += _component_boost(node.ward_name, detected_ward, 14.0, 9.0, -6.0)
+            boost += _component_boost(node.district_name, detected_dist, 10.0, 6.0, -4.0)
+            boost += _component_boost(node.province_name, detected_prov, 6.0, 3.0, -2.0)
+
             comps = int(bool(node.province_name)) + int(bool(node.district_name)) + int(bool(node.ward_name))
-            # Prefer nodes that include ward over district-only when comps equal
             has_ward = 1 if node.ward_name else 0
-            return (comps, has_ward, len(node.standardized_full_name))
+            specificity = (comps, has_ward, len(node.standardized_full_name))
 
-        filtered_ids.sort(key=_specificity_key, reverse=True)
+            final_score = combined + boost + (comps * 1.5) + (has_ward * 1.0) + (dice_score * 10)
+            scored_candidates.append(
+                (
+                    final_score,
+                    combined,
+                    boost,
+                    specificity,
+                    idx,
+                )
+            )
 
-        # Stage 2: one vectorized RapidFuzz call over filtered strings
-        choices = [self.address_node_list[i].standardized_full_name for i in filtered_ids]
-
-        result = rf_process.extractOne(
-            input_string_standard,
-            choices,
-            scorer=partial_ratio if partial_input_string else ratio,
-            score_cutoff=self.PARTIAL_CUTOFF,
-        )
-        if result is None:
+        if not scored_candidates:
             return []
 
-        _, score, relative_index = result
-        best_abs_idx = filtered_ids[relative_index]
-        return [
-            (best_abs_idx, float(score), self.address_node_list[best_abs_idx].full_name)
-        ]
+        scored_candidates.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+                item[3],
+                len(self.address_node_list[item[4]].standardized_full_name),
+            ),
+            reverse=True,
+        )
+
+        top_results = []
+        for final_score, combined, boost, _, idx in scored_candidates[:25]:
+            node = self.address_node_list[idx]
+            top_results.append((idx, float(final_score), node.full_name))
+
+        return top_results
 
 if __name__ == "__main__":
     parser = AddressParser()
-    test_address = "50 Tôn Thất Đạm Sài Gòn TP.HCM"
+    test_address = "50 Tôn Thất Đạm, P.Sài Gò, TP.HCM"
     result = parser.process(test_address)
-    print(result) # {'province': 'Hồ Chí Minh', 'district': '', 'ward': 'Sài Gòn', 'street_address': '50 Tôn Thất Đạm', 'format': 'new', 'is_new': True}
+    print(result)
