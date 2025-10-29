@@ -58,6 +58,18 @@ class AddressParser:
         "ap",
         "to",
         "todanpho",
+        "ward",
+        "district",
+        "city",
+        "province",
+        "town",
+        "commune",
+        "village",
+        "hamlet",
+        "street",
+        "road",
+        "d",
+        "w",
     }
 
     def __init__(self):
@@ -109,7 +121,17 @@ class AddressParser:
 
         address = self.AddressNode("", "", "")
 
-        detected_components = self._detect_by_prefix(input_string_basic)
+        detected_components_raw = self._detect_by_prefix(input_string_basic)
+        detected_prov = self._validate_detected_value(
+            detected_components_raw[0], self.invert_province_to_indices
+        )
+        detected_dist = self._validate_detected_value(
+            detected_components_raw[1], self.invert_district_to_indices
+        )
+        detected_ward = self._validate_detected_value(
+            detected_components_raw[2], self.invert_ward_to_indices
+        )
+        detected_components = (detected_prov, detected_dist, detected_ward)
         ngram_address_piece_list = self.ngram_address_piece_list(
             input_string_ngram_list, self.TOPK_CANDIDATES
         )
@@ -125,16 +147,86 @@ class AddressParser:
         if address_candidate:
             address = self.address_node_list[address_candidate[0][0]]
 
+        province = address.province_name
+        district = address.district_name
+        ward = address.ward_name
+
+        if not province and detected_prov:
+            resolved_province = self._resolve_detected_component(
+                "province", detected_prov
+            )
+            if resolved_province:
+                province = resolved_province
+
+        if not district and detected_dist:
+            resolved_district = self._resolve_detected_component(
+                "district",
+                detected_dist,
+                expected_province=province,
+            )
+            if resolved_district:
+                district = resolved_district
+
+        if district and detected_dist and district != detected_dist:
+            district_std = self.standardize_name(district, False)
+            if district_std and district_std.isdigit() and detected_dist.isdigit():
+                resolved = self._resolve_detected_component(
+                    "district",
+                    detected_dist,
+                    expected_province=province,
+                )
+                if resolved:
+                    district = resolved
+
+        if not ward and detected_ward:
+            resolved_ward = self._resolve_detected_component(
+                "ward",
+                detected_ward,
+                expected_province=province,
+                expected_district=district,
+            )
+            if resolved_ward:
+                ward = resolved_ward
+
+        if ward and detected_ward:
+            current_ward_std = self.standardize_name(ward, False)
+            if current_ward_std and current_ward_std.isdigit() and detected_ward.isdigit() and current_ward_std != detected_ward:
+                resolved = self._resolve_detected_component(
+                    "ward",
+                    detected_ward,
+                    expected_province=province,
+                    expected_district=district,
+                )
+                ward = resolved or ""
+
+        if ward:
+            current_ward_std = self.standardize_name(ward, False)
+            if current_ward_std:
+                validated_current = self._resolve_detected_component(
+                    "ward",
+                    current_ward_std,
+                    expected_province=province,
+                    expected_district=district,
+                )
+                if not validated_current:
+                    ward = ""
+
         fmt = (
             "new"
             if address.is_new_format is True
             else ("old" if address.is_new_format is False else "unknown")
         )
-        street_address = self._extract_street_address(input_string, address)
+        normalized_node = self.AddressNode(
+            province or "",
+            district or "",
+            ward or "",
+            is_new_format=address.is_new_format,
+        )
+        street_address = self._extract_street_address(input_string, normalized_node)
         return {
-            "province": address.province_name,
-            "district": address.district_name,
-            "ward": address.ward_name,
+            "province": province,
+            "district": district,
+            "ward": ward,
             "street_address": street_address,
             "format": fmt,
             "is_new": (
@@ -195,6 +287,7 @@ class AddressParser:
                         ward_aliases = self._collect_aliases(
                             ward_output_name, ward_name
                         )
+                        ward_aliases = self._augment_aliases(ward_aliases, "ward")
                         ward_output_std = self.standardize_name(ward_output_name, False)
                         if ward_output_std:
                             self.ward_names_std.add(ward_output_std)
@@ -255,6 +348,7 @@ class AddressParser:
                 district_aliases = self._collect_aliases(
                     district_output_name, district_name
                 )
+                district_aliases = self._augment_aliases(district_aliases, "district")
 
                 district_node = self.AddressNode(
                     "", district_output_name, "", is_new_format=False
@@ -305,6 +399,7 @@ class AddressParser:
                     # Trust JSON names for wards in 3-level structure
                     ward_output_name = ward_name
                     ward_aliases = self._collect_aliases(ward_output_name, ward_name)
+                    ward_aliases = self._augment_aliases(ward_aliases, "ward")
                     ward_output_std = self.standardize_name(ward_output_name, False)
                     if ward_output_std:
                         self.ward_names_std.add(ward_output_std)
@@ -465,6 +560,144 @@ class AddressParser:
             aliases.append(raw_value)
         return aliases or [""]
 
+    def _augment_aliases(self, aliases: List[str], level: str) -> List[str]:
+        seen: Set[str] = set()
+        normalized_aliases: List[str] = []
+        for alias in aliases:
+            if alias not in seen:
+                normalized_aliases.append(alias)
+                seen.add(alias)
+
+        extras: List[str] = []
+        for alias in normalized_aliases:
+            std = self.standardize_name(alias, False)
+            if not std:
+                continue
+            tokens = std.split()
+            digits = None
+            if std.isdigit():
+                digits = std
+            elif len(tokens) == 1 and tokens[0].isdigit():
+                digits = tokens[0]
+                if digits:
+                    if level == "ward":
+                        extras.extend(
+                            [
+                                f"phuong {digits}",
+                                f"p {digits}",
+                                f"ward {digits}",
+                                f"w {digits}",
+                            ]
+                        )
+                    elif level == "district":
+                        extras.extend(
+                            [
+                                f"quan {digits}",
+                                f"q {digits}",
+                                f"district {digits}",
+                                f"d {digits}",
+                            ]
+                        )
+
+        for extra in extras:
+            if extra not in seen:
+                normalized_aliases.append(extra)
+                seen.add(extra)
+        return normalized_aliases
+
+    def _validate_detected_value(
+        self, value: Optional[str], lookup: Dict[str, Set[int]]
+    ) -> Optional[str]:
+        if not value:
+            return None
+        return value if value in lookup else None
+
+    def _resolve_detected_component(
+        self,
+        level: str,
+        detected_value: Optional[str],
+        *,
+        expected_province: Optional[str] = None,
+        expected_district: Optional[str] = None,
+    ) -> Optional[str]:
+        if not detected_value:
+            return None
+
+        invert_map = {
+            "province": self.invert_province_to_indices,
+            "district": self.invert_district_to_indices,
+            "ward": self.invert_ward_to_indices,
+        }
+        lookup = invert_map.get(level)
+        if not lookup:
+            return None
+
+        indices = lookup.get(detected_value, set())
+        if not indices:
+            return None
+
+        expected_province_std = (
+            self.standardize_name(expected_province, False)
+            if expected_province
+            else None
+        )
+        expected_district_std = (
+            self.standardize_name(expected_district, False)
+            if expected_district
+            else None
+        )
+
+        fallback: Optional[str] = None
+
+        for idx in indices:
+            node = self.address_node_list[idx]
+            if level == "province":
+                return node.province_name or fallback
+
+            if level == "district":
+                name = node.district_name
+                if not name:
+                    continue
+                node_prov_std = (
+                    self.standardize_name(node.province_name, False)
+                    if node.province_name
+                    else None
+                )
+                if expected_province_std:
+                    if not node_prov_std or node_prov_std != expected_province_std:
+                        continue
+                if expected_province_std:
+                    return name
+                if not fallback:
+                    fallback = name
+                continue
+
+            # ward level
+            name = node.ward_name
+            if not name:
+                continue
+            node_prov_std = (
+                self.standardize_name(node.province_name, False)
+                if node.province_name
+                else None
+            )
+            node_dist_std = (
+                self.standardize_name(node.district_name, False)
+                if node.district_name
+                else None
+            )
+            if expected_province_std:
+                if not node_prov_std or node_prov_std != expected_province_std:
+                    continue
+            if expected_district_std:
+                if not node_dist_std:
+                    continue
+                if node_dist_std != expected_district_std:
+                    continue
+            return name
+
+        return fallback
+
     def _build_node_search_profile(
         self,
         province_aliases: List[str],
@@ -560,6 +793,18 @@ class AddressParser:
                 "h.",
                 " h ",
                 ".h ",
+                "district",
+                "dist.",
+                "dist ",
+                "ward",
+                "w.",
+                "w ",
+                "city",
+                "province",
+                "municipality",
+                "town",
+                "village",
+                "commune",
                 "thị xã",
                 "thị.xã",
                 "tx.",
@@ -882,13 +1127,13 @@ class AddressParser:
 
         # Compile once per call; small overhead compared to overall cost
         province_pref = re.compile(
-            r"\b(?:thanh pho|tp|tinh)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh)\b|$)"
+            r"\b(?:thanh pho|tp|tinh|city|province|municipality)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
         district_pref = re.compile(
-            r"\b(?:quan|huyen|thi xa)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa)\b|$)"
+            r"\b(?:quan|huyen|thi xa|district|county)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
         ward_pref = re.compile(
-            r"\b(?:phuong|xa|thi tran)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa)\b|$)"
+            r"\b(?:phuong|xa|thi tran|ward|commune|town)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
 
         def _pick_best(fragment: str, choices: List[str]) -> Optional[str]:
@@ -898,10 +1143,39 @@ class AddressParser:
             # Limit fragment to first 3 tokens to avoid swallowing next parts
             tokens = fragment.split()
             fragment = " ".join(tokens[:3])
-            res = rf_process.extractOne(
-                fragment, choices, scorer=partial_ratio, score_cutoff=75
+            exact_fragment = fragment
+            if exact_fragment in choices:
+                return exact_fragment
+
+            candidates = rf_process.extract(
+                fragment,
+                choices,
+                scorer=partial_ratio,
+                score_cutoff=70,
+                limit=10,
             )
-            return res[0] if res else None
+            if not candidates:
+                return None
+
+            best_choice = None
+            best_score = -1.0
+            best_len_delta = None
+
+            for candidate, score, _ in candidates:
+                if candidate == exact_fragment:
+                    return candidate
+                len_delta = abs(len(candidate) - len(fragment))
+                if score > best_score:
+                    best_choice = candidate
+                    best_score = score
+                    best_len_delta = len_delta
+                    continue
+                if score == best_score:
+                    if len_delta < (best_len_delta if best_len_delta is not None else float("inf")):
+                        best_choice = candidate
+                        best_len_delta = len_delta
+                        continue
+            return best_choice
 
         prov = dist = ward = None
         m = province_pref.search(s)
@@ -963,19 +1237,6 @@ class AddressParser:
             detected_components if detected_components else (None, None, None)
         )
 
-        def _validate_detection(value: Optional[str], lookup: Dict[str, Set[int]]) -> Optional[str]:
-            if not value:
-                return None
-            if len(value) < 2:
-                return None
-            if value not in lookup:
-                return None
-            return value
-
-        detected_ward = _validate_detection(detected_ward, self.invert_ward_to_indices)
-        detected_dist = _validate_detection(detected_dist, self.invert_district_to_indices)
-        detected_prov = _validate_detection(detected_prov, self.invert_province_to_indices)
-
         input_set = input_ngram_set
         input_set_length = len(input_set)
         filtered_entries: list[Tuple[int, float]] = []
@@ -996,7 +1257,7 @@ class AddressParser:
 
             if dice_score >= self.DICE_GATE:
                 filtered_entries.append((idx, dice_score))
-            elif index >= 50:
+            elif index >= 200:
                 # Counter is ordered by frequency; dice will only go down after this point
                 break
         if not filtered_entries:
@@ -1043,7 +1304,7 @@ class AddressParser:
                 return fuzzy_bonus
             if similarity >= 80:
                 return fuzzy_bonus / 2
-            return -abs(missing_penalty) / 2
+            return missing_penalty
 
         max_candidates = 120
         input_len = max(len(input_string_standard), 1)
@@ -1071,9 +1332,9 @@ class AddressParser:
             combined = max(combined, blended)
 
             boost = 0.0
-            boost += _component_boost(node.ward_name, detected_ward, 14.0, 9.0, -6.0)
-            boost += _component_boost(node.district_name, detected_dist, 10.0, 6.0, -4.0)
-            boost += _component_boost(node.province_name, detected_prov, 6.0, 3.0, -2.0)
+            boost += _component_boost(node.ward_name, detected_ward, 18.0, 12.0, -12.0)
+            boost += _component_boost(node.district_name, detected_dist, 14.0, 9.0, -10.0)
+            boost += _component_boost(node.province_name, detected_prov, 6.0, 3.5, -4.0)
 
             comps = int(bool(node.province_name)) + int(bool(node.district_name)) + int(bool(node.ward_name))
             has_ward = 1 if node.ward_name else 0
@@ -1109,9 +1370,3 @@ class AddressParser:
             top_results.append((idx, float(final_score), node.full_name))
 
         return top_results
-
-if __name__ == "__main__":
-    parser = AddressParser()
-    test_address = "50 Tôn Thất Đạm, P.Sài Gò, TP.HCM"
-    result = parser.process(test_address)
-    print(result)
