@@ -57,7 +57,7 @@ Edit `ner/configs/train_default.json` (update `train_file`, `eval_file`, hyperpa
 python ner/ner_train.py --config ner/configs/train_default.json
 ```
 The Trainer will log to `ner/artifacts/`, save the best checkpoint, and print precision/recall/F1 via `seqeval`.
-> TPU/Kaggle note: `ner_train.py` automatically switches to the non-fused `adamw_hf` optimizer whenever `torch-xla` is detected. Override `optim` inside the JSON config if you need a specific optimizer.
+> TPU/Kaggle note: `ner_train.py` automatically switches to the TPU-safe `adamw_torch_xla` optimizer whenever `torch-xla` is detected. Override `optim` inside the JSON config if you need a specific optimizer.
 
 ## Configuration Tips
 - `build_standard_dataset.py` accepts `--max-samples`, `--train-ratio`, etc., so you can produce small smoke tests or full corpora.

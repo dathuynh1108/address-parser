@@ -189,7 +189,7 @@ def main() -> None:
 
     optim_name = config.get("optim")
     if optim_name is None and is_xla_available():
-        optim_name = "adamw_hf"
+        optim_name = "adamw_torch_xla"
 
     training_kwargs = dict(
         output_dir=str(config["output_dir"]),
