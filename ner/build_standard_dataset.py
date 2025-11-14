@@ -401,6 +401,7 @@ def materialize_component(raw: Dict[str, object], label: str) -> Optional[Compon
 
 
 def assemble_records(data_dir: Path) -> List[AddressRecord]:
+    print("Loading administrative data in directory:", data_dir)
     old_records = _assemble_old_structure(data_dir)
     new_records = _assemble_new_structure(data_dir)
     return old_records + new_records

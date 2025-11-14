@@ -15,7 +15,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from fuzz.inexus_parser import AddressParser
-from ner.prepare_dataset import label_tokens, clean_text
+from ner.build_standard_dataset import label_tokens, clean_text
 
 JsonValue = Union[Dict[str, Any], str]
 
