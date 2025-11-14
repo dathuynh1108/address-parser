@@ -36,6 +36,7 @@ DEFAULT_CONFIG = {
   "push_to_hub": False,
   "report": True,
   "optim": None,
+  "report_to": [],
 }
 
 CONFIG_PATH_KEYS = ("train_file", "eval_file", "output_dir")
@@ -208,6 +209,7 @@ def main() -> None:
         greater_is_better=True,
         seed=config["seed"],
         push_to_hub=config["push_to_hub"],
+        report_to=config.get("report_to"),
     )
     if optim_name:
         training_kwargs["optim"] = optim_name
