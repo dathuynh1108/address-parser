@@ -612,7 +612,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=Path("inexus/data"),
+        default=Path("fuzz/data"),
         help="Directory that contains the administrative data json files.",
     )
     parser.add_argument(
