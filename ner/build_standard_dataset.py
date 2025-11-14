@@ -753,6 +753,7 @@ def build_street_tokens(rng: random.Random) -> List[str]:
     alley_word = randomize_text_variant(
         rng.choice(["ngõ", "ngách", "hẻm", "ngo", "hem"]), rng
     )
+    
     templates = [
         f"{number_word} {number} {descriptor} {street}",
         f"{descriptor} {street} {number_word} {number}",
@@ -761,6 +762,7 @@ def build_street_tokens(rng: random.Random) -> List[str]:
         f"{alley_word} {alley}/{number} {street}",
         f"{descriptor} {street}",
         f"{number_word} {number} {street}",
+        f"{number_word}/{number} {street}",
     ]
     text = rng.choice(templates)
     return tokenize(text)
@@ -937,27 +939,32 @@ def main() -> None:
         specs = list(VARIANT_SPECS)
         rng.shuffle(specs)
         for spec in specs:
-            rendered = render_data_sample(record, spec, rng)
-            if not rendered:
-                continue
-            tokens, tags, text = rendered
-            signature = tuple(tokens)
-            if signature in seen_sequences:
-                continue
-            seen_sequences.add(signature)
-            all_examples.append(
-                {
-                    "id": f"{record.ward_code}_{spec.name}_{len(all_examples)}",
-                    "text": text,
-                    "tokens": tokens,
-                    "ner_tags": tags,
-                    "source": record.source,
-                }
-            )
+            loop_times = 1
+            if spec.include_street:
+                loop_times = 3
+            
+            for _ in range(loop_times):  
+                rendered = render_data_sample(record, spec, rng)
+                if not rendered:
+                    continue
+                tokens, tags, text = rendered
+                signature = tuple(tokens)
+                if signature in seen_sequences:
+                    continue
+                seen_sequences.add(signature)
+                all_examples.append(
+                    {
+                        "id": f"{record.ward_code}_{spec.name}_{len(all_examples)}",
+                        "text": text,
+                        "tokens": tokens,
+                        "ner_tags": tags,
+                        "source": record.source,
+                    }
+                )
+                if args.max_samples and len(all_examples) >= args.max_samples:
+                    break
             if args.max_samples and len(all_examples) >= args.max_samples:
                 break
-        if args.max_samples and len(all_examples) >= args.max_samples:
-            break
 
     if not all_examples:
         raise SystemExit("Dataset generation produced zero examples.")
