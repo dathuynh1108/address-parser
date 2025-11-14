@@ -1,7 +1,7 @@
 import json
 import os
-import unicodedata
 import re
+import unicodedata
 from typing import Any, List, Optional, Tuple, Set, Dict
 from collections import Counter, defaultdict
 from rapidfuzz.fuzz import partial_ratio, ratio
@@ -80,7 +80,13 @@ class AddressParser:
 
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.standard_address_list_path = os.path.join(base_dir, "list_addresses.jsonl")
+        self.data_dir = os.path.join(base_dir, "data")
+        self.new_format_provinces_path = os.path.join(self.data_dir, "provinces.json")
+        self.new_format_wards_path = os.path.join(self.data_dir, "wards.json")
+        self.new_format_mapping_path = os.path.join(self.data_dir, "ward_mappings.json")
+        self.old_provinces_path = os.path.join(self.data_dir, "old_provinces.json")
+        self.old_districts_path = os.path.join(self.data_dir, "old_districts.json")
+        self.old_wards_path = os.path.join(self.data_dir, "old_wards.json")
 
         self.address_node_list: List[AddressParser.AddressNode] = []
         self.invert_ngrams_idx: dict[str, Set[int]] = {}
@@ -118,6 +124,8 @@ class AddressParser:
         self.old_ward_records: Dict[str, Dict[str, Any]] = {}
         self.new_province_records: Dict[str, Dict[str, Any]] = {}
         self.new_ward_records: Dict[str, Dict[str, Any]] = {}
+        self.external_new_province_records: Dict[str, Dict[str, Any]] = {}
+        self.external_new_ward_records: Dict[str, Dict[str, Any]] = {}
 
         # Pre-process address data once when initializing the Solution object
         self.preprocess_address()
@@ -422,6 +430,12 @@ class AddressParser:
         elif ward_id is None and ward_info and ward_info.get("id") is not None:
             ward_id = ward_info["id"]
 
+        ward_present_in_input = _appears_in_input(ward)
+        if ward and not ward_present_in_input and not detected_ward:
+            ward = ""
+            ward_id = None
+            ward_info = None
+
         province_component = self._format_component(province, province_id, province_info)
         district_component = self._format_component(district, district_id, district_info)
         ward_component = self._format_component(ward, ward_id, ward_info)
@@ -452,9 +466,7 @@ class AddressParser:
         }
 
     def preprocess_address(self):
-        source_path = self.standard_address_list_path
-        with open(source_path, "r", encoding="utf-8") as f:
-            raw_data = json.load(f)
+        raw_data = self._build_raw_dataset()
         data = self._normalize_address_dataset(raw_data)
 
         # Reset caches; the parser may be reinstantiated multiple times in tests
@@ -477,25 +489,32 @@ class AddressParser:
         for province_name, province_payload in data.items():
             province_entry = province_payload or {}
             province_id = None
+            province_code = None
             districts_payload = province_entry
             if isinstance(province_entry, dict) and "districts" in province_entry:
                 province_id = province_entry.get("id")
+                province_code = province_entry.get("code")
                 districts_payload = province_entry.get("districts", {})
             if districts_payload is None:
                 districts_payload = {}
 
             province_output_name = province_name
             province_output_std = self.standardize_name(province_output_name, False)
-            if province_output_std:
-                self.province_names_std.add(province_output_std)
-                self.province_lookup[province_output_std] = {
-                    "id": province_id,
-                    "name": province_output_name,
-                }
-
             province_aliases = self._collect_aliases(
-                province_output_name, province_name
+                province_output_name,
+                province_name,
+                self._reference_aliases_for_level("province", province_code),
             )
+            province_aliases_std = self._standardize_aliases(province_aliases)
+            province_info = {
+                "id": province_id,
+                "name": province_output_name,
+            }
+            for alias_std in province_aliases_std:
+                if not alias_std:
+                    continue
+                self.province_names_std.add(alias_std)
+                self.province_lookup[alias_std] = province_info
 
             province_node = self.AddressNode(
                 province_output_name,
@@ -515,10 +534,10 @@ class AddressParser:
             province_node.standardized_full_name = std_name
             province_node.ngram_list = ngrams
             self.address_node_list.append(province_node)
-            if province_output_std:
-                self.invert_province_to_indices[province_output_std].add(
-                    len(self.address_node_list) - 1
-                )
+            self._register_node_aliases(
+                len(self.address_node_list) - 1,
+                province_aliases_std=province_aliases_std,
+            )
 
             for district_name, district_payload in districts_payload.items():
                 district_entry = district_payload or {}
@@ -547,11 +566,21 @@ class AddressParser:
                     self.district_lookup[(province_output_std, district_key)] = (
                         district_info
                     )
-                if district_output_std:
-                    self.district_names_std.add(district_output_std)
-                    self.district_lookup_by_name[district_output_std].append(
-                        district_info
-                    )
+                district_aliases = self._collect_aliases(
+                    district_output_name, district_name
+                )
+                district_aliases = self._augment_aliases(
+                    district_aliases, "district"
+                )
+                district_aliases_std = self._standardize_aliases(district_aliases)
+                for alias_std in district_aliases_std:
+                    if not alias_std:
+                        continue
+                    self.district_names_std.add(alias_std)
+                    if district_info not in self.district_lookup_by_name[alias_std]:
+                        self.district_lookup_by_name[alias_std].append(
+                            district_info
+                        )
 
                 if not district_output_std:
                     ward_iter = (
@@ -567,16 +596,25 @@ class AddressParser:
                             if isinstance(ward_meta, dict)
                             else None
                         )
+                        ward_code = (
+                            ward_meta.get("code")
+                            if isinstance(ward_meta, dict)
+                            else None
+                        )
                         ward_output_name = ward_name
                         ward_output_std = self.standardize_name(
                             ward_output_name, False
                         )
-                        if ward_output_std:
-                            self.ward_names_std.add(ward_output_std)
                         ward_aliases = self._collect_aliases(
-                            ward_output_name, ward_name
+                            ward_output_name,
+                            ward_name,
+                            self._reference_aliases_for_level("ward", ward_code),
                         )
                         ward_aliases = self._augment_aliases(ward_aliases, "ward")
+                        ward_aliases_std = self._standardize_aliases(ward_aliases)
+                        for alias_std in ward_aliases_std:
+                            if alias_std:
+                                self.ward_names_std.add(alias_std)
 
                         ward_info = {
                             "id": ward_id_value,
@@ -600,6 +638,11 @@ class AddressParser:
                             self.ward_lookup_by_district_key[district_key].append(
                                 ward_info
                             )
+                        self._register_alias_lookup_entry(
+                            self.ward_lookup_by_name,
+                            ward_aliases_std,
+                            ward_info,
+                        )
 
                         ward_node = self.AddressNode(
                             "",
@@ -621,10 +664,10 @@ class AddressParser:
                         ward_node.standardized_full_name = std_name
                         ward_node.ngram_list = ngrams
                         self.address_node_list.append(ward_node)
-                        if ward_output_std:
-                            self.invert_ward_to_indices[ward_output_std].add(
-                                len(self.address_node_list) - 1
-                            )
+                        self._register_node_aliases(
+                            len(self.address_node_list) - 1,
+                            ward_aliases_std=ward_aliases_std,
+                        )
 
                         province_ward_node = self.AddressNode(
                             province_output_name,
@@ -647,22 +690,13 @@ class AddressParser:
                         province_ward_node.standardized_full_name = std_name
                         province_ward_node.ngram_list = ngrams
                         self.address_node_list.append(province_ward_node)
-                        if province_output_std:
-                            self.invert_province_to_indices[province_output_std].add(
-                                len(self.address_node_list) - 1
-                            )
-                        if ward_output_std:
-                            self.invert_ward_to_indices[ward_output_std].add(
-                                len(self.address_node_list) - 1
-                            )
+                        self._register_node_aliases(
+                            len(self.address_node_list) - 1,
+                            province_aliases_std=province_aliases_std,
+                            ward_aliases_std=ward_aliases_std,
+                        )
                     continue
 
-                district_aliases = self._collect_aliases(
-                    district_output_name, district_name
-                )
-                district_aliases = self._augment_aliases(
-                    district_aliases, "district"
-                )
 
                 district_node = self.AddressNode(
                     "",
@@ -684,10 +718,10 @@ class AddressParser:
                 district_node.standardized_full_name = std_name
                 district_node.ngram_list = ngrams
                 self.address_node_list.append(district_node)
-                if district_output_std:
-                    self.invert_district_to_indices[district_output_std].add(
-                        len(self.address_node_list) - 1
-                    )
+                self._register_node_aliases(
+                    len(self.address_node_list) - 1,
+                    district_aliases_std=district_aliases_std,
+                )
 
                 province_district_node = self.AddressNode(
                     province_output_name,
@@ -710,14 +744,11 @@ class AddressParser:
                 province_district_node.standardized_full_name = std_name
                 province_district_node.ngram_list = ngrams
                 self.address_node_list.append(province_district_node)
-                if province_output_std:
-                    self.invert_province_to_indices[province_output_std].add(
-                        len(self.address_node_list) - 1
-                    )
-                if district_output_std:
-                    self.invert_district_to_indices[district_output_std].add(
-                        len(self.address_node_list) - 1
-                    )
+                self._register_node_aliases(
+                    len(self.address_node_list) - 1,
+                    province_aliases_std=province_aliases_std,
+                    district_aliases_std=district_aliases_std,
+                )
 
                 ward_iter = (
                     wards_payload.items()
@@ -730,17 +761,23 @@ class AddressParser:
                     ward_id_value = (
                         ward_meta.get("id") if isinstance(ward_meta, dict) else None
                     )
+                    ward_code = (
+                        ward_meta.get("code") if isinstance(ward_meta, dict) else None
+                    )
                     ward_output_name = ward_name
                     ward_output_std = self.standardize_name(
                         ward_output_name, False
                     )
-                    if ward_output_std:
-                        self.ward_names_std.add(ward_output_std)
-
                     ward_aliases = self._collect_aliases(
-                        ward_output_name, ward_name
+                        ward_output_name,
+                        ward_name,
+                        self._reference_aliases_for_level("ward", ward_code),
                     )
                     ward_aliases = self._augment_aliases(ward_aliases, "ward")
+                    ward_aliases_std = self._standardize_aliases(ward_aliases)
+                    for alias_std in ward_aliases_std:
+                        if alias_std:
+                            self.ward_names_std.add(alias_std)
 
                     ward_info = {
                         "id": ward_id_value,
@@ -762,6 +799,11 @@ class AddressParser:
                         self.ward_lookup_by_district_key[district_key].append(
                             ward_info
                         )
+                    self._register_alias_lookup_entry(
+                        self.ward_lookup_by_name,
+                        ward_aliases_std,
+                        ward_info,
+                    )
 
                     ward_node = self.AddressNode(
                         "",
@@ -783,10 +825,10 @@ class AddressParser:
                     ward_node.standardized_full_name = std_name
                     ward_node.ngram_list = ngrams
                     self.address_node_list.append(ward_node)
-                    if ward_output_std:
-                        self.invert_ward_to_indices[ward_output_std].add(
-                            len(self.address_node_list) - 1
-                        )
+                    self._register_node_aliases(
+                        len(self.address_node_list) - 1,
+                        ward_aliases_std=ward_aliases_std,
+                    )
 
                     district_ward_node = self.AddressNode(
                         "",
@@ -808,14 +850,11 @@ class AddressParser:
                     district_ward_node.standardized_full_name = std_name
                     district_ward_node.ngram_list = ngrams
                     self.address_node_list.append(district_ward_node)
-                    if district_output_std:
-                        self.invert_district_to_indices[district_output_std].add(
-                            len(self.address_node_list) - 1
-                        )
-                    if ward_output_std:
-                        self.invert_ward_to_indices[ward_output_std].add(
-                            len(self.address_node_list) - 1
-                        )
+                    self._register_node_aliases(
+                        len(self.address_node_list) - 1,
+                        district_aliases_std=district_aliases_std,
+                        ward_aliases_std=ward_aliases_std,
+                    )
 
                     province_district_ward_node = self.AddressNode(
                         province_output_name,
@@ -837,18 +876,12 @@ class AddressParser:
                     province_district_ward_node.standardized_full_name = std_name
                     province_district_ward_node.ngram_list = ngrams
                     self.address_node_list.append(province_district_ward_node)
-                    if province_output_std:
-                        self.invert_province_to_indices[province_output_std].add(
-                            len(self.address_node_list) - 1
-                        )
-                    if district_output_std:
-                        self.invert_district_to_indices[district_output_std].add(
-                            len(self.address_node_list) - 1
-                        )
-                    if ward_output_std:
-                        self.invert_ward_to_indices[ward_output_std].add(
-                            len(self.address_node_list) - 1
-                        )
+                    self._register_node_aliases(
+                        len(self.address_node_list) - 1,
+                        province_aliases_std=province_aliases_std,
+                        district_aliases_std=district_aliases_std,
+                        ward_aliases_std=ward_aliases_std,
+                    )
 
         for index, node in enumerate(self.address_node_list, start=0):
             self.generate_ngram_inverted_index(
@@ -871,197 +904,440 @@ class AddressParser:
         except ValueError:
             return None
 
+    def _read_json_file(self, path: Optional[str]) -> Any:
+        if not path or not os.path.exists(path):
+            return None
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return None
+
+    def _register_external_entry(
+        self,
+        target: Dict[str, Dict[str, Any]],
+        code: Any,
+        entry: Dict[str, Any],
+    ) -> None:
+        keys: Set[str] = set()
+        if code is not None:
+            if isinstance(code, str):
+                key_str = code.strip()
+            else:
+                key_str = str(code)
+            if key_str:
+                keys.add(key_str)
+        normalized = self._normalize_id_token(code)
+        if normalized:
+            keys.add(normalized)
+        if not keys:
+            return
+        for key in keys:
+            target[key] = entry
+
+    def _load_external_new_dataset(self) -> Dict[str, Any]:
+        payload = {
+            "provinces": {},
+            "wards": {},
+            "ward_mappings": [],
+        }
+        provinces_data = self._read_json_file(self.new_format_provinces_path)
+        if isinstance(provinces_data, list):
+            for entry in provinces_data:
+                if not isinstance(entry, dict):
+                    continue
+                code = entry.get("code")
+                if code is None:
+                    continue
+                normalized_entry = dict(entry)
+                normalized_entry.setdefault("code", str(code).strip())
+                self._register_external_entry(
+                    payload["provinces"],
+                    normalized_entry.get("code"),
+                    normalized_entry,
+                )
+        wards_data = self._read_json_file(self.new_format_wards_path)
+        if isinstance(wards_data, list):
+            for entry in wards_data:
+                if not isinstance(entry, dict):
+                    continue
+                code = entry.get("code")
+                if code is None:
+                    continue
+                normalized_entry = dict(entry)
+                normalized_entry.setdefault("code", str(code).strip())
+                self._register_external_entry(
+                    payload["wards"],
+                    normalized_entry.get("code"),
+                    normalized_entry,
+                )
+        mapping_data = self._read_json_file(self.new_format_mapping_path)
+        if isinstance(mapping_data, list):
+            payload["ward_mappings"] = [
+                row
+                for row in mapping_data
+                if isinstance(row, dict)
+                and row.get("old_ward_code") is not None
+                and row.get("new_ward_code") is not None
+            ]
+        self.external_new_province_records = payload["provinces"]
+        self.external_new_ward_records = payload["wards"]
+        return payload
+
+    def _dedupe_external_entries(
+        self, records: Dict[str, Dict[str, Any]]
+    ) -> Dict[str, Dict[str, Any]]:
+        result: Dict[str, Dict[str, Any]] = {}
+        seen: Set[str] = set()
+        for entry in records.values():
+            if not isinstance(entry, dict):
+                continue
+            code = entry.get("code")
+            if not code:
+                continue
+            code_str = str(code).strip()
+            if not code_str or code_str in seen:
+                continue
+            seen.add(code_str)
+            result[code_str] = entry
+        return result
+
+    def _load_entities_by_code(
+        self,
+        path: str,
+        *,
+        parent_key: Optional[str] = None,
+    ) -> Dict[str, Dict[str, Any]]:
+        data = self._read_json_file(path)
+        if not isinstance(data, list):
+            return {}
+        result: Dict[str, Dict[str, Any]] = {}
+        for entry in data:
+            if not isinstance(entry, dict):
+                continue
+            code = entry.get("code")
+            if code is None:
+                continue
+            code_str = str(code).strip()
+            if not code_str:
+                continue
+            normalized: Dict[str, Any] = {
+                "code": code_str,
+                "id": self._safe_int(code_str),
+                "name": entry.get("name"),
+                "name_with_type": entry.get("full_name") or entry.get("name"),
+            }
+            if parent_key:
+                parent_value = entry.get(parent_key)
+                normalized["parent_code"] = (
+                    str(parent_value).strip() if parent_value is not None else None
+                )
+            if "name_en" in entry and isinstance(entry["name_en"], str):
+                normalized["name_en"] = entry["name_en"]
+            if "full_name_en" in entry and isinstance(entry["full_name_en"], str):
+                normalized["full_name_en"] = entry["full_name_en"]
+            if "code_name" in entry and isinstance(entry["code_name"], str):
+                normalized["code_name"] = entry["code_name"]
+            result[code_str] = normalized
+        return result
+
+    def _build_raw_dataset(self) -> Dict[str, Any]:
+        old_provinces = self._load_entities_by_code(self.old_provinces_path)
+        old_districts = self._load_entities_by_code(
+            self.old_districts_path, parent_key="province_code"
+        )
+        old_wards = self._load_entities_by_code(
+            self.old_wards_path, parent_key="district_code"
+        )
+
+        self.old_province_records = old_provinces
+        self.old_district_records = old_districts
+        self.old_ward_records = old_wards
+
+        external_payload = self._load_external_new_dataset()
+        new_provinces_raw = self._dedupe_external_entries(
+            external_payload.get("provinces") or {}
+        )
+        new_wards_raw = self._dedupe_external_entries(
+            external_payload.get("wards") or {}
+        )
+
+        new_provinces: Dict[str, Dict[str, Any]] = {}
+        for code, entry in new_provinces_raw.items():
+            if not isinstance(entry, dict):
+                continue
+            new_provinces[code] = {
+                "code": code,
+                "id": self._safe_int(entry.get("code") or code),
+                "name": entry.get("name"),
+                "name_with_type": entry.get("full_name") or entry.get("name"),
+                "name_en": entry.get("name_en"),
+                "full_name_en": entry.get("full_name_en"),
+            }
+
+        new_wards: Dict[str, Dict[str, Any]] = {}
+        for code, entry in new_wards_raw.items():
+            if not isinstance(entry, dict):
+                continue
+            parent_code = entry.get("province_code")
+            normalized_parent = (
+                str(parent_code).strip() if parent_code is not None else None
+            )
+            new_wards[code] = {
+                "code": code,
+                "id": self._safe_int(entry.get("code") or code),
+                "name": entry.get("name"),
+                "name_with_type": entry.get("full_name") or entry.get("name"),
+                "name_en": entry.get("name_en"),
+                "full_name_en": entry.get("full_name_en"),
+                "parent_code": normalized_parent,
+                "is_new_format": True,
+            }
+
+        self.new_province_records = new_provinces
+        self.new_ward_records = new_wards
+
+        mapping_rows = external_payload.get("ward_mappings") or []
+        ward_old_to_new, ward_new_to_old = self._convert_external_ward_mappings(
+            mapping_rows
+        )
+
+        return {
+            "old": {
+                "provinces": old_provinces,
+                "districts": old_districts,
+                "wards": old_wards,
+            },
+            "new": {
+                "provinces": new_provinces,
+                "wards": new_wards,
+            },
+            "mapping": {
+                "ward_old_to_new": ward_old_to_new,
+                "ward_new_to_old": ward_new_to_old,
+            },
+        }
+
+    def _convert_external_ward_mappings(
+        self,
+        rows: List[Dict[str, Any]],
+    ) -> Tuple[Dict[str, List[Dict[str, Any]]], Dict[str, List[Dict[str, Any]]]]:
+        old_to_new: Dict[str, List[Dict[str, Any]]] = {}
+        new_to_old: Dict[str, List[Dict[str, Any]]] = {}
+
+        def _register(target: Dict[str, List[Dict[str, Any]]], code: Optional[str], payload: Dict[str, Any]):
+            if not code:
+                return
+            bucket = target.setdefault(code, [])
+            bucket.append(payload)
+            normalized = self._normalize_id_token(code)
+            if normalized and normalized != code:
+                target[normalized] = bucket
+
+        for row in rows:
+            old_code_raw = row.get("old_ward_code") or row.get("ward_id_old")
+            new_code_raw = row.get("new_ward_code") or row.get("ward_id_new")
+            if old_code_raw is None or new_code_raw is None:
+                continue
+            old_code = str(old_code_raw).strip()
+            new_code = str(new_code_raw).strip()
+            if not old_code or not new_code:
+                continue
+
+            old_entry = self.old_ward_records.get(old_code)
+            district_id_old = None
+            city_id_old = None
+            if old_entry:
+                district_id_old = self._normalize_id_token(old_entry.get("parent_code"))
+                if district_id_old:
+                    district_entry = self.old_district_records.get(district_id_old)
+                    if district_entry:
+                        city_id_old = self._normalize_id_token(district_entry.get("parent_code"))
+
+            new_entry = self.new_ward_records.get(new_code)
+            city_id_new = None
+            if new_entry:
+                city_id_new = self._normalize_id_token(new_entry.get("parent_code"))
+
+            old_payload = {
+                "city_id_old": city_id_old,
+                "district_id_old": district_id_old,
+                "ward_id_old": old_code,
+                "city_id_new": city_id_new,
+                "ward_id_new": new_code,
+                "old_ward_name": row.get("old_ward_name"),
+                "new_ward_name": row.get("new_ward_name"),
+                "old_province_name": row.get("old_province_name"),
+                "new_province_name": row.get("new_province_name"),
+                "old_district_name": row.get("old_district_name"),
+            }
+            _register(old_to_new, old_code, old_payload)
+
+            new_payload = {
+                "city_id_new": city_id_new,
+                "ward_id_new": new_code,
+                "city_id_old": city_id_old,
+                "district_id_old": district_id_old,
+                "ward_id_old": old_code,
+                "old_ward_name": row.get("old_ward_name"),
+                "new_ward_name": row.get("new_ward_name"),
+                "old_province_name": row.get("old_province_name"),
+                "new_province_name": row.get("new_province_name"),
+                "old_district_name": row.get("old_district_name"),
+            }
+            _register(new_to_old, new_code, new_payload)
+
+        return old_to_new, new_to_old
+
     def _normalize_address_dataset(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Convert the VietMap raw schema (old/new/mapping) to the legacy nested structure
-        expected by the parser. If the incoming payload already follows the nested
-        format we simply return it unchanged.
+        Convert the data files (old/new/mapping) into a legacy nested structure
+        keyed by province name for downstream processing.
         """
 
         if not isinstance(raw_data, dict):
             return {}
 
-        if "old" not in raw_data or "new" not in raw_data:
-            # Already in legacy format
-            self.ward_mapping_by_old_code = {}
-            self.ward_mapping_by_new_code = {}
-            self.old_province_records = {}
-            self.old_district_records = {}
-            self.old_ward_records = {}
-            self.new_province_records = {}
-            self.new_ward_records = {}
-            return raw_data
-
-        mapping_section = raw_data.get("mapping") or {}
-        ward_mapping = mapping_section.get("ward_old_to_new") or {}
-        ward_mapping_new = mapping_section.get("ward_new_to_old") or {}
-        # Ensure keys are strings for downstream lookups
-        self.ward_mapping_by_old_code = {
-            str(k): v for k, v in ward_mapping.items()
-        }
-        self.ward_mapping_by_new_code = {
-            str(k): v for k, v in ward_mapping_new.items()
-        }
-
         old_section = raw_data.get("old") or {}
         new_section = raw_data.get("new") or {}
+        mapping_section = raw_data.get("mapping") or {}
 
         provinces_old = old_section.get("provinces") or {}
         districts_old = old_section.get("districts") or {}
         wards_old = old_section.get("wards") or {}
+        provinces_new = new_section.get("provinces") or {}
+        wards_new = new_section.get("wards") or {}
+
         self.old_province_records = provinces_old
         self.old_district_records = districts_old
         self.old_ward_records = wards_old
-
-        provinces_new = new_section.get("provinces") or {}
-        wards_new = new_section.get("wards") or {}
         self.new_province_records = provinces_new
         self.new_ward_records = wards_new
+
+        ward_mapping = mapping_section.get("ward_old_to_new") or {}
+        ward_mapping_new = mapping_section.get("ward_new_to_old") or {}
+        self.ward_mapping_by_old_code = {str(k): v for k, v in ward_mapping.items()}
+        self.ward_mapping_by_new_code = {str(k): v for k, v in ward_mapping_new.items()}
 
         legacy_view: Dict[str, Dict[str, Any]] = {}
         province_entries_by_code: Dict[str, Dict[str, Any]] = {}
         district_entries_by_code: Dict[str, Dict[str, Any]] = {}
 
         def _preferred_name(entity: Dict[str, Any], fallback: str) -> str:
-            for key in ("name", "name_with_type", "slug"):
+            for key in ("name", "name_with_type"):
                 value = entity.get(key)
                 if isinstance(value, str) and value.strip():
                     return value.strip()
             return fallback
 
-        def ensure_province_entry(code: Optional[str], template: Optional[Dict[str, Any]]) -> Dict[str, Any]:
-            normalized_code = str(code) if code is not None else None
-            template = template or {}
-            name = _preferred_name(template, normalized_code or "Unknown Province")
-            entry = legacy_view.get(name)
+        def ensure_province(code: Optional[str], payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+            payload = payload or {}
+            normalized_code = str(code) if code is not None else payload.get("code")
+            normalized_code = str(normalized_code).strip() if normalized_code else None
+            name = _preferred_name(payload, normalized_code or "Unknown Province")
+
+            entry = None
+            if normalized_code:
+                entry = province_entries_by_code.get(normalized_code)
+            if entry is None:
+                entry = legacy_view.get(name)
+
             if entry is None:
                 entry = {
-                    "id": self._safe_int(template.get("code") or normalized_code),
-                    "code": template.get("code") or normalized_code,
-                    "slug": template.get("slug"),
-                    "type": template.get("type"),
-                    "name_with_type": template.get("name_with_type") or name,
+                    "id": self._safe_int(payload.get("id") or normalized_code),
+                    "code": normalized_code,
+                    "name_with_type": payload.get("name_with_type") or name,
                     "districts": {},
                 }
                 legacy_view[name] = entry
             else:
-                if entry.get("code") is None and (template.get("code") or normalized_code):
-                    entry["code"] = template.get("code") or normalized_code
+                if entry.get("code") is None and normalized_code:
+                    entry["code"] = normalized_code
                 if entry.get("id") is None:
-                    entry["id"] = self._safe_int(template.get("code") or normalized_code)
-                for key in ("slug", "type", "name_with_type"):
-                    if not entry.get(key) and template.get(key):
-                        entry[key] = template[key]
-            if normalized_code:
+                    entry["id"] = self._safe_int(payload.get("id") or normalized_code)
+                if not entry.get("name_with_type") and payload.get("name_with_type"):
+                    entry["name_with_type"] = payload["name_with_type"]
+
+            if normalized_code and normalized_code not in province_entries_by_code:
                 province_entries_by_code[normalized_code] = entry
             return entry
 
-        # Seed provinces from both datasets
         for code, info in provinces_old.items():
-            ensure_province_entry(code, info)
+            ensure_province(code, info)
         for code, info in provinces_new.items():
-            ensure_province_entry(code, info)
+            ensure_province(code, info)
 
-        def ensure_new_format_bucket(province_entry: Dict[str, Any]) -> Dict[str, Any]:
-            bucket = province_entry.setdefault("districts", {}).get("")
-            if bucket is None:
-                bucket = {
-                    "id": None,
-                    "code": None,
-                    "slug": None,
-                    "type": None,
-                    "name_with_type": "",
+        def attach_district(province_entry: Dict[str, Any], code: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+            district_name = _preferred_name(payload, code)
+            district_entry = province_entry["districts"].get(district_name)
+            if district_entry is None:
+                district_entry = {
+                    "id": self._safe_int(payload.get("id") or code),
+                    "code": payload.get("code") or code,
+                    "name_with_type": payload.get("name_with_type") or district_name,
                     "wards": {},
                 }
-                province_entry["districts"][""] = bucket
-            bucket["is_new_format"] = True
-            bucket.setdefault("wards", {})
-            return bucket
+                province_entry["districts"][district_name] = district_entry
+            district_entries_by_code[str(code)] = district_entry
+            return district_entry
 
-        # Hydrate districts from old dataset
         for code, info in districts_old.items():
             province_code = info.get("parent_code")
             province_entry = province_entries_by_code.get(str(province_code))
             if province_entry is None:
-                province_entry = ensure_province_entry(province_code, provinces_old.get(str(province_code)))
-            district_name = _preferred_name(info, str(code))
-            district_entry = {
-                "id": self._safe_int(info.get("code") or code),
-                "code": info.get("code") or code,
-                "slug": info.get("slug"),
-                "type": info.get("type"),
-                "name_with_type": info.get("name_with_type") or district_name,
-                "wards": {},
-            }
-            province_entry.setdefault("districts", {})[district_name] = district_entry
-            district_entries_by_code[str(code)] = district_entry
+                province_entry = ensure_province(province_code, provinces_old.get(str(province_code)))
+            attach_district(province_entry, code, info)
 
-        # Attach old wards under their districts using the mapping for lookups
+        def new_format_bucket(province_entry: Dict[str, Any]) -> Dict[str, Any]:
+            bucket = province_entry["districts"].get("")
+            if bucket is None:
+                bucket = {
+                    "id": None,
+                    "code": None,
+                    "name_with_type": "",
+                    "is_new_format": True,
+                    "wards": {},
+                }
+                province_entry["districts"][""] = bucket
+            bucket.setdefault("wards", {})
+            return bucket
+
         for code, info in wards_old.items():
-            province_code = info.get("parent_code")
-            province_entry = province_entries_by_code.get(str(province_code))
-            if province_entry is None:
-                province_entry = ensure_province_entry(province_code, provinces_old.get(str(province_code)))
-
-            mapping_candidates = self.ward_mapping_by_old_code.get(str(code), [])
-            district_entry = None
-            district_code = None
-            if mapping_candidates:
-                primary = mapping_candidates[0]
-                district_code = primary.get("district_id_old")
-            if district_code:
-                district_entry = district_entries_by_code.get(str(district_code))
-                if district_entry is None:
-                    district_payload = districts_old.get(str(district_code)) or {}
-                    district_name = _preferred_name(district_payload, str(district_code))
-                    district_entry = {
-                        "id": self._safe_int(district_code),
-                        "code": str(district_code),
-                        "slug": district_payload.get("slug"),
-                        "type": district_payload.get("type"),
-                        "name_with_type": district_payload.get("name_with_type") or district_name,
-                        "wards": {},
-                    }
-                    province_entry.setdefault("districts", {})[district_name] = district_entry
-                    district_entries_by_code[str(district_code)] = district_entry
+            parent_district = info.get("parent_code")
+            district_entry = district_entries_by_code.get(str(parent_district))
             if district_entry is None:
-                district_entry = ensure_new_format_bucket(province_entry)
-
-            ward_name = _preferred_name(info, str(code))
+                province_code = None
+                district_payload = districts_old.get(str(parent_district)) or {}
+                if district_payload:
+                    province_code = district_payload.get("parent_code")
+                province_entry = province_entries_by_code.get(str(province_code))
+                if province_entry is None:
+                    province_entry = ensure_province(province_code, provinces_old.get(str(province_code)))
+                district_entry = attach_district(province_entry, parent_district or code, district_payload)
+            ward_name = _preferred_name(info, code)
             ward_entry = {
-                "id": self._safe_int(info.get("code") or code),
+                "id": self._safe_int(info.get("id") or code),
                 "code": info.get("code") or code,
-                "slug": info.get("slug"),
-                "type": info.get("type"),
                 "name_with_type": info.get("name_with_type") or ward_name,
-                "path": info.get("path"),
-                "path_with_type": info.get("path_with_type"),
                 "parent_code": info.get("parent_code"),
             }
-            if mapping_candidates:
-                ward_entry["mapping"] = mapping_candidates
-            district_entry.setdefault("wards", {})[ward_name] = ward_entry
+            district_entry["wards"][ward_name] = ward_entry
 
-        # Attach new-format wards directly under the special bucket
         for code, info in wards_new.items():
             province_code = info.get("parent_code")
             province_entry = province_entries_by_code.get(str(province_code))
             if province_entry is None:
-                province_entry = ensure_province_entry(province_code, provinces_new.get(str(province_code)))
-            new_bucket = ensure_new_format_bucket(province_entry)
-            ward_name = _preferred_name(info, str(code))
+                province_entry = ensure_province(province_code, provinces_new.get(str(province_code)))
+            bucket = new_format_bucket(province_entry)
+            ward_name = _preferred_name(info, code)
             ward_entry = {
-                "id": self._safe_int(info.get("code") or code),
+                "id": self._safe_int(info.get("id") or code),
                 "code": info.get("code") or code,
-                "slug": info.get("slug"),
-                "type": info.get("type"),
                 "name_with_type": info.get("name_with_type") or ward_name,
-                "path": info.get("path"),
-                "path_with_type": info.get("path_with_type"),
                 "parent_code": info.get("parent_code"),
                 "is_new_format": True,
             }
-            new_bucket.setdefault("wards", {})[ward_name] = ward_entry
+            bucket["wards"][ward_name] = ward_entry
 
         return legacy_view
 
@@ -1480,14 +1756,101 @@ class AddressParser:
         return candidate, True
 
     def _collect_aliases(
-        self, primary: Optional[str], raw_value: Optional[str]
+        self,
+        primary: Optional[str],
+        raw_value: Optional[str],
+        extra_aliases: Optional[List[str]] = None,
     ) -> List[str]:
         aliases: List[str] = []
-        if primary:
-            aliases.append(primary)
-        if raw_value and raw_value not in aliases:
-            aliases.append(raw_value)
+        seen: Set[str] = set()
+
+        def _add(value: Optional[str]):
+            if not value:
+                return
+            if value in seen:
+                return
+            aliases.append(value)
+            seen.add(value)
+
+        _add(primary)
+        _add(raw_value)
+        if extra_aliases:
+            for alias in extra_aliases:
+                _add(alias)
         return aliases or [""]
+
+    def _standardize_aliases(self, aliases: List[str]) -> Set[str]:
+        normalized: Set[str] = set()
+        for alias in aliases:
+            std = self.standardize_name(alias, False)
+            if std:
+                normalized.add(std)
+        return normalized
+
+    def _reference_aliases_for_level(
+        self,
+        level: str,
+        code: Optional[Any],
+    ) -> List[str]:
+        if not code:
+            return []
+        code_str = str(code).strip()
+        candidates = [code_str]
+        normalized = self._normalize_id_token(code)
+        if normalized and normalized not in candidates:
+            candidates.append(normalized)
+        lookup = (
+            self.external_new_province_records
+            if level == "province"
+            else self.external_new_ward_records
+        )
+        entry = None
+        for key in candidates:
+            if key and key in lookup:
+                entry = lookup[key]
+                break
+        if not entry:
+            return []
+        extras: List[str] = []
+        for key in ("name_en", "full_name"):
+            value = entry.get(key)
+            if isinstance(value, str) and value not in extras:
+                extras.append(value)
+        return extras
+
+    def _register_alias_lookup_entry(
+        self,
+        registry: Dict[str, List[Dict[str, Any]]],
+        alias_set: Set[str],
+        payload: Dict[str, Any],
+    ) -> None:
+        for alias_std in alias_set:
+            if not alias_std:
+                continue
+            bucket = registry.setdefault(alias_std, [])
+            if payload not in bucket:
+                bucket.append(payload)
+
+    def _register_node_aliases(
+        self,
+        node_index: int,
+        *,
+        province_aliases_std: Optional[Set[str]] = None,
+        district_aliases_std: Optional[Set[str]] = None,
+        ward_aliases_std: Optional[Set[str]] = None,
+    ) -> None:
+        if province_aliases_std:
+            for alias in province_aliases_std:
+                if alias:
+                    self.invert_province_to_indices[alias].add(node_index)
+        if district_aliases_std:
+            for alias in district_aliases_std:
+                if alias:
+                    self.invert_district_to_indices[alias].add(node_index)
+        if ward_aliases_std:
+            for alias in ward_aliases_std:
+                if alias:
+                    self.invert_ward_to_indices[alias].add(node_index)
 
     def _augment_aliases(self, aliases: List[str], level: str) -> List[str]:
         seen: Set[str] = set()
@@ -1581,20 +1944,42 @@ class AddressParser:
         candidates: List[Tuple[str, str]] = []
 
         source_norm = source_string if source_string else ""
-        for idx in indices:
-            node = self.address_node_list[idx]
-            if level == "province":
-                name = node.province_name
-                if not name:
+        def _collect(relax: bool) -> List[Tuple[str, str]]:
+            nonlocal fallback
+            local_candidates: List[Tuple[str, str]] = []
+            local_fallback: Optional[str] = None
+            for idx in indices:
+                node = self.address_node_list[idx]
+                if level == "province":
+                    name = node.province_name
+                    if not name:
+                        continue
+                    norm = self.standardize_name(name, False)
+                    local_candidates.append((name, norm))
+                    if local_fallback is None:
+                        local_fallback = name
                     continue
-                norm = self.standardize_name(name, False)
-                candidates.append((name, norm))
-                if fallback is None:
-                    fallback = name
-                continue
 
-            if level == "district":
-                name = node.district_name
+                if level == "district":
+                    name = node.district_name
+                    if not name:
+                        continue
+                    node_prov_std = (
+                        self.standardize_name(node.province_name, False)
+                        if node.province_name
+                        else None
+                    )
+                    if expected_province_std and not relax:
+                        if not node_prov_std or node_prov_std != expected_province_std:
+                            continue
+                    norm = self.standardize_name(name, False)
+                    local_candidates.append((name, norm))
+                    if local_fallback is None:
+                        local_fallback = name
+                    continue
+
+                # ward level
+                name = node.ward_name
                 if not name:
                     continue
                 node_prov_std = (
@@ -1602,42 +1987,32 @@ class AddressParser:
                     if node.province_name
                     else None
                 )
-                if expected_province_std:
+                node_dist_std = (
+                    self.standardize_name(node.district_name, False)
+                    if node.district_name
+                    else None
+                )
+                if expected_province_std and not relax:
                     if not node_prov_std or node_prov_std != expected_province_std:
                         continue
+                if expected_district_std and not relax:
+                    if not node_dist_std:
+                        continue
+                    if node_dist_std != expected_district_std:
+                        continue
                 norm = self.standardize_name(name, False)
-                candidates.append((name, norm))
-                if not fallback:
-                    fallback = name
+                local_candidates.append((name, norm))
+                if local_fallback is None:
+                    local_fallback = name
                 continue
 
-            # ward level
-            name = node.ward_name
-            if not name:
-                continue
-            node_prov_std = (
-                self.standardize_name(node.province_name, False)
-                if node.province_name
-                else None
-            )
-            node_dist_std = (
-                self.standardize_name(node.district_name, False)
-                if node.district_name
-                else None
-            )
-            if expected_province_std:
-                if not node_prov_std or node_prov_std != expected_province_std:
-                    continue
-            if expected_district_std:
-                if not node_dist_std:
-                    continue
-                if node_dist_std != expected_district_std:
-                    continue
-            norm = self.standardize_name(name, False)
-            candidates.append((name, norm))
-            if fallback is None:
-                fallback = name
-            continue
+            if fallback is None and local_fallback is not None:
+                fallback = local_fallback
+            return local_candidates
+
+        candidates = _collect(relax=False)
+        if not candidates and (expected_province_std or expected_district_std):
+            candidates = _collect(relax=True)
 
         if not candidates:
             return fallback
@@ -2271,6 +2646,12 @@ class AddressParser:
         street = "".join(filtered_chars)
         street = re.sub(r"[,\.;:]+\s*", " ", street)
         street = re.sub(r"\s+", " ", street).strip(" ,;.-")
+        if street:
+            street = re.sub(
+                r"(?i)\bvi\S*t[\s-]*nam\b\.?$",
+                "",
+                street,
+            ).strip(" ,;.-")
         return street.strip()
 
     def generate_ngrams(self, s: str, n: int = 4) -> list:
@@ -2313,7 +2694,7 @@ class AddressParser:
             r"\b(?:thanh pho|tp|tinh|city|province|municipality)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
         district_pref = re.compile(
-            r"\b(?:quan|huyen|thi xa|district|county)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
+            r"\b(?:quan|huyen|thi xa|thi tran|thanh pho|tp|city|municipality|district|county)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
         ward_pref = re.compile(
             r"\b(?:phuong|xa|thi tran|ward|commune|town)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
@@ -2325,7 +2706,9 @@ class AddressParser:
                 return None
             # Limit fragment to first 3 tokens to avoid swallowing next parts
             tokens = fragment.split()
-            if len(tokens) > 3 and len(tokens[3]) == 1:
+            if len(tokens) <= 4:
+                fragment = " ".join(tokens)
+            elif len(tokens) > 3 and len(tokens[3]) == 1:
                 fragment = " ".join(tokens[:4])
             else:
                 fragment = " ".join(tokens[:3])
@@ -2559,16 +2942,23 @@ class AddressParser:
 
 if __name__ == "__main__":
     parser = AddressParser()
-    test_address = "UBND xã Vĩnh Kim, Châu Thành, Tiền Giang"
+    test_address = "Vĩnh Kim, Châu Thành, Tiền Giang"
     result = parser.process(test_address)
     print(result)
 
-    province_id_old = result["province"].get("id")
-    district_id_old = result["district"].get("id")
-    ward_id_old = result["ward"].get("id")
+    province_component = result.get("province") or {}
+    district_component = result.get("district") or {}
+    ward_component = result.get("ward") or {}
 
-    sample_mapping = parser.map_old_ward_to_new(ward_id_old)
-    print(f"Sample mapping for ward {ward_id_old}:", sample_mapping[:1])
+    province_id_old = province_component.get("id")
+    district_id_old = district_component.get("id")
+    ward_id_old = ward_component.get("id")
+
+    if ward_id_old is not None:
+        sample_mapping = parser.map_old_ward_to_new(ward_id_old)
+        print(f"Sample mapping for ward {ward_id_old}:", sample_mapping[:1])
+    else:
+        print("Sample mapping skipped: ward ID missing")
 
     node_snapshot = parser.get_address_components_from_ids(
         province_id=province_id_old,
