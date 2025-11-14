@@ -25,6 +25,9 @@ python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### 1b. Optional: Download public dataset
+Grab the curated samples from Kaggle: [NER Address Standard Dataset](https://www.kaggle.com/datasets/thnhthunh/ner-address-standard-dataset) and drop the downloaded files under `ner/datasets/` (the repo ignores the root-level `datasets/` folder by default).
+
 ### 2. Generate synthetic data
 ```bash
 python ner/build_standard_dataset.py --max-samples 500000
