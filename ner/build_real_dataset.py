@@ -33,10 +33,10 @@ def detect_file_kind(path: Path) -> str:
             return "json_lines"
 
 
-def iter_json_objects(path: Path) -> Iterator[JsonValue]:
+def iter_json_objects(path: Path, mode: str) -> Iterator[JsonValue]:
     kind = detect_file_kind(path)
     if kind == "json_array":
-        yield from _iter_json_array(path)
+        yield from _iter_json_array(path, mode=mode)
     elif kind == "json_lines":
         yield from _iter_json_lines(path)
     else:
@@ -57,8 +57,22 @@ def _iter_json_lines(path: Path) -> Iterator[JsonValue]:
                 continue
 
 
-def _iter_json_array(path: Path) -> Iterator[JsonValue]:
+def _iter_json_array(path: Path, mode: str) -> Iterator[JsonValue]:
     with path.open("r", encoding="utf-8") as handle:
+        if mode == "memory":
+            # Read the entire file into memory
+            content = handle.read()
+            try:
+                data = json.loads(content)
+                print(f"Loaded {len(data)} records into memory from {path}", file=sys.stderr)
+                if isinstance(data, list):
+                    for item in data:
+                        yield item
+            except json.JSONDecodeError:
+                return
+            return
+        
+        # Stream parsing
         buffer: list[str] = []
         depth = 0
         capturing = False
@@ -109,7 +123,7 @@ def load_addresses(
 ) -> Iterable[Union[str, List[str]]]:
     def generator() -> Iterator[str]:
         count = 0
-        for entry in iter_json_objects(path):
+        for entry in iter_json_objects(path, mode):
             if limit is not None and count >= limit:
                 break
             count += 1
@@ -217,6 +231,11 @@ def build_dataset(
                 write_record(test_handle, payload)
                 test_count += 1
 
+            if total % 1000 == 0:
+                print(f"Processed {total} addresses...")
+    
+    print("Build done")    
+    
     return {
         "total": total,
         "parser_hits": parser_hits,

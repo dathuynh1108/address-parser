@@ -351,6 +351,24 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         component_order=("WARD", "DISTRICT"),
         abbreviate_types=True,
     ),
+    VariantSpec(
+        name="district_first",
+        component_order=("DISTRICT", "WARD", "PROVINCE"),
+    ),
+    VariantSpec(
+        name="district_first_abbrev",
+        component_order=("DISTRICT", "WARD", "PROVINCE"),
+        abbreviate_types=True,
+    ),
+    VariantSpec(
+        name="province_first",
+        component_order=("PROVINCE", "DISTRICT", "WARD"),
+    ),
+    VariantSpec(
+        name="province_first_abbrev",
+        component_order=("PROVINCE", "DISTRICT", "WARD"),
+        abbreviate_types=True,
+    ),
 )
 
 
@@ -542,8 +560,8 @@ def collect_variants(record: Dict[str, str]) -> List[NameVariant]:
     fields = [
         ("name", False),
         ("full_name", True),
-        ("name_en", False),
-        ("full_name_en", True),
+        # ("name_en", False),
+        # ("full_name_en", True),
         ("code_name", False),
     ]
     for key, default_includes_type in fields:
@@ -801,12 +819,8 @@ def render_data_sample(
 
     component_map = {label: component for label, component in record.components()}
     ordered_labels = [
-        label
-        for label in spec.component_order
-        if label in component_map and label != "PROVINCE"
+        label for label in spec.component_order if label in component_map
     ]
-    if "PROVINCE" in spec.component_order and "PROVINCE" in component_map:
-        ordered_labels.append("PROVINCE")
     if not ordered_labels:
         return None
 
