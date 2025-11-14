@@ -282,10 +282,28 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
     ),
     VariantSpec(name="ward_only", include_street=False, component_order=("WARD",)),
     VariantSpec(
+        name="ward_only_abbrev",
+        include_street=False,
+        component_order=("WARD",),
+        abbreviate_types=True,
+    ),
+    VariantSpec(
         name="district_only", include_street=False, component_order=("DISTRICT",)
     ),
     VariantSpec(
+        name="district_only_abbrev",
+        include_street=False,
+        component_order=("DISTRICT",),
+        abbreviate_types=True,
+    ),
+    VariantSpec(
         name="province_only", include_street=False, component_order=("PROVINCE",)
+    ),
+    VariantSpec(
+        name="province_only_abbrev",
+        include_street=False,
+        component_order=("PROVINCE",),
+        abbreviate_types=True,
     ),
     VariantSpec(
         name="ward_province", include_street=False, component_order=("WARD", "PROVINCE")
