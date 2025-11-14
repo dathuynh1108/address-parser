@@ -20,20 +20,20 @@ from transformers import (
 )
 
 DEFAULT_CONFIG = {
-    "train_file": "ner/datasets/train.jsonl",
-    "eval_file": "ner/datasets/test.jsonl",
-    "model_name": "NlpHUST/electra-base-vn",
-    "output_dir": "ner/artifacts",
-    "epochs": 5,
-    "batch_size": 16,
-    "learning_rate": 3e-5,
-    "weight_decay": 0.01,
-    "warmup_ratio": 0.1,
-    "gradient_accumulation_steps": 1,
-    "max_length": 256,
-    "seed": 42,
-    "push_to_hub": False,
-    "report": True,
+  "train_file": "ner/datasets/combined/train.jsonl",
+  "eval_file": "ner/datasets/combined/test.jsonl",
+  "model_name": "NlpHUST/electra-base-vn",
+  "output_dir": "ner/artifacts",
+  "epochs": 5,
+  "batch_size": 32,
+  "learning_rate": 2e-5,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.02,
+  "gradient_accumulation_steps": 2,
+  "max_length": 256,
+  "seed": 42,
+  "push_to_hub": False,
+  "report": True
 }
 
 CONFIG_PATH_KEYS = ("train_file", "eval_file", "output_dir")
@@ -187,7 +187,7 @@ def main() -> None:
         learning_rate=config["learning_rate"],
         warmup_ratio=config["warmup_ratio"],
         weight_decay=config["weight_decay"],
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         logging_steps=50,
         load_best_model_at_end=True,

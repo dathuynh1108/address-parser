@@ -45,14 +45,14 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         nargs="+",
         required=True,
-        help="List of JSONL files whose contents will be merged into the output train split.",
+        help="List of JSONL files whose contents will be merged prior to splitting.",
     )
     parser.add_argument(
         "--test-files",
         type=Path,
         nargs="*",
         default=None,
-        help="Optional list of JSONL files for the output test split. If omitted, the merged train data will be re-split.",
+        help="Optional additional JSONL files that will be merged before re-splitting.",
     )
     parser.add_argument(
         "--output-dir",
@@ -75,21 +75,25 @@ def main() -> None:
     args = parse_args()
     rng = random.Random(args.seed)
 
-    train_rows = merge_files(args.train_files)
-    test_rows: List[dict]
-
+    all_paths: List[Path] = list(args.train_files)
     if args.test_files:
-        test_rows = merge_files(args.test_files)
+        all_paths.extend(args.test_files)
+
+    merged_rows = merge_files(all_paths)
+    if not merged_rows:
+        raise SystemExit("No rows were loaded from the provided files.")
+
+    if not args.no_shuffle:
+        rng.shuffle(merged_rows)
+
+    if len(merged_rows) == 1:
+        train_rows = merged_rows[:]
+        test_rows = merged_rows[:]
     else:
-        merged = train_rows
-        if not args.no_shuffle:
-            rng.shuffle(merged)
-        split_idx = int(len(merged) * args.train_ratio)
-        train_rows = merged[:split_idx]
-        test_rows = merged[split_idx:]
-        if not test_rows and train_rows:
-            test_rows = train_rows[-1:]
-            train_rows = train_rows[:-1]
+        split_idx = int(len(merged_rows) * args.train_ratio)
+        split_idx = max(1, min(split_idx, len(merged_rows) - 1))
+        train_rows = merged_rows[:split_idx]
+        test_rows = merged_rows[split_idx:]
 
     if not args.no_shuffle:
         rng.shuffle(train_rows)
