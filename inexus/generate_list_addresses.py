@@ -137,7 +137,7 @@ def main() -> None:
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT,
-        help="Destination path for the generated JSON (default: inexus/list_addresses.jsonl).",
+        help="Destination path for the generated JSON (default: fuzz/list_addresses.jsonl).",
     )
     args = parser.parse_args()
 
