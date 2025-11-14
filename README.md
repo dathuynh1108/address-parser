@@ -57,12 +57,13 @@ Edit `ner/configs/train_default.json` (update `train_file`, `eval_file`, hyperpa
 python ner/ner_train.py --config ner/configs/train_default.json
 ```
 The Trainer will log to `ner/artifacts/`, save the best checkpoint, and print precision/recall/F1 via `seqeval`.
+> TPU/Kaggle note: `ner_train.py` automatically switches to the non-fused `adamw_hf` optimizer whenever `torch-xla` is detected. Override `optim` inside the JSON config if you need a specific optimizer.
 
 ## Configuration Tips
 - `build_standard_dataset.py` accepts `--max-samples`, `--train-ratio`, etc., so you can produce small smoke tests or full corpora.
 - `build_real_dataset.py` streams JSON/JSONL (no 3M-row memory blowups) and records a `matches` flag per entity for debugging.
 - `ner/merge_datasets.py` always re-shuffles merged rows before splitting; use `--train-ratio` to bias train size or `--no-shuffle` for deterministic ordering.
-- `ner/ner_train.py` looks for `ner/configs/train_default.json` by default. Duplicate it to create multiple experiment configs (different LR, seeds, checkpoints) without juggling CLI flags.
+- `ner/ner_train.py` looks for `ner/configs/train_default.json` by default. Duplicate it to create multiple experiment configs (different LR, seeds, checkpoints) without juggling CLI flags. You can set `optim` in the JSON to any Hugging Face `TrainingArguments.optim` value; the script auto-falls back to `adamw_hf` when `torch-xla` is present to avoid fused-optimizer crashes on TPUs.
 
 ## Testing / Debugging
 - Use `ner/debug.py` (or notebooks) to poke at tokenizer alignment, CLS/SEP handling, etc.

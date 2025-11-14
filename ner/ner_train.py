@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -33,10 +34,18 @@ DEFAULT_CONFIG = {
   "max_length": 256,
   "seed": 42,
   "push_to_hub": False,
-  "report": True
+  "report": True,
+  "optim": None,
 }
 
 CONFIG_PATH_KEYS = ("train_file", "eval_file", "output_dir")
+
+
+def is_xla_available() -> bool:
+    try:
+        return importlib.util.find_spec("torch_xla") is not None
+    except Exception:
+        return False
 
 
 def parse_args() -> argparse.Namespace:
@@ -178,7 +187,11 @@ def main() -> None:
 
     data_collator = DataCollatorForTokenClassification(tokenizer)
 
-    training_args = TrainingArguments(
+    optim_name = config.get("optim")
+    if optim_name is None and is_xla_available():
+        optim_name = "adamw_hf"
+
+    training_kwargs = dict(
         output_dir=str(config["output_dir"]),
         num_train_epochs=config["epochs"],
         per_device_train_batch_size=config["batch_size"],
@@ -196,6 +209,10 @@ def main() -> None:
         seed=config["seed"],
         push_to_hub=config["push_to_hub"],
     )
+    if optim_name:
+        training_kwargs["optim"] = optim_name
+
+    training_args = TrainingArguments(**training_kwargs)
 
     trainer = Trainer(
         model=model,
