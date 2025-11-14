@@ -63,7 +63,7 @@ The Trainer will log to `ner/artifacts/`, save the best checkpoint, and print pr
 - `build_standard_dataset.py` accepts `--max-samples`, `--train-ratio`, etc., so you can produce small smoke tests or full corpora.
 - `build_real_dataset.py` streams JSON/JSONL (no 3M-row memory blowups) and records a `matches` flag per entity for debugging.
 - `ner/merge_datasets.py` always re-shuffles merged rows before splitting; use `--train-ratio` to bias train size or `--no-shuffle` for deterministic ordering.
-- `ner/ner_train.py` looks for `ner/configs/train_default.json` by default. Duplicate it to create multiple experiment configs (different LR, seeds, checkpoints) without juggling CLI flags. You can set `optim` in the JSON to any Hugging Face `TrainingArguments.optim` value; the script auto-falls back to `adamw_hf` when `torch-xla` is present to avoid fused-optimizer crashes on TPUs.
+- `ner/ner_train.py` looks for `ner/configs/train_default.json` by default. Duplicate it to create multiple experiment configs (different LR, seeds, checkpoints) without juggling CLI flags. You can set `optim` in the JSON to any Hugging Face `TrainingArguments.optim` value; the script auto-falls back to `adamw_torch_xla` when `torch-xla` is present to avoid fused-optimizer crashes on TPUs.
 
 ## Testing / Debugging
 - Use `ner/debug.py` (or notebooks) to poke at tokenizer alignment, CLS/SEP handling, etc.
