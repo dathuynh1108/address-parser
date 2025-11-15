@@ -4,13 +4,15 @@
   "model_name": "NlpHUST/electra-base-vn",
   "output_dir": "ner/artifacts",
   "epochs": 5,
-  "batch_size": 32,
-  "learning_rate": 2e-5,
+  "batch_size": 16,
+  "learning_rate": 1.5e-5,
   "weight_decay": 0.01,
-  "warmup_ratio": 0.02,
-  "gradient_accumulation_steps": 2,
+  "warmup_ratio": 0.03,
+  "gradient_accumulation_steps": 4,
   "max_length": 256,
   "seed": 42,
   "push_to_hub": false,
-  "report": true
+  "report": true,
+  "optim": null,
+  "report_to": []
 }

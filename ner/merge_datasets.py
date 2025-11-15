@@ -78,7 +78,6 @@ def main() -> None:
     all_paths: List[Path] = list(args.train_files)
     if args.test_files:
         all_paths.extend(args.test_files)
-
     merged_rows = merge_files(all_paths)
     if not merged_rows:
         raise SystemExit("No rows were loaded from the provided files.")
