@@ -8,6 +8,28 @@ This repo combines a fuzzy address parser with a full synthetic/real dataset pip
 - **Dataset merger** (`ner/merge_datasets.py`): Concatenates any number of JSONL splits and re-splits with deterministic shuffling.
 - **Electra trainer** (`ner/ner_train.py`): Fine-tunes `NlpHUST/electra-base-vn` (or any HF checkpoint) using a JSON config instead of a huge CLI.
 
+
+## Public Resources (Datasets & Models)
+
+### **Synthetic + Real NER Dataset**
+- Kaggle dataset:  
+  https://www.kaggle.com/datasets/thnhthunh/ner-address-standard-dataset  
+
+- Hugging Face dataset (mirror + improved metadata):  
+  https://huggingface.co/datasets/dathuynh1108/ner-address-standard-dataset  
+
+This dataset contains:
+- Synthetic Vietnamese addresses with accent/no-accent variants, abbreviations, and structural noise
+- Real-world addresses labeled using the parser
+- Unified JSONL format with labels: `STREET`, `WARD`, `DISTRICT`, `PROVINCE`
+- Metadata flags for matching quality
+
+### **Trained Electra NER Model**
+Fine-tuned from `NlpHUST/electra-base-vn` on the combined synthetic + real dataset.
+
+Model on HuggingFace:  
+https://huggingface.co/dathuynh1108/ner-address-electra-base-vn
+
 ## Directory Structure
 - `inexus/`: Address parser + `data/` (administrative dumps & mappings).
 - `ner/`:
@@ -26,7 +48,7 @@ pip install -r requirements.txt
 ```
 
 ### 1b. Optional: Download public dataset
-Grab the curated samples from Kaggle: [NER Address Standard Dataset](https://www.kaggle.com/datasets/thnhthunh/ner-address-standard-dataset) and drop the downloaded files under `ner/datasets/` (the repo ignores the root-level `datasets/` folder by default).
+Download from Kaggle/HuggingFace and drop the downloaded files under `ner/datasets/` (the repo ignores the root-level `datasets/` folder by default).
 
 ### 2. Generate synthetic data
 ```bash
