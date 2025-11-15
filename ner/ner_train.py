@@ -37,6 +37,8 @@ DEFAULT_CONFIG = {
   "report": True,
   "optim": None,
   "report_to": [],
+  "hub_model_id": None,
+  "hub_private_repo": False,
 }
 
 CONFIG_PATH_KEYS = ("train_file", "eval_file", "output_dir")
@@ -213,6 +215,11 @@ def main() -> None:
     )
     if optim_name:
         training_kwargs["optim"] = optim_name
+    hub_model_id = config.get("hub_model_id")
+    if hub_model_id:
+        training_kwargs["hub_model_id"] = hub_model_id
+    if config.get("hub_private_repo"):
+        training_kwargs["hub_private_repo"] = True
 
     training_args = TrainingArguments(**training_kwargs)
 
@@ -230,6 +237,12 @@ def main() -> None:
     metrics = trainer.evaluate()
     trainer.save_model()
     trainer.state.save_to_json(str(config["output_dir"] / "trainer_state.json"))
+    if config["push_to_hub"]:
+        commit_message = "Train model"
+        eval_f1 = metrics.get("eval_f1")
+        if eval_f1 is not None:
+            commit_message = f"Train model - eval_f1={eval_f1:.4f}"
+        trainer.push_to_hub(commit_message=commit_message)
 
     print(json.dumps(metrics, indent=2))
     if config["report"]:

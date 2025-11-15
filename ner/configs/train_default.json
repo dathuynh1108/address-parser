@@ -11,8 +11,11 @@
   "gradient_accumulation_steps": 4,
   "max_length": 256,
   "seed": 42,
-  "push_to_hub": false,
   "report": true,
   "optim": null,
-  "report_to": []
+  
+  "push_to_hub": true,
+  "report_to": [],
+  "hub_model_id": "dathuynh1108/ner-address-electra-base-vn",
+  "hub_private_repo": false
 }

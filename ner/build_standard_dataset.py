@@ -755,19 +755,29 @@ def build_street_tokens(rng: random.Random) -> List[str]:
     )
     
     templates = [
-        f"{number} {descriptor} {street}",
-        f"{number}/{alley} {descriptor} {street}",
+        # Basic
         f"{number} {street}",
+        f"{number} {descriptor} {street}",
+        f"{descriptor} {street}",
+        f"{street}",
+
+        # Alley / hẻm
+        f"{number}/{alley} {descriptor} {street}",
         f"{number}/{alley} {street}",
-        f"{number_word} {number} {descriptor} {street}",
-        f"{descriptor} {street} {number_word} {number}",
         f"{alley_word} {alley} {descriptor} {street}",
         f"{descriptor} {street} {alley_word} {alley}",
         f"{alley_word} {alley}/{number} {street}",
-        f"{descriptor} {street}",
+
+        # With 'số', 'số nhà', 'No.'
         f"{number_word} {number} {street}",
-        f"{number_word}/{number} {street}",
+        f"{number_word} {number} {descriptor} {street}",
+        f"{number_word} {number}/{alley} {street}",
+        f"{number_word} {number}/{alley} {descriptor} {street}",
+
+        # Descriptor first then number
+        f"{descriptor} {street} {number_word} {number}",
     ]
+
     text = rng.choice(templates)
     return tokenize(text)
 
@@ -943,11 +953,8 @@ def main() -> None:
         specs = list(VARIANT_SPECS)
         rng.shuffle(specs)
         for spec in specs:
-            loop_times = 1
-            if spec.include_street:
-                loop_times = 5
-            
-            for _ in range(loop_times):  
+            attempts = 10 if spec.include_street else 1
+            for _ in range(attempts):
                 rendered = render_data_sample(record, spec, rng)
                 if not rendered:
                     continue

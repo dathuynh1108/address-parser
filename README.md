@@ -59,6 +59,7 @@ python ner/ner_train.py --config ner/configs/train_default.json
 The Trainer will log to `ner/artifacts/`, save the best checkpoint, and print precision/recall/F1 via `seqeval`.
 > TPU/Kaggle note: `ner_train.py` automatically switches to the TPU-safe `adamw_torch_xla` optimizer whenever `torch-xla` is detected. Override `optim` inside the JSON config if you need a specific optimizer.
 > Logging note: Weights & Biases is disabled by default (`report_to: []`). Add `"report_to": ["wandb"]` in your config if you want to enable it.
+> Hub note: flip `push_to_hub` to `true` and set `hub_model_id` if you want the training script to push the final model to the Hugging Face Hub automatically (supports private repos via `hub_private_repo: true`).
 
 ## Configuration Tips
 - `build_standard_dataset.py` accepts `--max-samples`, `--train-ratio`, etc., so you can produce small smoke tests or full corpora.
