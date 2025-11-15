@@ -755,6 +755,10 @@ def build_street_tokens(rng: random.Random) -> List[str]:
     )
     
     templates = [
+        f"{number} {descriptor} {street}",
+        f"{number}/{alley} {descriptor} {street}",
+        f"{number} {street}",
+        f"{number}/{alley} {street}",
         f"{number_word} {number} {descriptor} {street}",
         f"{descriptor} {street} {number_word} {number}",
         f"{alley_word} {alley} {descriptor} {street}",
@@ -941,7 +945,7 @@ def main() -> None:
         for spec in specs:
             loop_times = 1
             if spec.include_street:
-                loop_times = 3
+                loop_times = 5
             
             for _ in range(loop_times):  
                 rendered = render_data_sample(record, spec, rng)
