@@ -40,9 +40,9 @@ class AddressParser:
             district_name: str,
             ward_name: str,
             *,
-            province_id: Optional[int] = None,
-            district_id: Optional[int] = None,
-            ward_id: Optional[int] = None,
+            province_id: Optional[str] = None,
+            district_id: Optional[str] = None,
+            ward_id: Optional[str] = None,
             is_new_format: Optional[bool] = None,
         ):
             self.full_name = f"{ward_name} {district_name} {province_name}"
@@ -54,9 +54,9 @@ class AddressParser:
             self.ngram_list: Set[str] = set()  # List of n-grams for fuzzy matching
             # None = unknown; True = new 2-level; False = old 3-level
             self.is_new_format: Optional[bool] = is_new_format
-            self.province_id: Optional[int] = province_id
-            self.district_id: Optional[int] = district_id
-            self.ward_id: Optional[int] = ward_id
+            self.province_id: Optional[str] = province_id
+            self.district_id: Optional[str] = district_id
+            self.ward_id: Optional[str] = ward_id
 
     _GENERIC_LOCATION_TOKENS: Set[str] = {
         "phuong",
@@ -450,6 +450,14 @@ class AddressParser:
             district_id = district_info["id"]
 
         district_for_lookup = district if district else None
+
+        def _update_format(current_value: Optional[bool], info_value: Optional[Dict[str, Any]]) -> Optional[bool]:
+            if info_value and info_value.get("is_new_format") is True:
+                return True
+            if info_value and info_value.get("is_new_format") is False:
+                return False
+            return current_value
+
         ward_info = (
             self._lookup_ward_info(
                 ward,
@@ -468,6 +476,7 @@ class AddressParser:
             ward_id = None
         elif ward_id is None and ward_info and ward_info.get("id") is not None:
             ward_id = ward_info["id"]
+        resolved_is_new_format = _update_format(candidate_is_new_format, ward_info)
 
         ward_present_in_input = _appears_in_input(ward)
         if ward and not ward_present_in_input and not detected_ward:
@@ -540,6 +549,50 @@ class AddressParser:
                 ward_id = None
             elif ward_id is None and ward_info and ward_info.get("id") is not None:
                 ward_id = ward_info["id"]
+            resolved_is_new_format = _update_format(resolved_is_new_format, ward_info)
+
+        if resolved_is_new_format is not True and ward_id:
+            mapping_payload = self.map_old_address_ids_to_new(
+                province_id=province_id,
+                district_id=district_id,
+                ward_id=ward_id,
+            )
+            if mapping_payload:
+                new_province_id = mapping_payload.get("province_id_new")
+                new_ward_id = mapping_payload.get("ward_id_new")
+                new_province_entry, new_ward_entry = self._lookup_new_components(
+                    province_id=new_province_id,
+                    ward_id=new_ward_id,
+                )
+                if new_province_entry:
+                    province_info = new_province_entry
+                    province = (
+                        new_province_entry.get("name")
+                        or new_province_entry.get("name_with_type")
+                        or province
+                    )
+                else:
+                    province = mapping_payload.get("province_name_new") or province
+                if new_ward_entry:
+                    ward_info = new_ward_entry
+                    ward = (
+                        new_ward_entry.get("name")
+                        or new_ward_entry.get("name_with_type")
+                        or ward
+                    )
+                else:
+                    ward = mapping_payload.get("ward_name_new") or ward
+                province_id = new_province_id or province_id
+                ward_id = new_ward_id or ward_id
+                district = ""
+                district_id = None
+                district_info = None
+                resolved_is_new_format = True
+
+        if resolved_is_new_format is True:
+            district = ""
+            district_id = None
+            district_info = None
 
         province_component = self._format_component(province, province_id, province_info)
         district_component = self._format_component(district, district_id, district_info)
@@ -547,14 +600,14 @@ class AddressParser:
 
         fmt = (
             "new"
-            if address.is_new_format is True
-            else ("old" if address.is_new_format is False else "unknown")
+            if resolved_is_new_format is True
+            else ("old" if resolved_is_new_format is False else "unknown")
         )
         normalized_node = self.AddressNode(
             province or "",
             district or "",
             ward or "",
-            is_new_format=address.is_new_format,
+            is_new_format=resolved_is_new_format,
         )
         street_address = self._extract_street_address(input_string, normalized_node)
         return {
@@ -565,8 +618,8 @@ class AddressParser:
             "format": fmt,
             "is_new": (
                 True
-                if address.is_new_format is True
-                else False if address.is_new_format is False else None
+                if resolved_is_new_format is True
+                else False if resolved_is_new_format is False else None
             ),
         }
 
@@ -1006,21 +1059,14 @@ class AddressParser:
                 node.ngram_list, index, self.invert_ngrams_idx
             )
 
-    def _safe_int(self, value: Any) -> Optional[int]:
+    def _normalize_code_str(self, value: Any) -> Optional[str]:
         if value is None:
             return None
-        if isinstance(value, int):
-            return value
         try:
             value_str = str(value).strip()
         except Exception:
             return None
-        if not value_str or not value_str.isdigit():
-            return None
-        try:
-            return int(value_str)
-        except ValueError:
-            return None
+        return value_str or None
 
     def _read_json_file(self, path: Optional[str]) -> Any:
         if not path or not os.path.exists(path):
@@ -1141,7 +1187,7 @@ class AddressParser:
                 continue
             normalized: Dict[str, Any] = {
                 "code": code_str,
-                "id": self._safe_int(code_str),
+                "id": self._normalize_code_str(code_str),
                 "name": entry.get("name"),
                 "name_with_type": entry.get("full_name") or entry.get("name"),
             }
@@ -1186,7 +1232,7 @@ class AddressParser:
                 continue
             new_provinces[code] = {
                 "code": code,
-                "id": self._safe_int(entry.get("code") or code),
+                "id": self._normalize_code_str(entry.get("code") or code),
                 "name": entry.get("name"),
                 "name_with_type": entry.get("full_name") or entry.get("name"),
                 "name_en": entry.get("name_en"),
@@ -1203,7 +1249,7 @@ class AddressParser:
             )
             new_wards[code] = {
                 "code": code,
-                "id": self._safe_int(entry.get("code") or code),
+                "id": self._normalize_code_str(entry.get("code") or code),
                 "name": entry.get("name"),
                 "name_with_type": entry.get("full_name") or entry.get("name"),
                 "full_name": entry.get("full_name"),
@@ -1364,7 +1410,7 @@ class AddressParser:
 
             if entry is None:
                 entry = {
-                    "id": self._safe_int(payload.get("id") or normalized_code),
+                    "id": self._normalize_code_str(payload.get("id") or normalized_code),
                     "code": normalized_code,
                     "name_with_type": payload.get("name_with_type") or name,
                     "districts": {},
@@ -1374,7 +1420,7 @@ class AddressParser:
                 if entry.get("code") is None and normalized_code:
                     entry["code"] = normalized_code
                 if entry.get("id") is None:
-                    entry["id"] = self._safe_int(payload.get("id") or normalized_code)
+                    entry["id"] = self._normalize_code_str(payload.get("id") or normalized_code)
                 if not entry.get("name_with_type") and payload.get("name_with_type"):
                     entry["name_with_type"] = payload["name_with_type"]
 
@@ -1392,7 +1438,7 @@ class AddressParser:
             district_entry = province_entry["districts"].get(district_name)
             if district_entry is None:
                 district_entry = {
-                    "id": self._safe_int(payload.get("id") or code),
+                    "id": self._normalize_code_str(payload.get("id") or code),
                     "code": payload.get("code") or code,
                     "name_with_type": payload.get("name_with_type") or district_name,
                     "wards": {},
@@ -1436,7 +1482,7 @@ class AddressParser:
                 district_entry = attach_district(province_entry, parent_district or code, district_payload)
             ward_name = _preferred_name(info, code)
             ward_entry = {
-                "id": self._safe_int(info.get("id") or code),
+                "id": self._normalize_code_str(info.get("id") or code),
                 "code": info.get("code") or code,
                 "name_with_type": info.get("name_with_type") or ward_name,
                 "parent_code": info.get("parent_code"),
@@ -1453,7 +1499,7 @@ class AddressParser:
             bucket = new_format_bucket(province_entry)
             ward_name = _preferred_name(info, code)
             ward_entry = {
-                "id": self._safe_int(info.get("id") or code),
+                "id": self._normalize_code_str(info.get("id") or code),
                 "code": info.get("code") or code,
                 "name_with_type": info.get("name_with_type") or ward_name,
                 "parent_code": info.get("parent_code"),
@@ -2358,7 +2404,7 @@ class AddressParser:
     def _format_component(
         self,
         name: Optional[str],
-        candidate_id: Optional[int],
+        candidate_id: Optional[str],
         info: Optional[Dict[str, Any]],
     ) -> Optional[Dict[str, Any]]:
         if not name:
@@ -3213,6 +3259,6 @@ class AddressParser:
 
 if __name__ == "__main__":
     parser = AddressParser()
-    test_address = "Số 29 đường An Bài, Xã Đan Phượng, TP Hà Nội, Việt Nam"
+    test_address = "Xóm 4 Nam Lạng Đông, Xã Cổ Lễ, Tỉnh Ninh Bình, Việt Nam"
     result = parser.process(test_address)
     print(result)
