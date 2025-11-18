@@ -2,12 +2,35 @@ import json
 import os
 import re
 import unicodedata
+from pathlib import Path
 from typing import Any, List, Optional, Tuple, Set, Dict
 from collections import Counter, defaultdict
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
 from rapidfuzz import fuzz as rf_fuzz
 
+SPECIAL_PROVINCE_MAP = {
+    ("br vt", "br-vt", "brvt", "ba ria vung tau"): "Bà Rịa - Vũng Tàu",
+    (
+        "dac lac",
+        "dac lak",
+        "dak lak",
+        "dak lac",
+        "daklak",
+        "daklac",
+        "daclac",
+    ): "ĐắkLắk",
+    ("con tum",): "Kon Tum",
+    ("za lai",): "Gia Lai",
+    (
+        "tt hue",
+        "tt-hue",
+        "thua thien hue",
+        "thua thien-hue",
+        "thua thien - hue",
+        "thua thienhue",
+    ): "Huế",
+}
 
 class AddressParser:
     class AddressNode:
@@ -167,6 +190,12 @@ class AddressParser:
         detected_ward = self._validate_detected_value(
             detected_components_raw[2], self.invert_ward_to_indices
         )
+        if not detected_prov:
+            special_province = self._detect_special_province_token(input_string_basic)
+            if special_province:
+                detected_prov = self._validate_detected_value(
+                    special_province, self.invert_province_to_indices
+                )
         detected_components = (detected_prov, detected_dist, detected_ward)
         ngram_address_piece_list = self.ngram_address_piece_list(
             input_string_ngram_list, self.TOPK_CANDIDATES
@@ -189,6 +218,7 @@ class AddressParser:
         province_id = address.province_id
         district_id = address.district_id
         ward_id = address.ward_id
+        candidate_is_new_format = address.is_new_format
 
         if not province and detected_prov:
             resolved_province = self._resolve_detected_component(
@@ -386,7 +416,7 @@ class AddressParser:
                 ward = resolved_ward
                 ward_id = None
 
-        if not district and ward:
+        if not district and ward and candidate_is_new_format is not True:
             inferred_district = self._infer_district_from_components(
                 province,
                 ward,
@@ -421,10 +451,19 @@ class AddressParser:
 
         district_for_lookup = district if district else None
         ward_info = (
-            self._lookup_ward_info(ward, province_for_lookup, district_for_lookup)
+            self._lookup_ward_info(
+                ward,
+                province_for_lookup,
+                district_for_lookup,
+                preferred_format=candidate_is_new_format,
+            )
             if ward
             else None
         )
+        if ward and ward_info is None:
+            ward_info = self._lookup_ward_info(
+                ward, preferred_format=candidate_is_new_format
+            )
         if not ward:
             ward_id = None
         elif ward_id is None and ward_info and ward_info.get("id") is not None:
@@ -435,6 +474,72 @@ class AddressParser:
             ward = ""
             ward_id = None
             ward_info = None
+
+        def _std_name(value: Optional[str]) -> str:
+            return self.standardize_name(value, False) if value else ""
+
+        canonical_changed = False
+        if ward_info:
+            canonical_province = ward_info.get("province_name")
+            canonical_district = ward_info.get("district_name")
+
+            if (
+                canonical_province
+                and not province
+                and _std_name(canonical_province)
+                and _std_name(canonical_province) != _std_name(province)
+            ):
+                province = canonical_province
+                province_id = None
+                canonical_changed = True
+
+            if (
+                canonical_district
+                and not district
+                and _std_name(canonical_district)
+                and _std_name(canonical_district) != _std_name(district)
+            ):
+                district = canonical_district
+                district_id = None
+                canonical_changed = True
+
+        if canonical_changed:
+            province_info = self._lookup_province_info(province) if province else None
+            if not province:
+                province_id = None
+            elif province_id is None and province_info and province_info.get("id") is not None:
+                province_id = province_info["id"]
+
+            province_for_lookup = province if province else None
+            district_info = (
+                self._lookup_district_info(district, province_for_lookup)
+                if district
+                else None
+            )
+            if not district:
+                district_id = None
+            elif district_id is None and district_info and district_info.get("id") is not None:
+                district_id = district_info["id"]
+
+            district_for_lookup = district if district else None
+            ward_info = (
+                self._lookup_ward_info(
+                    ward,
+                    province_for_lookup,
+                    district_for_lookup,
+                    preferred_format=candidate_is_new_format,
+                )
+                if ward
+                else None
+            )
+            if ward and ward_info is None:
+                ward_info = self._lookup_ward_info(
+                    ward, preferred_format=candidate_is_new_format
+                )
+            if not ward:
+                ward_id = None
+            elif ward_id is None and ward_info and ward_info.get("id") is not None:
+                ward_id = ward_info["id"]
 
         province_component = self._format_component(province, province_id, province_info)
         district_component = self._format_component(district, district_id, district_info)
@@ -500,10 +605,17 @@ class AddressParser:
 
             province_output_name = province_name
             province_output_std = self.standardize_name(province_output_name, False)
+            reference_aliases = self._reference_aliases_for_level(
+                "province", province_code
+            )
+            province_aliases_extra = list(reference_aliases or [])
+            province_aliases_extra.extend(
+                self._get_special_province_aliases(province_output_name)
+            )
             province_aliases = self._collect_aliases(
                 province_output_name,
                 province_name,
-                self._reference_aliases_for_level("province", province_code),
+                province_aliases_extra,
             )
             province_aliases_std = self._standardize_aliases(province_aliases)
             province_info = {
@@ -601,9 +713,11 @@ class AddressParser:
                             if isinstance(ward_meta, dict)
                             else None
                         )
-                        ward_output_name = ward_name
-                        ward_output_std = self.standardize_name(
-                            ward_output_name, False
+                        ward_output_name, ward_lookup_name = self._derive_ward_names(
+                            ward_name, ward_meta
+                        )
+                        ward_lookup_std = self.standardize_name(
+                            ward_lookup_name, False
                         )
                         ward_aliases = self._collect_aliases(
                             ward_output_name,
@@ -623,16 +737,17 @@ class AddressParser:
                             "province_name": province_output_name,
                             "district_key": district_key,
                             "district_name": district_output_name,
+                            "is_new_format": True,
                         }
-                        if province_output_std and ward_output_std:
+                        if province_output_std and ward_lookup_std:
                             self.ward_lookup[
-                                (province_output_std, district_key, ward_output_std)
+                                (province_output_std, district_key, ward_lookup_std)
                             ] = ward_info
                             self.ward_lookup_by_province_name[
-                                (province_output_std, ward_output_std)
+                                (province_output_std, ward_lookup_std)
                             ].append(ward_info)
-                        if ward_output_std:
-                            self.ward_lookup_by_name[ward_output_std].append(
+                        if ward_lookup_std:
+                            self.ward_lookup_by_name[ward_lookup_std].append(
                                 ward_info
                             )
                             self.ward_lookup_by_district_key[district_key].append(
@@ -764,9 +879,11 @@ class AddressParser:
                     ward_code = (
                         ward_meta.get("code") if isinstance(ward_meta, dict) else None
                     )
-                    ward_output_name = ward_name
+                    ward_output_name, ward_lookup_name = self._derive_ward_names(
+                        ward_name, ward_meta
+                    )
                     ward_output_std = self.standardize_name(
-                        ward_output_name, False
+                        ward_lookup_name, False
                     )
                     ward_aliases = self._collect_aliases(
                         ward_output_name,
@@ -786,6 +903,7 @@ class AddressParser:
                         "province_name": province_output_name,
                         "district_key": district_key,
                         "district_name": district_output_name,
+                        "is_new_format": False,
                     }
                     if province_output_std and ward_output_std:
                         self.ward_lookup[
@@ -1088,9 +1206,11 @@ class AddressParser:
                 "id": self._safe_int(entry.get("code") or code),
                 "name": entry.get("name"),
                 "name_with_type": entry.get("full_name") or entry.get("name"),
+                "full_name": entry.get("full_name"),
                 "name_en": entry.get("name_en"),
                 "full_name_en": entry.get("full_name_en"),
                 "parent_code": normalized_parent,
+                "administrative_unit_id": entry.get("administrative_unit_id"),
                 "is_new_format": True,
             }
 
@@ -1320,6 +1440,8 @@ class AddressParser:
                 "code": info.get("code") or code,
                 "name_with_type": info.get("name_with_type") or ward_name,
                 "parent_code": info.get("parent_code"),
+                "full_name": info.get("full_name") or info.get("name_with_type"),
+                "administrative_unit_id": info.get("administrative_unit_id"),
             }
             district_entry["wards"][ward_name] = ward_entry
 
@@ -1336,6 +1458,8 @@ class AddressParser:
                 "name_with_type": info.get("name_with_type") or ward_name,
                 "parent_code": info.get("parent_code"),
                 "is_new_format": True,
+                "full_name": info.get("full_name"),
+                "administrative_unit_id": info.get("administrative_unit_id"),
             }
             bucket["wards"][ward_name] = ward_entry
 
@@ -1779,6 +1903,35 @@ class AddressParser:
                 _add(alias)
         return aliases or [""]
 
+    def _get_special_province_aliases(self, province_name: Optional[str]) -> List[str]:
+        """
+        Provide legacy aliases (e.g. Thừa Thiên - Huế) for provinces that have
+        been renamed in the canonical dataset so that lookup/detection still works.
+        """
+        if not province_name:
+            return []
+
+        province_std = self.standardize_name(province_name, False)
+        if not province_std:
+            return []
+
+        aliases: List[str] = []
+
+        for synonyms, canonical in SPECIAL_PROVINCE_MAP.items():
+            canonical_std = self.standardize_name(canonical, False)
+            if not canonical_std or canonical_std != province_std:
+                continue
+
+            if isinstance(synonyms, (list, tuple, set)):
+                for alias in synonyms:
+                    if alias:
+                        aliases.append(alias)
+            else:
+                if synonyms:
+                    aliases.append(synonyms)
+
+        return aliases
+
     def _standardize_aliases(self, aliases: List[str]) -> Set[str]:
         normalized: Set[str] = set()
         for alias in aliases:
@@ -1851,6 +2004,41 @@ class AddressParser:
             for alias in ward_aliases_std:
                 if alias:
                     self.invert_ward_to_indices[alias].add(node_index)
+
+    def _derive_ward_names(
+        self,
+        ward_name: Optional[str],
+        ward_meta: Optional[Any],
+    ) -> Tuple[str, str]:
+        """
+        Return (display_name, lookup_name) for a ward. Display names keep
+        special prefixes like 'Đặc khu', while lookup names stay canonical
+        so dictionaries remain stable.
+        """
+        meta = ward_meta if isinstance(ward_meta, dict) else None
+        display_name = (ward_name or "").strip()
+        lookup_name = (ward_name or "").strip()
+
+        full_name = ""
+        admin_unit_id = None
+        if meta:
+            full_name = meta.get("full_name") or ""
+            admin_unit_id = meta.get("administrative_unit_id")
+
+        if admin_unit_id == 5 and isinstance(full_name, str) and full_name.strip():
+            display_name = full_name.strip()
+        elif not display_name and isinstance(full_name, str) and full_name.strip():
+            display_name = full_name.strip()
+
+        if not lookup_name and isinstance(full_name, str) and full_name.strip():
+            lookup_name = full_name.strip()
+
+        if not display_name:
+            display_name = lookup_name
+        if not lookup_name:
+            lookup_name = display_name
+
+        return display_name or "", lookup_name or ""
 
     def _augment_aliases(self, aliases: List[str], level: str) -> List[str]:
         seen: Set[str] = set()
@@ -2070,6 +2258,7 @@ class AddressParser:
         ward_name: Optional[str],
         province_name: Optional[str] = None,
         district_name: Optional[str] = None,
+        preferred_format: Optional[bool] = None,
     ) -> Optional[Dict[str, Any]]:
         if not ward_name:
             return None
@@ -2110,10 +2299,61 @@ class AddressParser:
                 return district_candidates[0]
 
         fallback_candidates = self.ward_lookup_by_name.get(ward_key, [])
-        if len(fallback_candidates) == 1:
-            return fallback_candidates[0]
+        if not fallback_candidates:
+            return None
 
-        return None
+        def _std(value: Optional[str]) -> str:
+            return self.standardize_name(value, False) if value else ""
+
+        candidates = fallback_candidates
+
+        if province_key:
+            province_matches = [
+                c
+                for c in candidates
+                if (c.get("province_key") and c["province_key"] == province_key)
+                or _std(c.get("province_name")) == province_key
+            ]
+            if province_matches:
+                candidates = province_matches
+
+        if district_key:
+            district_matches = [
+                c
+                for c in candidates
+                if (c.get("district_key") and c["district_key"] == district_key)
+                or _std(c.get("district_name")) == district_key
+            ]
+            if district_matches:
+                candidates = district_matches
+
+        if preferred_format is not None:
+            format_matches = [
+                c
+                for c in candidates
+                if c.get("is_new_format") is preferred_format
+            ]
+            if len(format_matches) == 1:
+                return format_matches[0]
+            if format_matches:
+                candidates = format_matches
+
+        if len(candidates) == 1:
+            return candidates[0]
+
+        prioritized = [c for c in candidates if c.get("district_key")]
+        if len(prioritized) == 1:
+            return prioritized[0]
+
+        prioritized = [c for c in candidates if c.get("province_key")]
+        if len(prioritized) == 1:
+            return prioritized[0]
+
+        prioritized = [c for c in candidates if c.get("id") is not None]
+        if len(prioritized) == 1:
+            return prioritized[0]
+
+        return candidates[0]
 
     def _format_component(
         self,
@@ -2697,7 +2937,7 @@ class AddressParser:
             r"\b(?:quan|huyen|thi xa|thi tran|thanh pho|tp|city|municipality|district|county)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
         ward_pref = re.compile(
-            r"\b(?:phuong|xa|thi tran|ward|commune|town)\b\s+([a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
+            r"\b(?P<prefix>phuong|xa|thi tran|dac\s*khu|special administrative region|ward|commune|town)\b\s+(?P<fragment>[a-z0-9 ]+?)(?=\b(?:phuong|xa|thi tran|quan|huyen|thi xa|district|ward|commune|town|thanh pho|city|province)\b|$)"
         )
 
         def _pick_best(fragment: str, choices: List[str]) -> Optional[str]:
@@ -2757,9 +2997,40 @@ class AddressParser:
 
         m = ward_pref.search(s)
         if m and self.ward_names_std:
-            ward = _pick_best(m.group(1), list(self.ward_names_std))
+            fragment = (m.group("fragment") or "").strip()
+            prefix = (m.group("prefix") or "").strip()
+            if prefix in ("dac khu", "special administrative region"):
+                frag_tokens = fragment.split()
+                trimmed: List[str] = []
+                for token in frag_tokens:
+                    if token in self._GENERIC_LOCATION_TOKENS:
+                        break
+                    trimmed.append(token)
+                    if len(trimmed) >= 3:
+                        break
+                limited = " ".join(trimmed)
+                fragment = f"{prefix} {limited}".strip() if limited else prefix
+            ward = _pick_best(fragment, list(self.ward_names_std))
 
         return prov, dist, ward
+
+    def _detect_special_province_token(self, standardized_basic: str) -> Optional[str]:
+        """
+        Detect legacy province aliases (e.g. 'thua thien hue') directly from the
+        standardized string when the user omits administrative prefixes.
+        """
+        if not standardized_basic:
+            return None
+        for synonyms, _ in SPECIAL_PROVINCE_MAP.items():
+            if isinstance(synonyms, (list, tuple, set)):
+                candidates = synonyms
+            else:
+                candidates = (synonyms,)
+            for alias in candidates:
+                alias_std = self.standardize_name(alias, False)
+                if alias_std and alias_std in standardized_basic:
+                    return alias_std
+        return None
 
     def _prefilter_by_prefix(self, standardized_basic: str) -> List[int]:
         prov, dist, ward = self._detect_by_prefix(standardized_basic)
@@ -2942,36 +3213,6 @@ class AddressParser:
 
 if __name__ == "__main__":
     parser = AddressParser()
-    test_address = "Vĩnh Kim, Châu Thành, Tiền Giang"
+    test_address = "Số 29 đường An Bài, Xã Đan Phượng, TP Hà Nội, Việt Nam"
     result = parser.process(test_address)
     print(result)
-
-    province_component = result.get("province") or {}
-    district_component = result.get("district") or {}
-    ward_component = result.get("ward") or {}
-
-    province_id_old = province_component.get("id")
-    district_id_old = district_component.get("id")
-    ward_id_old = ward_component.get("id")
-
-    if ward_id_old is not None:
-        sample_mapping = parser.map_old_ward_to_new(ward_id_old)
-        print(f"Sample mapping for ward {ward_id_old}:", sample_mapping[:1])
-    else:
-        print("Sample mapping skipped: ward ID missing")
-
-    node_snapshot = parser.get_address_components_from_ids(
-        province_id=province_id_old,
-        district_id=district_id_old,
-        ward_id=ward_id_old,
-        is_new_format=False,
-    )
-    print("Old node snapshot:", node_snapshot)
-
-    mapping_summary = parser.map_address_ids(
-        province_id=province_id_old,
-        district_id=district_id_old,
-        ward_id=ward_id_old,
-        is_new_format=result.get("is_new"),
-    )
-    print("Mapping summary:", mapping_summary)
