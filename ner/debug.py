@@ -5,7 +5,7 @@ model = AutoModelForTokenClassification.from_pretrained("artifacts")
 nlp = pipeline("ner", model=model, tokenizer=tokenizer)
 
 # NER TESTING
-test = "82 Đinh Bộ Lĩnh, Bình Thạnh, Thành phố Hồ Chí Minh"
+test = "50 Ton That Dam Phuong Sai Gon, Q1 TPHCM, Vietnam"
 ner_results = nlp(test)
 
 def build_result(ner_results):

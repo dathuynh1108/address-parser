@@ -1142,7 +1142,19 @@ class AddressParser:
             province_info = {
                 "id": province_id,
                 "name": province_output_name,
+                "full_name": province_entry.get("full_name"),
+                "name_with_type": province_entry.get("full_name") or province_output_name,
+                "administrative_unit_id": province_entry.get("administrative_unit_id"),
             }
+            if province_id:
+                ref = self.old_province_records.get(str(province_id)) or self.old_province_records.get(
+                    self._normalize_id_token(province_id) or ""
+                )
+                if isinstance(ref, dict):
+                    if not province_info.get("full_name"):
+                        province_info["full_name"] = ref.get("full_name") or ref.get("name_with_type")
+                    if province_info.get("administrative_unit_id") is None:
+                        province_info["administrative_unit_id"] = ref.get("administrative_unit_id")
             for alias_std in province_aliases_std:
                 if not alias_std:
                     continue
@@ -1192,9 +1204,21 @@ class AddressParser:
                 district_info = {
                     "id": district_id_value,
                     "name": district_output_name,
+                    "full_name": district_entry.get("full_name"),
+                    "name_with_type": district_entry.get("full_name") or district_output_name,
+                    "administrative_unit_id": district_entry.get("administrative_unit_id"),
                     "province_key": province_output_std,
                     "province_name": province_output_name,
                 }
+                if district_id_value:
+                    ref = self.old_district_records.get(str(district_id_value)) or self.old_district_records.get(
+                        self._normalize_id_token(district_id_value) or ""
+                    )
+                    if isinstance(ref, dict):
+                        if not district_info.get("full_name"):
+                            district_info["full_name"] = ref.get("full_name") or ref.get("name_with_type")
+                        if district_info.get("administrative_unit_id") is None:
+                            district_info["administrative_unit_id"] = ref.get("administrative_unit_id")
                 if province_output_std:
                     self.district_lookup[(province_output_std, district_key)] = (
                         district_info
@@ -1260,12 +1284,24 @@ class AddressParser:
                         ward_info = {
                             "id": ward_id_value,
                             "name": ward_output_name,
+                            "full_name": ward_meta.get("full_name") if isinstance(ward_meta, dict) else None,
+                            "name_with_type": (ward_meta.get("full_name") if isinstance(ward_meta, dict) else None) or ward_output_name,
+                            "administrative_unit_id": ward_meta.get("administrative_unit_id") if isinstance(ward_meta, dict) else None,
                             "province_key": province_output_std,
                             "province_name": province_output_name,
                             "district_key": district_key,
                             "district_name": district_output_name,
                             "is_new_format": True,
                         }
+                        if ward_id_value:
+                            ref = self.old_ward_records.get(str(ward_id_value)) or self.old_ward_records.get(
+                                self._normalize_id_token(ward_id_value) or ""
+                            )
+                            if isinstance(ref, dict):
+                                if not ward_info.get("full_name"):
+                                    ward_info["full_name"] = ref.get("full_name") or ref.get("name_with_type")
+                                if ward_info.get("administrative_unit_id") is None:
+                                    ward_info["administrative_unit_id"] = ref.get("administrative_unit_id")
                         if province_output_std and ward_lookup_std:
                             self.ward_lookup[
                                 (province_output_std, district_key, ward_lookup_std)
@@ -1691,6 +1727,7 @@ class AddressParser:
                 "id": self._normalize_code_str(code_str),
                 "name": entry.get("name"),
                 "name_with_type": entry.get("full_name") or entry.get("name"),
+                "administrative_unit_id": entry.get("administrative_unit_id"),
             }
             if parent_key:
                 parent_value = entry.get(parent_key)
@@ -3286,7 +3323,11 @@ class AddressParser:
         if not name:
             return None
         resolved_name = name
+        admin_unit_id = None
+        full_name = None
         if info:
+            admin_unit_id = info.get("administrative_unit_id")
+            full_name = info.get("full_name")
             alt_name = info.get("full_name") or info.get("name")
             if alt_name:
                 normalized = self.standardize_name(name, False)
@@ -3297,10 +3338,30 @@ class AddressParser:
                 elif not resolved_name.strip():
                     resolved_name = alt_name
 
+        # Try to enrich from cached records using ID length heuristic if still missing
+        if (admin_unit_id is None or not full_name) and candidate_id:
+            cid = self._normalize_id_token(candidate_id)
+            record = None
+            if cid and cid.isdigit():
+                length = len(cid)
+                if length == 2:
+                    record = self.old_province_records.get(cid)
+                elif length == 3:
+                    record = self.old_district_records.get(cid)
+                elif length == 5:
+                    record = self.old_ward_records.get(cid)
+            if isinstance(record, dict):
+                if admin_unit_id is None:
+                    admin_unit_id = record.get("administrative_unit_id")
+                if not full_name:
+                    full_name = record.get("full_name") or record.get("name_with_type")
+
         payload: Dict[str, Any] = {"name": resolved_name}
+        payload["full_name"] = full_name
+        payload["administrative_unit_id"] = admin_unit_id
         component_id = candidate_id
         if component_id is None and info:
-            component_id = info.get("id")
+            component_id = info.get("id") or info.get("code")
         if component_id is not None:
             payload["id"] = component_id
         return payload
@@ -4258,34 +4319,34 @@ class AddressParser:
 if __name__ == "__main__":
     parser = AddressParser()
     tests = [
-        "50 Ton That Dam, P. Nguyen Thai Binh, Q. 1, Thanh pho Ho Chi Minh, Vietnam",
-        "2/16 Đường số 7, Cư Xá Đô Thành, Phường Bàn Cờ, TP Hồ Chí Minh, Việt Nam",
-        "Thửa đất 101, tờ bản đồ số 88, tổ 2, đường 30/4, khu phố 1, Đặc khu Phú Quốc, Tỉnh AN Giang, Việt Nam",
-        "Phường An Hải Tây, Đà Nẵng",
-        "Ấp 5, Xã Vị Thanh 1, TP Cần Thơ, Việt Nam",
-        "41 - 43 Nguyễn Duy Dương, Phường 08, Quận 5, Thành phố Hồ Chí Minh",
-        "41 - 43 Nguyễn Duy Dương, Phường 08, Quận 5, Thành phố Hồ Chí Minh, Việt Nam",
-        "Phòng 202, Lầu 2, 70 Lý Tự Trọng, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh, Việt Nam",
-        "115-117 Thuận Kiều, Phường 4, Quận 11, Thành phố Hồ Chí Minh, Việt Nam",
-        "Lô D, KCN Quế Võ, Phường Nam Sơn, Tỉnh Bắc Ninh, Việt Nam",
-        "Tầng 4, Tòa nhà Dương Tuấn, đường Lê Thái Tổ, Phường Võ Cường, Tỉnh Bắc Ninh, Việt Nam",
-        "Lô A4-3, đường 6, Khu Công nghiệp Công nghệ cao Long Thành, Xã Long Thành, Tỉnh Đồng Nai, Việt Nam",
-        "Số 1505/60/2, đường Bùi Hữu Nghĩa, khu phố Tân Hạnh 3, Phường Biên Hòa, Tỉnh Đồng Nai, Việt Nam",
-        "76B/34 Nguyễn Nhạc, Phường Thống Nhất, Tỉnh Gia Lai, Việt Nam",
-        "Tổ 2, Phường Thống Nhất, Tỉnh Gia Lai, Việt Nam",
-        "81 Tôn Thất Tùng, Phường Pleiku, Tỉnh Gia Lai, Việt Nam",
-        "Số 35 Ngô Gia Tự, Phường Nguyễn Văn Cừ, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
-        "Số 97 đường Lê Lợi, Phường Trần Hưng Đạo, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
-        "Tổ 18, ấp Bàu Trâm , Xã Bàu Trâm, Thành phố Long khánh, Tỉnh Đồng Nai, Việt Nam",
-        "Số 89, tổ 4, KP Tân Phong, Phường Xuân Tân, Thành phố Long khánh, Tỉnh Đồng Nai, Việt Nam",
-        "44 Trần Phú, Phường Lý Thường Kiệt, Thành phố Quy Nhơn, Bình Định",
-        "Số 11 Huỳnh Văn Thống, Phường Nhơn Bình, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
-        "Lô 57 Phan Tứ, Phường Mỹ An, Quận Ngũ Hành Sơn, Thành phố Đà Nẵng, Việt Nam",
-        "260/20B Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Thành phố Đà Nẵng, Việt Nam",
-        "Số nhà E4, Lô 35, đường Vũ Miên, Thôn Miếu Bông, Xã Hoà Phước, Huyện Hoà Vang, Thành phố Đà Nẵng, Việt Nam",
-        "25/16A, Lý Thường Kiệt, Phường Thạch Thang, Quận Hải Châu, Thành phố Đà Nẵng, Việt Nam",
-        "10 Tôn Quang Phiệt, Phường Nại Hiên Đông, Quận Sơn Trà, Thành phố Đà Nẵng, Việt Nam",
-        "263 Hoàng Diệu, Quận Hải Châu, Thành phố Đà Nẵng, Việt Nam",
+        # "50 Ton That Dam, P. Nguyen Thai Binh, Q. 1, Thanh pho Ho Chi Minh, Vietnam",
+        # "2/16 Đường số 7, Cư Xá Đô Thành, Phường Bàn Cờ, TP Hồ Chí Minh, Việt Nam",
+        # "Thửa đất 101, tờ bản đồ số 88, tổ 2, đường 30/4, khu phố 1, Đặc khu Phú Quốc, Tỉnh AN Giang, Việt Nam",
+        # "Phường An Hải Tây, Đà Nẵng",
+        # "Ấp 5, Xã Vị Thanh 1, TP Cần Thơ, Việt Nam",
+        # "41 - 43 Nguyễn Duy Dương, Phường 08, Quận 5, Thành phố Hồ Chí Minh",
+        # "41 - 43 Nguyễn Duy Dương, Phường 08, Quận 5, Thành phố Hồ Chí Minh, Việt Nam",
+        # "Phòng 202, Lầu 2, 70 Lý Tự Trọng, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh, Việt Nam",
+        # "115-117 Thuận Kiều, Phường 4, Quận 11, Thành phố Hồ Chí Minh, Việt Nam",
+        # "Lô D, KCN Quế Võ, Phường Nam Sơn, Tỉnh Bắc Ninh, Việt Nam",
+        # "Tầng 4, Tòa nhà Dương Tuấn, đường Lê Thái Tổ, Phường Võ Cường, Tỉnh Bắc Ninh, Việt Nam",
+        # "Lô A4-3, đường 6, Khu Công nghiệp Công nghệ cao Long Thành, Xã Long Thành, Tỉnh Đồng Nai, Việt Nam",
+        # "Số 1505/60/2, đường Bùi Hữu Nghĩa, khu phố Tân Hạnh 3, Phường Biên Hòa, Tỉnh Đồng Nai, Việt Nam",
+        # "76B/34 Nguyễn Nhạc, Phường Thống Nhất, Tỉnh Gia Lai, Việt Nam",
+        # "Tổ 2, Phường Thống Nhất, Tỉnh Gia Lai, Việt Nam",
+        # "81 Tôn Thất Tùng, Phường Pleiku, Tỉnh Gia Lai, Việt Nam",
+        # "Số 35 Ngô Gia Tự, Phường Nguyễn Văn Cừ, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
+        # "Số 97 đường Lê Lợi, Phường Trần Hưng Đạo, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
+        # "Tổ 18, ấp Bàu Trâm , Xã Bàu Trâm, Thành phố Long khánh, Tỉnh Đồng Nai, Việt Nam",
+        # "Số 89, tổ 4, KP Tân Phong, Phường Xuân Tân, Thành phố Long khánh, Tỉnh Đồng Nai, Việt Nam",
+        # "44 Trần Phú, Phường Lý Thường Kiệt, Thành phố Quy Nhơn, Bình Định",
+        # "Số 11 Huỳnh Văn Thống, Phường Nhơn Bình, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
+        # "Lô 57 Phan Tứ, Phường Mỹ An, Quận Ngũ Hành Sơn, Thành phố Đà Nẵng, Việt Nam",
+        # "260/20B Hải Phòng, Phường Tân Chính, Quận Thanh Khê, Thành phố Đà Nẵng, Việt Nam",
+        # "Số nhà E4, Lô 35, đường Vũ Miên, Thôn Miếu Bông, Xã Hoà Phước, Huyện Hoà Vang, Thành phố Đà Nẵng, Việt Nam",
+        # "25/16A, Lý Thường Kiệt, Phường Thạch Thang, Quận Hải Châu, Thành phố Đà Nẵng, Việt Nam",
+        # "10 Tôn Quang Phiệt, Phường Nại Hiên Đông, Quận Sơn Trà, Thành phố Đà Nẵng, Việt Nam",
+        # "263 Hoàng Diệu, Quận Hải Châu, Thành phố Đà Nẵng, Việt Nam",
         "Số nhà 11, ngõ 229, khu 10, phố Bình Lộc, Phường Tân Bình, Thành phố Hải Dương, Tỉnh Hải Dương, Việt Nam",
     ]
     for test in tests:

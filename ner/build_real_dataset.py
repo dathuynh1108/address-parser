@@ -15,7 +15,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from fuzz.inexus_parser import AddressParser
-from ner.build_standard_dataset import label_tokens, clean_text
+from ner.build_standard_dataset import label_tokens, clean_text, strip_accents
 
 JsonValue = Union[Dict[str, Any], str]
 
@@ -151,6 +151,109 @@ def load_addresses(
     return generator()
 
 
+TYPE_ALIASES = {
+    "province": (
+        (("tinh",), ("Tinh", "T.")),
+        (("thanh", "pho"), ("TP.", "TP")),
+    ),
+    "district": (
+        (("quan",), ("Q.", "Q")),
+        (("huyen",), ("H.", "H")),
+        (("thi", "xa"), ("TX.", "TX")),
+        (("thi", "tran"), ("TT.", "TT")),
+        (("thanh", "pho"), ("TP.", "TP")),
+    ),
+    "ward": (
+        (("phuong",), ("P.", "P")),
+        (("xa",), ("X.", "X")),
+        (("thi", "tran"), ("TT.", "TT")),
+    ),
+}
+
+
+def _normalize_token(text: str) -> str:
+    return strip_accents(text or "").lower()
+
+
+def _add_abbr_variants(abbr: str, body: str, dest: List[str]) -> None:
+    abbr_base = abbr.rstrip(".")
+    bodies = [body] if body else [""]
+    for current_body in bodies:
+        if current_body:
+            compact = current_body.replace(" ", "")
+            dest.extend(
+                [
+                    f"{abbr} {current_body}".strip(),
+                    f"{abbr}{current_body}",
+                    f"{abbr}{compact}",
+                ]
+            )
+        else:
+            dest.append(abbr)
+        if abbr.endswith(".") and abbr_base != abbr:
+            if current_body:
+                compact = current_body.replace(" ", "")
+                dest.extend(
+                    [
+                        f"{abbr_base} {current_body}".strip(),
+                        f"{abbr_base}{current_body}",
+                        f"{abbr_base}{compact}",
+                    ]
+                )
+            else:
+                dest.append(abbr_base)
+
+
+def expand_component_alias(name: Optional[str], *, kind: str) -> List[str]:
+    if not name:
+        return []
+    cleaned = clean_text(name, remove_slash=False)
+    tokens = cleaned.split()
+    norm_tokens = [_normalize_token(tok) for tok in tokens]
+    abbrs: List[str] = []
+    drop = 0
+    for prefix_tokens, candidates in TYPE_ALIASES.get(kind, ()):
+        if norm_tokens[: len(prefix_tokens)] == list(prefix_tokens):
+            abbrs = list(candidates)
+            drop = len(prefix_tokens)
+            break
+    rest_tokens = tokens[drop:]
+    rest = " ".join(rest_tokens).strip()
+    variants: List[str] = [cleaned]
+    for abbr in abbrs:
+        _add_abbr_variants(abbr, rest, variants)
+    seen = set()
+    deduped = []
+    for item in variants:
+        normalized_item = clean_text(item, remove_slash=False)
+        if normalized_item and normalized_item not in seen:
+            deduped.append(normalized_item)
+            seen.add(normalized_item)
+    return deduped
+
+
+def collect_aliases(
+    primary: Optional[str],
+    full_name: Optional[str],
+    *,
+    kind: str,
+) -> List[str]:
+    bases: List[str] = []
+    for candidate in (full_name, primary):
+        if candidate and candidate not in bases:
+            bases.append(candidate)
+    aliases: List[str] = []
+    for base in bases:
+        aliases.extend(expand_component_alias(base, kind=kind))
+    seen: set[str] = set()
+    merged: List[str] = []
+    for alias in aliases:
+        if alias not in seen:
+            merged.append(alias)
+            seen.add(alias)
+    return merged
+
+
 def write_record(handle, record: Dict[str, Any]) -> None:
     handle.write(json.dumps(record, ensure_ascii=False))
     handle.write("\n")
@@ -199,18 +302,62 @@ def build_dataset(
                 parsed_result = parser.process(address)
             except Exception:
                 continue
-            province = (parsed_result.get("province") or {}).get("name")
-            district = (parsed_result.get("district") or {}).get("name")
-            ward = (parsed_result.get("ward") or {}).get("name")
+            province_entry = parsed_result.get("province") or {}
+            district_entry = parsed_result.get("district") or {}
+            ward_entry = parsed_result.get("ward") or {}
+
+            province = province_entry.get("name")
+            district = district_entry.get("name")
+            ward = ward_entry.get("name")
+            province_full = province_entry.get("full_name")
+            district_full = district_entry.get("full_name")
+            ward_full = ward_entry.get("full_name")
             street = parsed_result.get("street_address")
-            if not (province and district and ward):
+            if not (province and ward):
                 continue
             parser_hits += 1
-            labeling = label_tokens(address, street=street, province=province, district=district, ward=ward)
-            required_matches = ["PROVINCE", "DISTRICT", "WARD"]
+            province_aliases = collect_aliases(province, province_full, kind="province")
+            district_aliases = collect_aliases(district, district_full, kind="district")
+            ward_aliases = collect_aliases(ward, ward_full, kind="ward")
+
+            def _iter_or_default(values: List[str], fallback: Optional[str]) -> Iterator[str]:
+                if values:
+                    yield from values
+                elif fallback:
+                    yield fallback
+
+            province_candidates = list(_iter_or_default(province_aliases, province))
+            ward_candidates = list(_iter_or_default(ward_aliases, ward))
+            district_candidates = list(_iter_or_default(district_aliases, district))
+            if not district_candidates:
+                district_candidates = [None]
+
+            labeling: Optional[Any] = None
+            required_matches = ["PROVINCE", "WARD"]
+            if district:
+                required_matches.append("DISTRICT")
             if street:
                 required_matches.append("STREET")
-            if not all(labeling.matches.get(key, False) for key in required_matches):
+
+            for province_value in province_candidates:
+                for ward_value in ward_candidates:
+                    for district_value in district_candidates:
+                        candidate = label_tokens(
+                            address,
+                            street=street,
+                            province=province_value,
+                            district=district_value,
+                            ward=ward_value,
+                        )
+                        if all(candidate.matches.get(key, False) for key in required_matches):
+                            labeling = candidate
+                            break
+                    if labeling:
+                        break
+                if labeling:
+                    break
+
+            if not labeling:
                 continue
             tokens = labeling.tokens
             tags = labeling.ner_tags
