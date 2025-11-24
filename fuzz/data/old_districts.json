@@ -150,156 +150,6 @@
     "administrative_unit_id": 5
   },
   {
-    "code": "250",
-    "name": "Mê Linh",
-    "name_en": "Me Linh",
-    "full_name": "Huyện Mê Linh",
-    "full_name_en": "Me Linh District",
-    "code_name": "me_linh",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "268",
-    "name": "Hà Đông",
-    "name_en": "Ha Dong",
-    "full_name": "Quận Hà Đông",
-    "full_name_en": "Ha Dong District",
-    "code_name": "ha_dong",
-    "province_code": "01",
-    "administrative_unit_id": 5
-  },
-  {
-    "code": "269",
-    "name": "Sơn Tây",
-    "name_en": "Son Tay",
-    "full_name": "Thị xã Sơn Tây",
-    "full_name_en": "Son Tay Town",
-    "code_name": "son_tay",
-    "province_code": "01",
-    "administrative_unit_id": 6
-  },
-  {
-    "code": "271",
-    "name": "Ba Vì",
-    "name_en": "Ba Vi",
-    "full_name": "Huyện Ba Vì",
-    "full_name_en": "Ba Vi District",
-    "code_name": "ba_vi",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "272",
-    "name": "Phúc Thọ",
-    "name_en": "Phuc Tho",
-    "full_name": "Huyện Phúc Thọ",
-    "full_name_en": "Phuc Tho District",
-    "code_name": "phuc_tho",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "273",
-    "name": "Đan Phượng",
-    "name_en": "Dan Phuong",
-    "full_name": "Huyện Đan Phượng",
-    "full_name_en": "Dan Phuong District",
-    "code_name": "dan_phuong",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "274",
-    "name": "Hoài Đức",
-    "name_en": "Hoai Duc",
-    "full_name": "Huyện Hoài Đức",
-    "full_name_en": "Hoai Duc District",
-    "code_name": "hoai_duc",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "275",
-    "name": "Quốc Oai",
-    "name_en": "Quoc Oai",
-    "full_name": "Huyện Quốc Oai",
-    "full_name_en": "Quoc Oai District",
-    "code_name": "quoc_oai",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "276",
-    "name": "Thạch Thất",
-    "name_en": "Thach That",
-    "full_name": "Huyện Thạch Thất",
-    "full_name_en": "Thach That District",
-    "code_name": "thach_that",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "277",
-    "name": "Chương Mỹ",
-    "name_en": "Chuong My",
-    "full_name": "Huyện Chương Mỹ",
-    "full_name_en": "Chuong My District",
-    "code_name": "chuong_my",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "278",
-    "name": "Thanh Oai",
-    "name_en": "Thanh Oai",
-    "full_name": "Huyện Thanh Oai",
-    "full_name_en": "Thanh Oai District",
-    "code_name": "thanh_oai",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "279",
-    "name": "Thường Tín",
-    "name_en": "Thuong Tin",
-    "full_name": "Huyện Thường Tín",
-    "full_name_en": "Thuong Tin District",
-    "code_name": "thuong_tin",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "280",
-    "name": "Phú Xuyên",
-    "name_en": "Phu Xuyen",
-    "full_name": "Huyện Phú Xuyên",
-    "full_name_en": "Phu Xuyen District",
-    "code_name": "phu_xuyen",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "281",
-    "name": "Ứng Hòa",
-    "name_en": "Ung Hoa",
-    "full_name": "Huyện Ứng Hòa",
-    "full_name_en": "Ung Hoa District",
-    "code_name": "ung_hoa",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
-    "code": "282",
-    "name": "Mỹ Đức",
-    "name_en": "My Duc",
-    "full_name": "Huyện Mỹ Đức",
-    "full_name_en": "My Duc District",
-    "code_name": "my_duc",
-    "province_code": "01",
-    "administrative_unit_id": 7
-  },
-  {
     "code": "024",
     "name": "Hà Giang",
     "name_en": "Ha Giang",
@@ -997,7 +847,11 @@
     "full_name_en": "Moc Chau Town",
     "code_name": "moc_chau",
     "province_code": "14",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Mộc Châu",
+      "Moc Chau District"
+    ]
   },
   {
     "code": "124",
@@ -1317,7 +1171,11 @@
     "full_name_en": "Pho Yen City",
     "code_name": "pho_yen",
     "province_code": "19",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Thị xã Phổ Yên",
+      "Pho Yen Town"
+    ]
   },
   {
     "code": "173",
@@ -1547,7 +1405,11 @@
     "full_name_en": "Dong Trieu City",
     "code_name": "dong_trieu",
     "province_code": "22",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Thị xã Đông Triều",
+      "Dong Trieu Town"
+    ]
   },
   {
     "code": "206",
@@ -1640,6 +1502,16 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "221",
+    "name": "Yên Dũng",
+    "name_en": "Yen Dung",
+    "full_name": "Huyện Yên Dũng",
+    "full_name_en": "Yen Dung District",
+    "code_name": "yen_dung",
+    "province_code": "24",
+    "administrative_unit_id": 7
+  },
+  {
     "code": "222",
     "name": "Việt Yên",
     "name_en": "Viet Yen",
@@ -1647,7 +1519,11 @@
     "full_name_en": "Viet Yen Town",
     "code_name": "viet_yen",
     "province_code": "24",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Việt Yên",
+      "Viet Yen District"
+    ]
   },
   {
     "code": "223",
@@ -1860,6 +1736,16 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "250",
+    "name": "Mê Linh",
+    "name_en": "Me Linh",
+    "full_name": "Huyện Mê Linh",
+    "full_name_en": "Me Linh District",
+    "code_name": "me_linh",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
     "code": "251",
     "name": "Yên Lạc",
     "name_en": "Yen Lac",
@@ -1917,7 +1803,11 @@
     "full_name_en": "Que Vo Town",
     "code_name": "que_vo",
     "province_code": "27",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Quế Võ",
+      "Que Vo District"
+    ]
   },
   {
     "code": "260",
@@ -1947,7 +1837,11 @@
     "full_name_en": "Thuan Thanh Town",
     "code_name": "thuan_thanh",
     "province_code": "27",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Thuận Thành",
+      "Thuan Thanh District"
+    ]
   },
   {
     "code": "263",
@@ -1967,6 +1861,146 @@
     "full_name_en": "Luong Tai District",
     "code_name": "luong_tai",
     "province_code": "27",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "268",
+    "name": "Hà Đông",
+    "name_en": "Ha Dong",
+    "full_name": "Quận Hà Đông",
+    "full_name_en": "Ha Dong District",
+    "code_name": "ha_dong",
+    "province_code": "01",
+    "administrative_unit_id": 5
+  },
+  {
+    "code": "269",
+    "name": "Sơn Tây",
+    "name_en": "Son Tay",
+    "full_name": "Thị xã Sơn Tây",
+    "full_name_en": "Son Tay Town",
+    "code_name": "son_tay",
+    "province_code": "01",
+    "administrative_unit_id": 6
+  },
+  {
+    "code": "271",
+    "name": "Ba Vì",
+    "name_en": "Ba Vi",
+    "full_name": "Huyện Ba Vì",
+    "full_name_en": "Ba Vi District",
+    "code_name": "ba_vi",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "272",
+    "name": "Phúc Thọ",
+    "name_en": "Phuc Tho",
+    "full_name": "Huyện Phúc Thọ",
+    "full_name_en": "Phuc Tho District",
+    "code_name": "phuc_tho",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "273",
+    "name": "Đan Phượng",
+    "name_en": "Dan Phuong",
+    "full_name": "Huyện Đan Phượng",
+    "full_name_en": "Dan Phuong District",
+    "code_name": "dan_phuong",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "274",
+    "name": "Hoài Đức",
+    "name_en": "Hoai Duc",
+    "full_name": "Huyện Hoài Đức",
+    "full_name_en": "Hoai Duc District",
+    "code_name": "hoai_duc",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "275",
+    "name": "Quốc Oai",
+    "name_en": "Quoc Oai",
+    "full_name": "Huyện Quốc Oai",
+    "full_name_en": "Quoc Oai District",
+    "code_name": "quoc_oai",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "276",
+    "name": "Thạch Thất",
+    "name_en": "Thach That",
+    "full_name": "Huyện Thạch Thất",
+    "full_name_en": "Thach That District",
+    "code_name": "thach_that",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "277",
+    "name": "Chương Mỹ",
+    "name_en": "Chuong My",
+    "full_name": "Huyện Chương Mỹ",
+    "full_name_en": "Chuong My District",
+    "code_name": "chuong_my",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "278",
+    "name": "Thanh Oai",
+    "name_en": "Thanh Oai",
+    "full_name": "Huyện Thanh Oai",
+    "full_name_en": "Thanh Oai District",
+    "code_name": "thanh_oai",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "279",
+    "name": "Thường Tín",
+    "name_en": "Thuong Tin",
+    "full_name": "Huyện Thường Tín",
+    "full_name_en": "Thuong Tin District",
+    "code_name": "thuong_tin",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "280",
+    "name": "Phú Xuyên",
+    "name_en": "Phu Xuyen",
+    "full_name": "Huyện Phú Xuyên",
+    "full_name_en": "Phu Xuyen District",
+    "code_name": "phu_xuyen",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "281",
+    "name": "Ứng Hòa",
+    "name_en": "Ung Hoa",
+    "full_name": "Huyện Ứng Hòa",
+    "full_name_en": "Ung Hoa District",
+    "code_name": "ung_hoa",
+    "province_code": "01",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "282",
+    "name": "Mỹ Đức",
+    "name_en": "My Duc",
+    "full_name": "Huyện Mỹ Đức",
+    "full_name_en": "My Duc District",
+    "code_name": "my_duc",
+    "province_code": "01",
     "administrative_unit_id": 7
   },
   {
@@ -2167,7 +2201,11 @@
     "full_name_en": "Thuy Nguyen City",
     "code_name": "thuy_nguyen",
     "province_code": "31",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Huyện Thuỷ Nguyên",
+      "Thuy Nguyen District"
+    ]
   },
   {
     "code": "312",
@@ -2177,7 +2215,10 @@
     "full_name_en": "An Duong District",
     "code_name": "an_duong",
     "province_code": "31",
-    "administrative_unit_id": 5
+    "administrative_unit_id": 5,
+    "legacy_names": [
+      "Huyện An Dương"
+    ]
   },
   {
     "code": "313",
@@ -2447,7 +2488,11 @@
     "full_name_en": "Kim Bang Town",
     "code_name": "kim_bang",
     "province_code": "35",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Kim Bảng",
+      "Kim Bang District"
+    ]
   },
   {
     "code": "351",
@@ -2488,6 +2533,16 @@
     "code_name": "nam_dinh",
     "province_code": "36",
     "administrative_unit_id": 4
+  },
+  {
+    "code": "358",
+    "name": "Mỹ Lộc",
+    "name_en": "My Loc",
+    "full_name": "Huyện Mỹ Lộc",
+    "full_name_en": "My Loc District",
+    "code_name": "my_loc",
+    "province_code": "36",
+    "administrative_unit_id": 7
   },
   {
     "code": "359",
@@ -2570,6 +2625,16 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "369",
+    "name": "Ninh Bình",
+    "name_en": "Ninh Binh",
+    "full_name": "Thành phố Ninh Bình",
+    "full_name_en": "Ninh Binh City",
+    "code_name": "ninh_binh",
+    "province_code": "37",
+    "administrative_unit_id": 4
+  },
+  {
     "code": "370",
     "name": "Tam Điệp",
     "name_en": "Tam Diep",
@@ -2607,7 +2672,11 @@
     "full_name_en": "Hoa Lu City",
     "code_name": "hoa_lu",
     "province_code": "37",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Huyện Hoa Lư",
+      "Hoa Lu District"
+    ]
   },
   {
     "code": "375",
@@ -2880,6 +2949,16 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "405",
+    "name": "Đông Sơn",
+    "name_en": "Dong Son",
+    "full_name": "Huyện Đông Sơn",
+    "full_name_en": "Dong Son District",
+    "code_name": "dong_son",
+    "province_code": "38",
+    "administrative_unit_id": 7
+  },
+  {
     "code": "406",
     "name": "Quảng Xương",
     "name_en": "Quang Xuong",
@@ -2908,6 +2987,16 @@
     "code_name": "vinh",
     "province_code": "40",
     "administrative_unit_id": 4
+  },
+  {
+    "code": "413",
+    "name": "Cửa Lò",
+    "name_en": "Cua Lo",
+    "full_name": "Thị xã Cửa Lò",
+    "full_name_en": "Cua Lo Town",
+    "code_name": "cua_lo",
+    "province_code": "40",
+    "administrative_unit_id": 6
   },
   {
     "code": "414",
@@ -3210,6 +3299,16 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "448",
+    "name": "Lộc Hà",
+    "name_en": "Loc Ha",
+    "full_name": "Huyện Lộc Hà",
+    "full_name_en": "Loc Ha District",
+    "code_name": "loc_ha",
+    "province_code": "42",
+    "administrative_unit_id": 7
+  },
+  {
     "code": "449",
     "name": "Kỳ Anh",
     "name_en": "Ky Anh",
@@ -3407,7 +3506,13 @@
     "full_name_en": "Thuan Hoa District",
     "code_name": "thuan_hoa",
     "province_code": "46",
-    "administrative_unit_id": 5
+    "administrative_unit_id": 5,
+    "legacy_names": [
+      "Huế",
+      "Thành phố Huế",
+      "Hue",
+      "Hue City"
+    ]
   },
   {
     "code": "475",
@@ -3427,7 +3532,11 @@
     "full_name_en": "Phong Dien Town",
     "code_name": "phong_dien",
     "province_code": "46",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Phong Điền",
+      "Phong Dien District"
+    ]
   },
   {
     "code": "477",
@@ -3486,6 +3595,16 @@
     "full_name": "Huyện Phú Lộc",
     "full_name_en": "Phu Loc District",
     "code_name": "phu_loc",
+    "province_code": "46",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "483",
+    "name": "Nam Đông",
+    "name_en": "Nam Dong",
+    "full_name": "Huyện Nam Đông",
+    "full_name_en": "Nam Dong District",
+    "code_name": "nam_dong",
     "province_code": "46",
     "administrative_unit_id": 7
   },
@@ -3736,6 +3855,16 @@
     "full_name": "Huyện Phú Ninh",
     "full_name_en": "Phu Ninh District",
     "code_name": "phu_ninh",
+    "province_code": "49",
+    "administrative_unit_id": 7
+  },
+  {
+    "code": "519",
+    "name": "Nông Sơn",
+    "name_en": "Nong Son",
+    "full_name": "Huyện Nông Sơn",
+    "full_name_en": "Nong Son District",
+    "code_name": "nong_son",
     "province_code": "49",
     "administrative_unit_id": 7
   },
@@ -4421,10 +4550,10 @@
   },
   {
     "code": "618",
-    "name": "Ia H' Drai",
-    "name_en": "Ia H' Drai",
-    "full_name": "Huyện Ia H' Drai",
-    "full_name_en": "Ia H' Drai District",
+    "name": "Ia H Drai",
+    "name_en": "Ia H Drai",
+    "full_name": "Huyện Ia H Drai",
+    "full_name_en": "Ia H Drai District",
     "code_name": "ia_h_drai",
     "province_code": "62",
     "administrative_unit_id": 7
@@ -4621,10 +4750,10 @@
   },
   {
     "code": "645",
-    "name": "Ea H'leo",
-    "name_en": "Ea H'leo",
-    "full_name": "Huyện Ea H'leo",
-    "full_name_en": "Ea H'leo District",
+    "name": "Ea Hleo",
+    "name_en": "Ea Hleo",
+    "full_name": "Huyện Ea Hleo",
+    "full_name_en": "Ea Hleo District",
     "code_name": "ea_hleo",
     "province_code": "66",
     "administrative_unit_id": 7
@@ -4651,10 +4780,10 @@
   },
   {
     "code": "648",
-    "name": "Cư M'gar",
-    "name_en": "Cu M'gar",
-    "full_name": "Huyện Cư M'gar",
-    "full_name_en": "Cu M'gar District",
+    "name": "Cư Mgar",
+    "name_en": "Cu Mgar",
+    "full_name": "Huyện Cư Mgar",
+    "full_name_en": "Cu Mgar District",
     "code_name": "cu_mgar",
     "province_code": "66",
     "administrative_unit_id": 7
@@ -4691,10 +4820,10 @@
   },
   {
     "code": "652",
-    "name": "M'Đrắk",
-    "name_en": "M'Drak",
-    "full_name": "Huyện M'Đrắk",
-    "full_name_en": "M'Drak District",
+    "name": "MĐrắk",
+    "name_en": "MDrak",
+    "full_name": "Huyện MĐrắk",
+    "full_name_en": "MDrak District",
     "code_name": "mdrak",
     "province_code": "66",
     "administrative_unit_id": 7
@@ -4811,10 +4940,10 @@
   },
   {
     "code": "666",
-    "name": "Đắk R'Lấp",
-    "name_en": "Dak R'Lap",
-    "full_name": "Huyện Đắk R'Lấp",
-    "full_name_en": "Dak R'Lap District",
+    "name": "Đắk RLấp",
+    "name_en": "Dak RLap",
+    "full_name": "Huyện Đắk RLấp",
+    "full_name_en": "Dak RLap District",
     "code_name": "dak_rlap",
     "province_code": "67",
     "administrative_unit_id": 7
@@ -4920,12 +5049,38 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "681",
+    "name": "Đạ Huoai",
+    "name_en": "Da Huoai",
+    "full_name": "Huyện Đạ Huoai",
+    "full_name_en": "Da Huoai District",
+    "code_name": "da_huoai",
+    "province_code": "68",
+    "administrative_unit_id": 7
+  },
+  {
     "code": "682",
     "name": "Đạ Huoai",
     "name_en": "Da Huoai",
     "full_name": "Huyện Đạ Huoai",
     "full_name_en": "Da Huoai District",
     "code_name": "da_huoai",
+    "province_code": "68",
+    "administrative_unit_id": 7,
+    "legacy_names": [
+      "Đạ Tẻh",
+      "Huyện Đạ Tẻh",
+      "Da Teh",
+      "Da Teh District"
+    ]
+  },
+  {
+    "code": "683",
+    "name": "Cát Tiên",
+    "name_en": "Cat Tien",
+    "full_name": "Huyện Cát Tiên",
+    "full_name_en": "Cat Tien District",
+    "code_name": "cat_tien",
     "province_code": "68",
     "administrative_unit_id": 7
   },
@@ -5027,7 +5182,11 @@
     "full_name_en": "Chon Thanh Town",
     "code_name": "chon_thanh",
     "province_code": "70",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Chơn Thành",
+      "Chon Thanh District"
+    ]
   },
   {
     "code": "698",
@@ -5167,7 +5326,11 @@
     "full_name_en": "Ben Cat City",
     "code_name": "ben_cat",
     "province_code": "74",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Thị xã Bến Cát",
+      "Ben Cat Town"
+    ]
   },
   {
     "code": "722",
@@ -5187,7 +5350,11 @@
     "full_name_en": "Tan Uyen City",
     "code_name": "tan_uyen",
     "province_code": "74",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Thị xã Tân Uyên",
+      "Tan Uyen Town"
+    ]
   },
   {
     "code": "724",
@@ -5370,6 +5537,16 @@
     "administrative_unit_id": 7
   },
   {
+    "code": "752",
+    "name": "Long Điền",
+    "name_en": "Long Dien",
+    "full_name": "Huyện Long Điền",
+    "full_name_en": "Long Dien District",
+    "code_name": "long_dien",
+    "province_code": "77",
+    "administrative_unit_id": 7
+  },
+  {
     "code": "753",
     "name": "Long Đất",
     "name_en": "Long Dat",
@@ -5377,7 +5554,13 @@
     "full_name_en": "Long Dat District",
     "code_name": "long_dat",
     "province_code": "77",
-    "administrative_unit_id": 7
+    "administrative_unit_id": 7,
+    "legacy_names": [
+      "Đất Đỏ",
+      "Huyện Đất Đỏ",
+      "Dat Do",
+      "Dat Do District"
+    ]
   },
   {
     "code": "754",
@@ -5387,7 +5570,11 @@
     "full_name_en": "Phu My City",
     "code_name": "phu_my",
     "province_code": "77",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Thị xã Phú Mỹ",
+      "Phu My Town"
+    ]
   },
   {
     "code": "755",
@@ -5787,7 +5974,11 @@
     "full_name_en": "Go Cong City",
     "code_name": "go_cong",
     "province_code": "82",
-    "administrative_unit_id": 4
+    "administrative_unit_id": 4,
+    "legacy_names": [
+      "Thị xã Gò Công",
+      "Go Cong Town"
+    ]
   },
   {
     "code": "817",
@@ -6327,7 +6518,11 @@
     "full_name_en": "Tinh Bien Town",
     "code_name": "tinh_bien",
     "province_code": "89",
-    "administrative_unit_id": 6
+    "administrative_unit_id": 6,
+    "legacy_names": [
+      "Huyện Tịnh Biên",
+      "Tinh Bien District"
+    ]
   },
   {
     "code": "891",

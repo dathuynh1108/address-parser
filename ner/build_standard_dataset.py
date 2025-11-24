@@ -8,6 +8,7 @@ import json
 import random
 import re
 import unicodedata
+import string
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
@@ -41,6 +42,8 @@ LABELS = [
     "B-STREET",
     "I-STREET",
 ]
+
+# Common Vietnamese street names and descriptors for synthetic address generation.
 STREET_NAMES = [
     "Nguyễn Trãi",
     "Lê Lợi",
@@ -50,7 +53,9 @@ STREET_NAMES = [
     "Nguyễn Văn Cừ",
     "Cách Mạng Tháng Tám",
     "Pasteur",
+    "Marry Curie",
     "Võ Thị Sáu",
+    "Võ Văn Kiệt",
     "Hoàng Diệu",
     "Phạm Ngũ Lão",
     "Hai Bà Trưng",
@@ -62,6 +67,31 @@ STREET_NAMES = [
     "Trần Cao Vân",
     "Đặng Văn Bi",
     "Phổ Quang",
+    "Tôn Thất Đạm",
+    "Trường Chinh",
+    "Lê Hồng Phong",
+    "Lê Duẩn",
+    "Nguyễn Huệ",
+    "Bạch Đằng",
+    "Trần Phú",
+    "Lý Thái Tổ",
+    "Nguyễn Thái Học",
+    "Trần Nhân Tông",
+    "Phan Đình Phùng",
+    "Nguyễn Đình Chiểu",
+    "Trần Quang Khải",
+    "Lê Quang Định",
+    "Phan Xích Long",
+    "Cao Thắng",
+    "Nguyễn Oanh",
+    "Lê Văn Sỹ",
+    "Trần Xuân Soạn",
+    "Nguyễn Ảnh Thủ",
+    "Huỳnh Tấn Phát",
+    "Lương Định Của",
+    "Nguyễn Xiển",
+    "Nguyễn Duy Trinh",
+    "Phạm Hùng",
 ]
 
 STREET_DESCRIPTORS = [
@@ -79,6 +109,80 @@ STREET_DESCRIPTORS = [
     "tl",
     "đại lộ",
     "trục",
+]
+
+RURAL_HAMLET_NAMES = [
+    "An Bình", "An Lộc", "An Phú", "An Hòa", "An Thắng", "An Thành", "An Thuận",
+    "An Hiệp", "An Tân", "An Nhơn", "An Đức", "An Lợi", "An Khánh", "An Trường",
+    "An Quý", "Bình An", "Bình Lộc", "Bình Hưng", "Bình Mỹ", "Bình Thuận",
+    "Bình Thành", "Bình Phước", "Bình Thạnh", "Bình Minh", "Bình Tiến",
+    "Bình Trung", "Bình Đông", "Bình Tây", "Bình Nam", "Bình Bắc", "Bình Phú",
+    "Bình Tường", "Bình Thịnh", "Bình Sơn", "Bình Long", "Bình Điền", "Tân An",
+    "Tân Bình", "Tân Lộc", "Tân Phú", "Tân Hòa", "Tân Hiệp", "Tân Thuận",
+    "Tân Long", "Tân Mỹ", "Tân Quý", "Tân Tiến", "Tân Thịnh", "Tân Phước",
+    "Tân Khánh", "Tân Trung", "Tân Đông", "Tân Tây", "Tân Nam", "Tân Bắc",
+    "Phú An", "Phú Lộc", "Phú Long", "Phú Mỹ", "Phú Hòa", "Phú Thuận",
+    "Phú Thịnh", "Phú Thành", "Phú Hiệp", "Phú Đức", "Phú Tân", "Phú Khánh",
+    "Phú Ninh", "Phú Quý", "Phú Sơn", "Mỹ An", "Mỹ Hòa", "Mỹ Hiệp", "Mỹ Lộc",
+    "Mỹ Long", "Mỹ Đức", "Mỹ Phú", "Mỹ Thuận", "Mỹ Thạnh", "Mỹ Thành",
+    "Mỹ Thắng", "Mỹ Sơn", "Mỹ Tiến", "Vĩnh An", "Vĩnh Lộc", "Vĩnh Long",
+    "Vĩnh Hòa", "Vĩnh Thuận", "Vĩnh Thịnh", "Vĩnh Thành", "Vĩnh Hiệp",
+    "Vĩnh Quang", "Vĩnh Sơn", "Vĩnh Phúc", "Vĩnh Tân", "Long An", "Long Hòa",
+    "Long Thuận", "Long Phước", "Long Hiệp", "Long Thành", "Long Đức",
+    "Long Giang", "Long Tiến", "Long Khánh", "Long Sơn", "Long Tân", "Hòa An",
+    "Hòa Bình", "Hòa Lộc", "Hòa Long", "Hòa Thuận", "Hòa Thạnh", "Hòa Thành",
+    "Hòa Hiệp", "Hòa Phú", "Hòa Lợi", "Hòa Tiến", "Hòa Sơn", "Hòa Đông",
+    "Hòa Tây", "Hòa Trung", "Thạnh An", "Thạnh Lộc", "Thạnh Mỹ", "Thạnh Phú",
+    "Thạnh Sơn", "Thạnh Hòa", "Thạnh Thuận", "Thạnh Đức", "Thạnh Đông",
+    "Thạnh Tây", "Trung An", "Trung Lộc", "Trung Hòa", "Trung Sơn", "Trung Phú",
+    "Trung Thuận", "Trung Thành", "Trung Hiệp", "Trung Đức", "Trung Tín",
+    "Đông An", "Đông Lộc", "Đông Hòa", "Đông Phú", "Đông Thuận", "Đông Tiến",
+    "Đông Thạnh", "Đông Sơn", "Đông Khánh", "Đông Thành", "Tây An", "Tây Hòa",
+    "Tây Lộc", "Tây Thuận", "Tây Thạnh", "Tây Sơn", "Tây Phú", "Tây Hiệp",
+    "Nam An", "Nam Lộc", "Nam Phú", "Nam Hòa", "Nam Thuận", "Nam Thạnh",
+    "Nam Sơn", "Nam Hiệp", "Bắc An", "Bắc Lộc", "Bắc Hòa", "Bắc Phú",
+    "Bắc Thuận", "Bắc Sơn", "Bắc Thịnh", "Bắc Thành", "Lộc An", "Lộc Điền",
+    "Lộc Sơn", "Lộc Thắng", "Lộc Thịnh", "Lộc Hòa", "Lộc Thuận", "Lộc Thành",
+    "Lộc Tiến", "Thuận An", "Thuận Lộc", "Thuận Hòa", "Thuận Phú", "Thuận Mỹ",
+    "Thuận Sơn", "Thuận Đức", "Thuận Thành", "Thuận Tiến", "Thuận Thịnh",
+    "Hiệp An", "Hiệp Lợi", "Hiệp Phú", "Hiệp Thạnh", "Hiệp Hòa", "Hiệp Thuận",
+    "Hiệp Đức", "Hiệp Thành", "Hiệp Sơn", "Minh An", "Minh Lộc", "Minh Phú",
+    "Minh Hòa", "Minh Thuận", "Minh Thạnh", "Minh Đức", "Minh Tiến", "Minh Tân",
+    "Quang An", "Quang Lộc", "Quang Phú", "Quang Hòa", "Quang Thuận",
+    "Quang Thạnh", "Quang Trung", "Quang Hiệp", "Ngọc An", "Ngọc Lộc",
+    "Ngọc Phú", "Ngọc Sơn", "Ngọc Hòa", "Ngọc Thuận", "Ngọc Tiến", "Ngọc Khánh",
+    "Phước An", "Phước Lộc", "Phước Long", "Phước Mỹ", "Phước Hòa",
+    "Phước Thuận", "Phước Thạnh", "Phước Sơn", "Phước Tiến", "Gia An",
+    "Gia Lộc", "Gia Hòa", "Gia Phú", "Gia Thuận", "Gia Thạnh", "Kim Long",
+    "Kim Sơn", "Kim Phú", "Kim Thịnh", "Cẩm An", "Cẩm Lộc", "Cẩm Hòa",
+    "Cẩm Phú", "Cẩm Sơn"
+]
+
+URBAN_HAMLET_NAMES = [
+    "An Lạc", "Bình Trị Đông", "Bình Hưng", "Bình Phú", "Bình Tân", "Bình Chiểu",
+    "Bình Thọ", "Hiệp Bình", "Hiệp Bình Chánh", "Hiệp Bình Phước", "Hiệp Thành",
+    "Hiệp Phú", "Tân Phú", "Tân Sơn Nhì", "Tân Thành", "Tân Thới", "Tân Thuận",
+    "Tân Kiểng", "Tân Quy", "Tân Hưng", "Tân Cảng", "Tân Định", "Phú Mỹ",
+    "Phú Mỹ Hưng", "Phú Mỹ Đông", "Phú Thuận", "Phú Thuận Đông", "Phú Thuận Tây",
+    "Phú Hữu", "Phú Nhuận", "Phú Lợi", "Phú Thạnh", "Phú Lâm", "Phú Tân",
+    "Thạnh Mỹ Lợi", "Thạnh Lộc", "Thạnh Xuân", "Thạnh Phú", "Thạnh Hòa",
+    "Thảo Điền", "Thảo Điền Pearl", "Trung Sơn", "Trung Mỹ Tây", "Trung Chánh",
+    "Linh Trung", "Linh Đông", "Linh Tây", "Linh Xuân", "Linh Chiểu",
+    "Vạn Phúc", "Vạn Phúc City", "Vạn Kiếp", "Vạn Lộc", "Vạn Thạnh",
+    "Vĩnh Lộc", "Vĩnh Lộc A", "Vĩnh Lộc B", "Vĩnh Hiệp", "Vĩnh Thạnh",
+    "Hưng Phú", "Hưng Lợi", "Đông Hòa", "Đông Hưng Thuận", "Đông Thạnh",
+    "Tây Thạnh", "Tây Sơn", "Tam Bình", "Tam Phú", "Nam Long", "Nam Hưng",
+    "Cityland", "Cityland Garden", "Cityland Park Hills", "Cityland Riverside",
+    "Cityland Center", "Lakeview City", "EcoCity", "Riverside City",
+    "Green Riverside", "Green Valley", "Sky Garden", "Sky View", "Topaz City",
+    "Topaz Home", "Richland", "RichStar", "Pearl Plaza", "Pearl Garden",
+    "Garden Plaza", "River Park", "River View", "Sunrise City",
+    "Sunrise Riverside", "Green City", "Golden River", "Golden Park",
+    "Diamond Island", "Diamond Lotus", "Saigon Mia", "Saigon Pearl",
+    "The Manor", "The Vista", "Vista Verde", "Masteri", "Masteri Parkland",
+    "Vinhomes Central Park", "Vinhomes Golden River", "Vinhomes Grand Park",
+    "Celadon City", "Sala", "EcoPark", "Gamuda City", "Royal City",
+    "Times City", "Park Hill", "Goldmark City", "Splendora", "Ciputra"
 ]
 
 
@@ -221,28 +325,46 @@ class VariantSpec:
 
 
 VARIANT_SPECS: Tuple[VariantSpec, ...] = (
+    # ===== Cơ bản =====
     VariantSpec(name="standard"),
     VariantSpec(name="standard_no_commas", use_commas=False),
     VariantSpec(name="lowercase", lowercase=True),
     VariantSpec(name="lowercase_no_commas", lowercase=True, use_commas=False),
+
+    # Không dấu (accentless), có / không dấu phẩy
     VariantSpec(
-        name="accentless", lowercase=True, strip_accents=True, use_commas=False
+        name="accentless",
+        lowercase=True,
+        strip_accents=True,
+        use_commas=False,
     ),
     VariantSpec(
-        name="accentless_commas", lowercase=True, strip_accents=True, use_commas=True
+        name="accentless_commas",
+        lowercase=True,
+        strip_accents=True,
+        use_commas=True,
     ),
+
+    # Viết tắt loại (TP./Q./P./...) nhưng vẫn giữ type token
     VariantSpec(name="abbrev_commas", abbreviate_types=True),
-    VariantSpec(name="abbrev_no_commas", abbreviate_types=True, use_commas=False),
+    VariantSpec(
+        name="abbrev_no_commas",
+        abbreviate_types=True,
+        use_commas=False,
+    ),
+
+    # ===== Compact: bỏ type token, chỉ giữ tên trơ =====
+    # "compact" ở đây = không còn từ loại (Tỉnh/Quận/...) => abbreviate_types không còn ý nghĩa -> đặt False.
     VariantSpec(
         name="compact_commas",
         use_commas=True,
-        abbreviate_types=True,
+        abbreviate_types=False,
         drop_type_tokens=True,
     ),
     VariantSpec(
         name="compact_no_commas",
         use_commas=False,
-        abbreviate_types=True,
+        abbreviate_types=False,
         drop_type_tokens=True,
     ),
     VariantSpec(
@@ -250,7 +372,7 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         lowercase=True,
         strip_accents=False,
         use_commas=False,
-        abbreviate_types=True,
+        abbreviate_types=False,
         drop_type_tokens=True,
         prefer_short_name=True,
     ),
@@ -259,10 +381,32 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         lowercase=True,
         strip_accents=True,
         use_commas=False,
-        abbreviate_types=True,
+        abbreviate_types=False,
         drop_type_tokens=True,
         prefer_short_name=True,
     ),
+
+    # ===== Evil nhưng còn type =====
+    VariantSpec(
+        name="evil_full_types",
+        lowercase=True,
+        strip_accents=True,
+        use_commas=False,
+        abbreviate_types=False,  # "phuong", "quan", "thanh pho"
+        drop_type_tokens=False,  # vẫn giữ type
+        prefer_full_name=True,
+    ),
+    VariantSpec(
+        name="evil_abbrev_types",
+        lowercase=True,
+        strip_accents=True,
+        use_commas=False,
+        abbreviate_types=True,   # p., q., tp.
+        drop_type_tokens=False,  # vẫn giữ type
+        prefer_full_name=True,
+    ),
+
+    # ===== Có connector nghĩa ("thuộc") =====
     VariantSpec(
         name="meaningful_connectors",
         connectors={
@@ -273,14 +417,36 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         },
         prefer_full_name=True,
     ),
+
+    # ===== Không street, nhưng vẫn đủ cấp hành chính =====
     VariantSpec(
         name="no_street_compact",
         include_street=False,
         use_commas=False,
-        abbreviate_types=True,
+        abbreviate_types=True,   # P./Q./TP.
         lowercase=True,
     ),
-    VariantSpec(name="ward_only", include_street=False, component_order=("WARD",)),
+    VariantSpec(
+        name="no_street_full",
+        include_street=False,
+        use_commas=True,
+        abbreviate_types=False,
+        drop_type_tokens=False,
+    ),
+    VariantSpec(
+        name="no_street_full_abbrev",
+        include_street=False,
+        use_commas=True,
+        abbreviate_types=True,   # P./Q./TP.
+        drop_type_tokens=False,
+    ),
+
+    # ===== Subset theo cấp =====
+    VariantSpec(
+        name="ward_only",
+        include_street=False,
+        component_order=("WARD",),
+    ),
     VariantSpec(
         name="ward_only_abbrev",
         include_street=False,
@@ -288,7 +454,9 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         abbreviate_types=True,
     ),
     VariantSpec(
-        name="district_only", include_street=False, component_order=("DISTRICT",)
+        name="district_only",
+        include_street=False,
+        component_order=("DISTRICT",),
     ),
     VariantSpec(
         name="district_only_abbrev",
@@ -297,7 +465,9 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         abbreviate_types=True,
     ),
     VariantSpec(
-        name="province_only", include_street=False, component_order=("PROVINCE",)
+        name="province_only",
+        include_street=False,
+        component_order=("PROVINCE",),
     ),
     VariantSpec(
         name="province_only_abbrev",
@@ -305,8 +475,12 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         component_order=("PROVINCE",),
         abbreviate_types=True,
     ),
+
+    # ===== Các tổ hợp 2 cấp =====
     VariantSpec(
-        name="ward_province", include_street=False, component_order=("WARD", "PROVINCE")
+        name="ward_province",
+        include_street=False,
+        component_order=("WARD", "PROVINCE"),
     ),
     VariantSpec(
         name="ward_province_abbrev",
@@ -315,7 +489,9 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         abbreviate_types=True,
     ),
     VariantSpec(
-        name="province_ward", include_street=False, component_order=("PROVINCE", "WARD")
+        name="province_ward",
+        include_street=False,
+        component_order=("PROVINCE", "WARD"),
     ),
     VariantSpec(
         name="province_ward_abbrev",
@@ -345,7 +521,12 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
         component_order=("PROVINCE", "DISTRICT"),
         abbreviate_types=True,
     ),
-    VariantSpec(name="ward_district", component_order=("WARD", "DISTRICT")),
+
+    # ===== Đảo order 3 cấp =====
+    VariantSpec(
+        name="ward_district",
+        component_order=("WARD", "DISTRICT"),
+    ),
     VariantSpec(
         name="ward_district_abbrev",
         component_order=("WARD", "DISTRICT"),
@@ -417,6 +598,12 @@ def clean_text(value: Optional[str], *, remove_slash: bool = True) -> str:
     return value
 
 
+def capitalize_first(text: str) -> str:
+    if not text:
+        return text
+    return text[0].upper() + text[1:]
+
+
 def infer_includes_type(text: str) -> bool:
     base = strip_accents(clean_text(text)).lower()
     prefixes = (
@@ -464,6 +651,31 @@ def add_connector_tokens(
 def detect_type_hint(
     level: str, full_name: str, admin_code_name: Optional[str] = None
 ) -> str:
+    if admin_code_name:
+        code = admin_code_name.lower()
+        # Prefer explicit mapping from administrative unit definitions.
+        admin_code_map = {
+            "province": {
+                "thanh_pho_truc_thuoc_trung_uong": "province_city",
+                "tinh": "province",
+            },
+            "district": {
+                "quan": "district_quan",
+                "huyen": "district_huyen",
+                "thi_xa": "district_thi_xa",
+                "thi_tran": "district_thi_tran",
+                "thanh_pho_thuoc_tinh": "district_city",
+                "thanh_pho_thuoc_thanh_pho_truc_thuoc_trung_uong": "district_city",
+            },
+            "ward": {
+                "phuong": "ward_phuong",
+                "xa": "ward_xa",
+                "thi_tran": "ward_thi_tran",
+            },
+        }
+        mapped = admin_code_map.get(level, {}).get(code)
+        if mapped:
+            return mapped
     if admin_code_name:
         normalized = admin_code_name.lower()
         if level == "province":
@@ -781,6 +993,112 @@ def build_street_tokens(rng: random.Random) -> List[str]:
     text = rng.choice(templates)
     return tokenize(text)
 
+def build_hamlet_tokens(rng: random.Random, *, urban: bool = False) -> List[str]:
+    """
+    Sinh cụm thôn/ấp/khu phố/tổ dân phố.
+
+    - urban=False (rural): Ấp, thôn, xóm, làng, buôn, bản, tổ + tên ấp/thôn/bản.
+    - urban=True  (urban): Khu phố, KDC, TDP, tổ dân phố/dân cư + tên KDC/dự án.
+    """
+
+    if urban:
+        # Đô thị: KP/Khu phố/KDC/TDP, tổ dân phố/dân cư
+        kp_like_prefixes = [
+            "khu phố",
+            "kp",
+            "kp.",
+            "khu dân cư",
+            "kdc",
+        ]
+        tdp_like_prefixes = [
+            "tổ dân phố",
+            "tổ dân cư",
+            "tdp",
+            "tổ",
+        ]
+        all_prefixes = kp_like_prefixes + tdp_like_prefixes
+    else:
+        # Nông thôn: Ấp/thôn/xóm/làng/buôn/bản + tổ
+        village_like_prefixes = [
+            "ấp",
+            "ấp.",
+            "thôn",
+            "xóm",
+            "làng",
+            "buôn",
+            "bản",
+        ]
+        tdp_like_prefixes = [
+            "tổ",  # tổ 5, tổ 12...
+        ]
+        kp_like_prefixes = []  # rural không dùng khu phố/KDC
+        all_prefixes = village_like_prefixes + tdp_like_prefixes
+
+    raw_prefix = rng.choice(all_prefixes)
+    prefix = capitalize_first(raw_prefix)
+
+
+    # Chọn pattern identifier theo nhóm prefix
+    if urban and raw_prefix in kp_like_prefixes:
+        # Khu phố/KDC/KP: "Khu phố 5", "KP 3A", "Khu dân cư Phú Mỹ"
+        identifier = rng.choice(
+            [
+                str(rng.randint(1, 20)),
+                f"{rng.randint(1, 20)}{rng.choice(string.ascii_uppercase)}",
+                rng.choice(URBAN_HAMLET_NAMES),
+            ]
+        )
+    elif raw_prefix in tdp_like_prefixes:
+        # Tổ/TDP (cả urban & rural): "Tổ 5", "Tổ 12A"
+        identifier = rng.choice(
+            [
+                str(rng.randint(1, 40)),
+                f"{rng.randint(1, 20)}{rng.choice(string.ascii_uppercase)}",
+            ]
+        )
+    else:
+        # Ấp/thôn/xóm/làng/buôn/bản: "Ấp 3A", "Thôn 5BC", "Bản Phước Lộc"
+        identifier = rng.choice(
+            [
+                str(rng.randint(1, 30)),
+                f"{rng.randint(1, 20)}{rng.choice(string.ascii_uppercase)}",
+                f"{rng.randint(1, 20)}{rng.choice(string.ascii_uppercase)}{rng.choice(string.ascii_uppercase)}",
+                rng.choice(RURAL_HAMLET_NAMES),
+            ]
+        )
+
+    return tokenize(f"{prefix} {identifier}")
+
+def build_location_prefix_tokens(
+    rng: random.Random,
+    ward_type_hint: Optional[str],
+    district_type_hint: Optional[str],
+) -> List[str]:
+    # Emit hamlet/khu pho variants in rural/commune contexts and occasionally in urban wards,
+    # while keeping a street component so mixes like "Đường ... Ấp ..." or "KDC ... Đường ..." appear.
+    is_rural = (ward_type_hint in {"ward_xa", "ward_thi_tran"}) or (
+        district_type_hint in {"district_huyen", "district_thi_xa", "district_thi_tran"}
+    )
+    is_urban = (ward_type_hint == "ward_phuong") or (
+        district_type_hint in {"district_quan", "district_city"}
+    )
+
+    rural_prob = 0.45  # higher share of hamlet/ấp in rural
+    urban_prob = 0.2   # smaller share of khu phố/TDP in urban
+    street_tokens = build_street_tokens(rng)
+    hamlet_tokens: Optional[List[str]] = None
+    if is_rural and rng.random() < rural_prob:
+        hamlet_tokens = build_hamlet_tokens(rng, urban=False)
+    elif is_urban and rng.random() < urban_prob:
+        hamlet_tokens = build_hamlet_tokens(rng, urban=True)
+
+    if hamlet_tokens:
+        # Mix order to mimic real usage: rural often "Đường ... Ấp ...", urban often "KDC ... Đường ..."
+        if rng.random() < 0.6:
+            return street_tokens + hamlet_tokens
+        return hamlet_tokens + street_tokens
+
+    return street_tokens
 
 def render_component_tokens(
     component: Component,
@@ -793,15 +1111,41 @@ def render_component_tokens(
         prefer_short=spec.prefer_short_name,
     )
     tokens: List[str] = []
+    name_tokens = tokenize(variant.text)
+
     if not spec.drop_type_tokens and not variant.includes_type:
-        # Add type token if the chosen name variant does not already include it
+        # Lấy token loại: Quận/Huyện/Phường...
         type_token = component.resolve_type_token(
             rng=rng, abbreviate=spec.abbreviate_types
         )
-        if type_token:
-            tokens.extend(tokenize(type_token))
 
-    tokens.extend(tokenize(variant.text))
+        if type_token:
+            first_token = name_tokens[0] if name_tokens else ""
+            if spec.abbreviate_types and first_token:
+                is_digit = first_token[0].isdigit()
+                has_punctuation = any(not ch.isalnum() for ch in type_token)
+
+                # -----------------------
+                # 1) Compact với số: Q1 / Q.1 / Q-1 ...
+                # -----------------------
+                if is_digit and rng.random() < 0.5:
+                    tokens.append(f"{type_token}{first_token}")
+                    name_tokens = name_tokens[1:]
+                # -----------------------
+                # 2) Compact với chữ: chỉ khi type_token có dấu (., - ...)
+                #    => sinh kiểu Q.Bình / Q-Bình, KHÔNG có QBình
+                # -----------------------
+                elif (not is_digit) and has_punctuation and rng.random() < 0.5:
+                    tokens.append(f"{type_token}{first_token}")  # Q.Binh / Q-Binh
+                    name_tokens = name_tokens[1:]
+                else:
+                    # Non-compact: Q Bình / Q. Bình
+                    tokens.extend(tokenize(type_token))
+            else:
+                # Không abbreviate: "Quận Bình Thạnh", "Phường An Phú", ...
+                tokens.extend(tokenize(type_token))
+
+    tokens.extend(name_tokens)
     return tokens
 
 
@@ -841,7 +1185,13 @@ def render_data_sample(
         return None
 
     if spec.include_street:
-        street_tokens = build_street_tokens(rng)
+        ward_component = component_map.get("WARD")
+        district_component = component_map.get("DISTRICT")
+        street_tokens = build_location_prefix_tokens(
+            rng,
+            ward_component.type_hint if ward_component else None,
+            district_component.type_hint if district_component else None,
+        )
         start_idx = len(tokens)
         tokens.extend(street_tokens)
         component_spans["STREET"] = (start_idx, len(street_tokens))
@@ -953,8 +1303,12 @@ def main() -> None:
         specs = list(VARIANT_SPECS)
         rng.shuffle(specs)
         for spec in specs:
-            attempts = 10 if spec.include_street else 1
-            for _ in range(attempts):
+            target_unique = 12 if spec.include_street else 1
+            max_attempts = target_unique * 5  # keep trying to replace dupes instead of wasting draws
+            added_for_spec = 0
+            attempts = 0
+            while attempts < max_attempts and added_for_spec < target_unique:
+                attempts += 1
                 rendered = render_data_sample(record, spec, rng)
                 if not rendered:
                     continue
@@ -972,6 +1326,7 @@ def main() -> None:
                         "source": record.source,
                     }
                 )
+                added_for_spec += 1
                 if args.max_samples and len(all_examples) >= args.max_samples:
                     break
             if args.max_samples and len(all_examples) >= args.max_samples:
