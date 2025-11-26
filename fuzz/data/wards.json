@@ -6951,9 +6951,9 @@
   },
   {
     "code": "06367",
-    "name": "Vũ Lăng",
+    "name": "Vũ Lãng",
     "name_en": "Vu Lang",
-    "full_name": "Xã Vũ Lăng",
+    "full_name": "Xã Vũ Lãng",
     "full_name_en": "Vu Lang Commune",
     "code_name": "vu_lang",
     "province_code": "20",
@@ -9311,9 +9311,9 @@
   },
   {
     "code": "07996",
-    "name": "Bằng Luân",
+    "name": "Băng Luân",
     "name_en": "Bang Luan",
-    "full_name": "Xã Bằng Luân",
+    "full_name": "Xã Băng Luân",
     "full_name_en": "Bang Luan Commune",
     "code_name": "bang_luan",
     "province_code": "25",
@@ -18461,11 +18461,11 @@
   },
   {
     "code": "20137",
-    "name": "Chân Mây - Lăng Cô",
-    "name_en": "Chan May - Lang Co",
-    "full_name": "Xã Chân Mây - Lăng Cô",
-    "full_name_en": "Chan May - Lang Co Commune",
-    "code_name": "chan_may_lang_co",
+    "name": "Chân Mây-Lăng Cô",
+    "name_en": "Chan May-Lang Co",
+    "full_name": "Xã Chân Mây-Lăng Cô",
+    "full_name_en": "Chan May-Lang Co Commune",
+    "code_name": "chan_may-lang_co",
     "province_code": "46",
     "administrative_unit_id": 4
   },
@@ -18771,9 +18771,9 @@
   },
   {
     "code": "20364",
-    "name": "Chiên Đàn",
+    "name": "Chiến Đàn",
     "name_en": "Chien Dan",
-    "full_name": "Xã Chiên Đàn",
+    "full_name": "Xã Chiến Đàn",
     "full_name_en": "Chien Dan Commune",
     "code_name": "chien_dan",
     "province_code": "48",
@@ -18831,11 +18831,11 @@
   },
   {
     "code": "20458",
-    "name": "Avương",
-    "name_en": "Avuong",
-    "full_name": "Xã Avương",
-    "full_name_en": "Avuong Commune",
-    "code_name": "avuong",
+    "name": "A vương",
+    "name_en": "A vuong",
+    "full_name": "Xã A vương",
+    "full_name_en": "A vuong Commune",
+    "code_name": "a_vuong",
     "province_code": "48",
     "administrative_unit_id": 4
   },
@@ -20416,7 +20416,7 @@
     "full_name": "Phường Quy Nhơn Bắc",
     "full_name_en": "Quy Nhon Bac Ward",
     "code_name": "quy_nhon_bac",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20426,7 +20426,7 @@
     "full_name": "Phường Quy Nhơn",
     "full_name_en": "Quy Nhon Ward",
     "code_name": "quy_nhon",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20436,7 +20436,7 @@
     "full_name": "Phường Quy Nhơn Tây",
     "full_name_en": "Quy Nhon Tay Ward",
     "code_name": "quy_nhon_tay",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20446,7 +20446,7 @@
     "full_name": "Phường Quy Nhơn Nam",
     "full_name_en": "Quy Nhon Nam Ward",
     "code_name": "quy_nhon_nam",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20456,7 +20456,7 @@
     "full_name": "Phường Quy Nhơn Đông",
     "full_name_en": "Quy Nhon Dong Ward",
     "code_name": "quy_nhon_dong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20466,7 +20466,7 @@
     "full_name": "Phường Tam Quan",
     "full_name_en": "Tam Quan Ward",
     "code_name": "tam_quan",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20476,7 +20476,7 @@
     "full_name": "Phường Bồng Sơn",
     "full_name_en": "Bong Son Ward",
     "code_name": "bong_son",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20486,7 +20486,7 @@
     "full_name": "Phường Hoài Nhơn Bắc",
     "full_name_en": "Hoai Nhon Bac Ward",
     "code_name": "hoai_nhon_bac",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20496,7 +20496,7 @@
     "full_name": "Phường Hoài Nhơn Tây",
     "full_name_en": "Hoai Nhon Tay Ward",
     "code_name": "hoai_nhon_tay",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20506,7 +20506,7 @@
     "full_name": "Phường Hoài Nhơn",
     "full_name_en": "Hoai Nhon Ward",
     "code_name": "hoai_nhon",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20516,7 +20516,7 @@
     "full_name": "Phường Hoài Nhơn Đông",
     "full_name_en": "Hoai Nhon Dong Ward",
     "code_name": "hoai_nhon_dong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20526,7 +20526,7 @@
     "full_name": "Phường Hoài Nhơn Nam",
     "full_name_en": "Hoai Nhon Nam Ward",
     "code_name": "hoai_nhon_nam",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20536,7 +20536,7 @@
     "full_name": "Phường Bình Định",
     "full_name_en": "Binh Dinh Ward",
     "code_name": "binh_dinh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20546,7 +20546,7 @@
     "full_name": "Phường An Nhơn",
     "full_name_en": "An Nhon Ward",
     "code_name": "an_nhon",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20556,7 +20556,7 @@
     "full_name": "Phường An Nhơn Bắc",
     "full_name_en": "An Nhon Bac Ward",
     "code_name": "an_nhon_bac",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20566,7 +20566,7 @@
     "full_name": "Phường An Nhơn Đông",
     "full_name_en": "An Nhon Dong Ward",
     "code_name": "an_nhon_dong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20576,7 +20576,7 @@
     "full_name": "Phường An Nhơn Nam",
     "full_name_en": "An Nhon Nam Ward",
     "code_name": "an_nhon_nam",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20586,7 +20586,7 @@
     "full_name": "Phường Diên Hồng",
     "full_name_en": "Dien Hong Ward",
     "code_name": "dien_hong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20596,7 +20596,7 @@
     "full_name": "Phường Pleiku",
     "full_name_en": "Pleiku Ward",
     "code_name": "pleiku",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20606,7 +20606,7 @@
     "full_name": "Phường Thống Nhất",
     "full_name_en": "Thong Nhat Ward",
     "code_name": "thong_nhat",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20616,7 +20616,7 @@
     "full_name": "Phường Hội Phú",
     "full_name_en": "Hoi Phu Ward",
     "code_name": "hoi_phu",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20626,7 +20626,7 @@
     "full_name": "Phường An Phú",
     "full_name_en": "An Phu Ward",
     "code_name": "an_phu",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20636,7 +20636,7 @@
     "full_name": "Phường An Bình",
     "full_name_en": "An Binh Ward",
     "code_name": "an_binh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20646,7 +20646,7 @@
     "full_name": "Phường An Khê",
     "full_name_en": "An Khe Ward",
     "code_name": "an_khe",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20656,7 +20656,7 @@
     "full_name": "Phường Ayun Pa",
     "full_name_en": "Ayun Pa Ward",
     "code_name": "ayun_pa",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 3
   },
   {
@@ -20666,7 +20666,7 @@
     "full_name": "Xã Nhơn Châu",
     "full_name_en": "Nhon Chau Commune",
     "code_name": "nhon_chau",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20676,7 +20676,7 @@
     "full_name": "Xã An Lão",
     "full_name_en": "An Lao Commune",
     "code_name": "an_lao",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20686,7 +20686,7 @@
     "full_name": "Xã An Vinh",
     "full_name_en": "An Vinh Commune",
     "code_name": "an_vinh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20696,7 +20696,7 @@
     "full_name": "Xã An Toàn",
     "full_name_en": "An Toan Commune",
     "code_name": "an_toan",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20706,7 +20706,7 @@
     "full_name": "Xã An Hòa",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20716,7 +20716,7 @@
     "full_name": "Xã Hoài Ân",
     "full_name_en": "Hoai An Commune",
     "code_name": "hoai_an",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20726,7 +20726,7 @@
     "full_name": "Xã Ân Hảo",
     "full_name_en": "An Hao Commune",
     "code_name": "an_hao",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20736,7 +20736,7 @@
     "full_name": "Xã Vạn Đức",
     "full_name_en": "Van Duc Commune",
     "code_name": "van_duc",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20746,7 +20746,7 @@
     "full_name": "Xã Ân Tường",
     "full_name_en": "An Tuong Commune",
     "code_name": "an_tuong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20756,7 +20756,7 @@
     "full_name": "Xã Kim Sơn",
     "full_name_en": "Kim Son Commune",
     "code_name": "kim_son",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20766,7 +20766,7 @@
     "full_name": "Xã Phù Mỹ",
     "full_name_en": "Phu My Commune",
     "code_name": "phu_my",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20776,7 +20776,7 @@
     "full_name": "Xã Bình Dương",
     "full_name_en": "Binh Duong Commune",
     "code_name": "binh_duong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20786,7 +20786,7 @@
     "full_name": "Xã Phù Mỹ Bắc",
     "full_name_en": "Phu My Bac Commune",
     "code_name": "phu_my_bac",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20796,7 +20796,7 @@
     "full_name": "Xã Phù Mỹ Đông",
     "full_name_en": "Phu My Dong Commune",
     "code_name": "phu_my_dong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20806,7 +20806,7 @@
     "full_name": "Xã Phù Mỹ Tây",
     "full_name_en": "Phu My Tay Commune",
     "code_name": "phu_my_tay",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20816,7 +20816,7 @@
     "full_name": "Xã An Lương",
     "full_name_en": "An Luong Commune",
     "code_name": "an_luong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20826,7 +20826,7 @@
     "full_name": "Xã Phù Mỹ Nam",
     "full_name_en": "Phu My Nam Commune",
     "code_name": "phu_my_nam",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20836,7 +20836,7 @@
     "full_name": "Xã Vĩnh Thạnh",
     "full_name_en": "Vinh Thanh Commune",
     "code_name": "vinh_thanh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20846,7 +20846,7 @@
     "full_name": "Xã Vĩnh Sơn",
     "full_name_en": "Vinh Son Commune",
     "code_name": "vinh_son",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20856,7 +20856,7 @@
     "full_name": "Xã Vĩnh Thịnh",
     "full_name_en": "Vinh Thinh Commune",
     "code_name": "vinh_thinh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20866,7 +20866,7 @@
     "full_name": "Xã Vĩnh Quang",
     "full_name_en": "Vinh Quang Commune",
     "code_name": "vinh_quang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20876,7 +20876,7 @@
     "full_name": "Xã Tây Sơn",
     "full_name_en": "Tay Son Commune",
     "code_name": "tay_son",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20886,7 +20886,7 @@
     "full_name": "Xã Bình Hiệp",
     "full_name_en": "Binh Hiep Commune",
     "code_name": "binh_hiep",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20896,7 +20896,7 @@
     "full_name": "Xã Bình Khê",
     "full_name_en": "Binh Khe Commune",
     "code_name": "binh_khe",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20906,7 +20906,7 @@
     "full_name": "Xã Bình An",
     "full_name_en": "Binh An Commune",
     "code_name": "binh_an",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20916,7 +20916,7 @@
     "full_name": "Xã Bình Phú",
     "full_name_en": "Binh Phu Commune",
     "code_name": "binh_phu",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20926,7 +20926,7 @@
     "full_name": "Xã Phù Cát",
     "full_name_en": "Phu Cat Commune",
     "code_name": "phu_cat",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20936,7 +20936,7 @@
     "full_name": "Xã Đề Gi",
     "full_name_en": "De Gi Commune",
     "code_name": "de_gi",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20946,7 +20946,7 @@
     "full_name": "Xã Hội Sơn",
     "full_name_en": "Hoi Son Commune",
     "code_name": "hoi_son",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20956,7 +20956,7 @@
     "full_name": "Xã Hòa Hội",
     "full_name_en": "Hoa Hoi Commune",
     "code_name": "hoa_hoi",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20966,7 +20966,7 @@
     "full_name": "Xã Cát Tiến",
     "full_name_en": "Cat Tien Commune",
     "code_name": "cat_tien",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20976,7 +20976,7 @@
     "full_name": "Xã Xuân An",
     "full_name_en": "Xuan An Commune",
     "code_name": "xuan_an",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20986,7 +20986,7 @@
     "full_name": "Xã Ngô Mây",
     "full_name_en": "Ngo May Commune",
     "code_name": "ngo_may",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -20996,7 +20996,7 @@
     "full_name": "Xã An Nhơn Tây",
     "full_name_en": "An Nhon Tay Commune",
     "code_name": "an_nhon_tay",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21006,7 +21006,7 @@
     "full_name": "Xã Tuy Phước",
     "full_name_en": "Tuy Phuoc Commune",
     "code_name": "tuy_phuoc",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21016,7 +21016,7 @@
     "full_name": "Xã Tuy Phước Bắc",
     "full_name_en": "Tuy Phuoc Bac Commune",
     "code_name": "tuy_phuoc_bac",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21026,7 +21026,7 @@
     "full_name": "Xã Tuy Phước Đông",
     "full_name_en": "Tuy Phuoc Dong Commune",
     "code_name": "tuy_phuoc_dong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21036,7 +21036,7 @@
     "full_name": "Xã Tuy Phước Tây",
     "full_name_en": "Tuy Phuoc Tay Commune",
     "code_name": "tuy_phuoc_tay",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21046,7 +21046,7 @@
     "full_name": "Xã Vân Canh",
     "full_name_en": "Van Canh Commune",
     "code_name": "van_canh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21056,7 +21056,7 @@
     "full_name": "Xã Canh Liên",
     "full_name_en": "Canh Lien Commune",
     "code_name": "canh_lien",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21066,7 +21066,7 @@
     "full_name": "Xã Canh Vinh",
     "full_name_en": "Canh Vinh Commune",
     "code_name": "canh_vinh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21076,7 +21076,7 @@
     "full_name": "Xã Biển Hồ",
     "full_name_en": "Bien Ho Commune",
     "code_name": "bien_ho",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21086,7 +21086,7 @@
     "full_name": "Xã Gào",
     "full_name_en": "Gao Commune",
     "code_name": "gao",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21096,7 +21096,7 @@
     "full_name": "Xã Cửu An",
     "full_name_en": "Cuu An Commune",
     "code_name": "cuu_an",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21106,7 +21106,7 @@
     "full_name": "Xã Kbang",
     "full_name_en": "Kbang Commune",
     "code_name": "kbang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21116,7 +21116,7 @@
     "full_name": "Xã Đak Rong",
     "full_name_en": "Dak Rong Commune",
     "code_name": "dak_rong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21126,7 +21126,7 @@
     "full_name": "Xã Sơn Lang",
     "full_name_en": "Son Lang Commune",
     "code_name": "son_lang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21136,7 +21136,7 @@
     "full_name": "Xã Krong",
     "full_name_en": "Krong Commune",
     "code_name": "krong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21146,7 +21146,7 @@
     "full_name": "Xã Tơ Tung",
     "full_name_en": "To Tung Commune",
     "code_name": "to_tung",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21156,7 +21156,7 @@
     "full_name": "Xã Kông Bơ La",
     "full_name_en": "Kong Bo La Commune",
     "code_name": "kong_bo_la",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21166,7 +21166,7 @@
     "full_name": "Xã Đak Đoa",
     "full_name_en": "Dak Doa Commune",
     "code_name": "dak_doa",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21176,7 +21176,7 @@
     "full_name": "Xã Đak Sơmei",
     "full_name_en": "Dak Somei Commune",
     "code_name": "dak_somei",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21186,7 +21186,7 @@
     "full_name": "Xã Kon Gang",
     "full_name_en": "Kon Gang Commune",
     "code_name": "kon_gang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21196,7 +21196,7 @@
     "full_name": "Xã Ia Băng",
     "full_name_en": "Ia Bang Commune",
     "code_name": "ia_bang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21206,7 +21206,7 @@
     "full_name": "Xã KDang",
     "full_name_en": "KDang Commune",
     "code_name": "kdang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21216,7 +21216,7 @@
     "full_name": "Xã Chư Păh",
     "full_name_en": "Chu Pah Commune",
     "code_name": "chu_pah",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21226,7 +21226,7 @@
     "full_name": "Xã Ia Khươl",
     "full_name_en": "Ia Khuol Commune",
     "code_name": "ia_khuol",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21236,7 +21236,7 @@
     "full_name": "Xã Ia Ly",
     "full_name_en": "Ia Ly Commune",
     "code_name": "ia_ly",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21246,7 +21246,7 @@
     "full_name": "Xã Ia Mơ",
     "full_name_en": "Ia Mo Commune",
     "code_name": "ia_mo",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21256,7 +21256,7 @@
     "full_name": "Xã Ia Phí",
     "full_name_en": "Ia Phi Commune",
     "code_name": "ia_phi",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21266,7 +21266,7 @@
     "full_name": "Xã Ia Grai",
     "full_name_en": "Ia Grai Commune",
     "code_name": "ia_grai",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21276,7 +21276,7 @@
     "full_name": "Xã Ia Hrung",
     "full_name_en": "Ia Hrung Commune",
     "code_name": "ia_hrung",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21286,7 +21286,7 @@
     "full_name": "Xã Ia Krái",
     "full_name_en": "Ia Krai Commune",
     "code_name": "ia_krai",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21296,7 +21296,7 @@
     "full_name": "Xã Ia O",
     "full_name_en": "Ia O Commune",
     "code_name": "ia_o",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21306,7 +21306,7 @@
     "full_name": "Xã Ia Chia",
     "full_name_en": "Ia Chia Commune",
     "code_name": "ia_chia",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21316,7 +21316,7 @@
     "full_name": "Xã Mang Yang",
     "full_name_en": "Mang Yang Commune",
     "code_name": "mang_yang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21326,7 +21326,7 @@
     "full_name": "Xã Ayun",
     "full_name_en": "Ayun Commune",
     "code_name": "ayun",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21336,7 +21336,7 @@
     "full_name": "Xã Hra",
     "full_name_en": "Hra Commune",
     "code_name": "hra",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21346,7 +21346,7 @@
     "full_name": "Xã Lơ Pang",
     "full_name_en": "Lo Pang Commune",
     "code_name": "lo_pang",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21356,7 +21356,7 @@
     "full_name": "Xã Kon Chiêng",
     "full_name_en": "Kon Chieng Commune",
     "code_name": "kon_chieng",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21366,7 +21366,7 @@
     "full_name": "Xã Kông Chro",
     "full_name_en": "Kong Chro Commune",
     "code_name": "kong_chro",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21376,7 +21376,7 @@
     "full_name": "Xã Chư Krey",
     "full_name_en": "Chu Krey Commune",
     "code_name": "chu_krey",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21386,7 +21386,7 @@
     "full_name": "Xã Ya Ma",
     "full_name_en": "Ya Ma Commune",
     "code_name": "ya_ma",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21396,7 +21396,7 @@
     "full_name": "Xã SRó",
     "full_name_en": "SRo Commune",
     "code_name": "sro",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21406,7 +21406,7 @@
     "full_name": "Xã Đăk Song",
     "full_name_en": "Dak Song Commune",
     "code_name": "dak_song",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21416,7 +21416,7 @@
     "full_name": "Xã Chơ Long",
     "full_name_en": "Cho Long Commune",
     "code_name": "cho_long",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21426,7 +21426,7 @@
     "full_name": "Xã Đức Cơ",
     "full_name_en": "Duc Co Commune",
     "code_name": "duc_co",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21436,7 +21436,7 @@
     "full_name": "Xã Ia Krêl",
     "full_name_en": "Ia Krel Commune",
     "code_name": "ia_krel",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21446,7 +21446,7 @@
     "full_name": "Xã Ia Dơk",
     "full_name_en": "Ia Dok Commune",
     "code_name": "ia_dok",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21456,7 +21456,7 @@
     "full_name": "Xã Ia Dom",
     "full_name_en": "Ia Dom Commune",
     "code_name": "ia_dom",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21466,7 +21466,7 @@
     "full_name": "Xã Ia Pnôn",
     "full_name_en": "Ia Pnon Commune",
     "code_name": "ia_pnon",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21476,7 +21476,7 @@
     "full_name": "Xã Ia Nan",
     "full_name_en": "Ia Nan Commune",
     "code_name": "ia_nan",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21486,7 +21486,7 @@
     "full_name": "Xã Chư Prông",
     "full_name_en": "Chu Prong Commune",
     "code_name": "chu_prong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21496,7 +21496,7 @@
     "full_name": "Xã Bàu Cạn",
     "full_name_en": "Bau Can Commune",
     "code_name": "bau_can",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21506,7 +21506,7 @@
     "full_name": "Xã Ia Tôr",
     "full_name_en": "Ia Tor Commune",
     "code_name": "ia_tor",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21516,7 +21516,7 @@
     "full_name": "Xã Ia Boòng",
     "full_name_en": "Ia Boong Commune",
     "code_name": "ia_boong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21526,7 +21526,7 @@
     "full_name": "Xã Ia Púch",
     "full_name_en": "Ia Puch Commune",
     "code_name": "ia_puch",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21536,7 +21536,7 @@
     "full_name": "Xã Ia Pia",
     "full_name_en": "Ia Pia Commune",
     "code_name": "ia_pia",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21546,7 +21546,7 @@
     "full_name": "Xã Ia Lâu",
     "full_name_en": "Ia Lau Commune",
     "code_name": "ia_lau",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21556,7 +21556,7 @@
     "full_name": "Xã Chư Sê",
     "full_name_en": "Chu Se Commune",
     "code_name": "chu_se",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21566,7 +21566,7 @@
     "full_name": "Xã Chư Pưh",
     "full_name_en": "Chu Puh Commune",
     "code_name": "chu_puh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21576,7 +21576,7 @@
     "full_name": "Xã Bờ Ngoong",
     "full_name_en": "Bo Ngoong Commune",
     "code_name": "bo_ngoong",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21586,7 +21586,7 @@
     "full_name": "Xã Al Bá",
     "full_name_en": "Al Ba Commune",
     "code_name": "al_ba",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21596,7 +21596,7 @@
     "full_name": "Xã Ia Hrú",
     "full_name_en": "Ia Hru Commune",
     "code_name": "ia_hru",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21606,7 +21606,7 @@
     "full_name": "Xã Ia Ko",
     "full_name_en": "Ia Ko Commune",
     "code_name": "ia_ko",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21616,7 +21616,7 @@
     "full_name": "Xã Ia Le",
     "full_name_en": "Ia Le Commune",
     "code_name": "ia_le",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21626,7 +21626,7 @@
     "full_name": "Xã Đak Pơ",
     "full_name_en": "Dak Po Commune",
     "code_name": "dak_po",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21636,7 +21636,7 @@
     "full_name": "Xã Ya Hội",
     "full_name_en": "Ya Hoi Commune",
     "code_name": "ya_hoi",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21646,7 +21646,7 @@
     "full_name": "Xã Pờ Tó",
     "full_name_en": "Po To Commune",
     "code_name": "po_to",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21656,7 +21656,7 @@
     "full_name": "Xã Ia Pa",
     "full_name_en": "Ia Pa Commune",
     "code_name": "ia_pa",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21666,7 +21666,7 @@
     "full_name": "Xã Ia Tul",
     "full_name_en": "Ia Tul Commune",
     "code_name": "ia_tul",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21676,7 +21676,7 @@
     "full_name": "Xã Phú Thiện",
     "full_name_en": "Phu Thien Commune",
     "code_name": "phu_thien",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21686,7 +21686,7 @@
     "full_name": "Xã Chư A Thai",
     "full_name_en": "Chu A Thai Commune",
     "code_name": "chu_a_thai",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21696,7 +21696,7 @@
     "full_name": "Xã Ia Hiao",
     "full_name_en": "Ia Hiao Commune",
     "code_name": "ia_hiao",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21706,7 +21706,7 @@
     "full_name": "Xã Ia Rbol",
     "full_name_en": "Ia Rbol Commune",
     "code_name": "ia_rbol",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21716,7 +21716,7 @@
     "full_name": "Xã Ia Sao",
     "full_name_en": "Ia Sao Commune",
     "code_name": "ia_sao",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21726,7 +21726,7 @@
     "full_name": "Xã Phú Túc",
     "full_name_en": "Phu Tuc Commune",
     "code_name": "phu_tuc",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21736,7 +21736,7 @@
     "full_name": "Xã Ia Dreh",
     "full_name_en": "Ia Dreh Commune",
     "code_name": "ia_dreh",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21746,7 +21746,7 @@
     "full_name": "Xã Uar",
     "full_name_en": "Uar Commune",
     "code_name": "uar",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -21756,7 +21756,7 @@
     "full_name": "Xã Ia Rsai",
     "full_name_en": "Ia Rsai Commune",
     "code_name": "ia_rsai",
-    "province_code": "52",
+    "province_code": "51",
     "administrative_unit_id": 4
   },
   {
@@ -22841,10 +22841,10 @@
   },
   {
     "code": "24184",
-    "name": "Ea H'Leo",
-    "name_en": "Ea H'Leo",
-    "full_name": "Xã Ea H'Leo",
-    "full_name_en": "Ea H'Leo Commune",
+    "name": "Ea HLeo",
+    "name_en": "Ea HLeo",
+    "full_name": "Xã Ea HLeo",
+    "full_name_en": "Ea HLeo Commune",
     "code_name": "ea_hleo",
     "province_code": "66",
     "administrative_unit_id": 4
@@ -22991,20 +22991,20 @@
   },
   {
     "code": "24280",
-    "name": "Cư M'gar",
-    "name_en": "Cu M'gar",
-    "full_name": "Xã Cư M'gar",
-    "full_name_en": "Cu M'gar Commune",
+    "name": "Cư Mgar",
+    "name_en": "Cu Mgar",
+    "full_name": "Xã Cư Mgar",
+    "full_name_en": "Cu Mgar Commune",
     "code_name": "cu_mgar",
     "province_code": "66",
     "administrative_unit_id": 4
   },
   {
     "code": "24286",
-    "name": "Ea M'Droh",
-    "name_en": "Ea M'Droh",
-    "full_name": "Xã Ea M'Droh",
-    "full_name_en": "Ea M'Droh Commune",
+    "name": "Ea MDroh",
+    "name_en": "Ea MDroh",
+    "full_name": "Xã Ea MDroh",
+    "full_name_en": "Ea MDroh Commune",
     "code_name": "ea_mdroh",
     "province_code": "66",
     "administrative_unit_id": 4
@@ -23151,10 +23151,10 @@
   },
   {
     "code": "24412",
-    "name": "M'Drắk",
-    "name_en": "M'Drak",
-    "full_name": "Xã M'Drắk",
-    "full_name_en": "M'Drak Commune",
+    "name": "MDrắk",
+    "name_en": "MDrak",
+    "full_name": "Xã MDrắk",
+    "full_name_en": "MDrak Commune",
     "code_name": "mdrak",
     "province_code": "66",
     "administrative_unit_id": 4
@@ -23181,10 +23181,10 @@
   },
   {
     "code": "24436",
-    "name": "Cư M'ta",
-    "name_en": "Cu M'ta",
-    "full_name": "Xã Cư M'ta",
-    "full_name_en": "Cu M'ta Commune",
+    "name": "Cư Mta",
+    "name_en": "Cu Mta",
+    "full_name": "Xã Cư Mta",
+    "full_name_en": "Cu Mta Commune",
     "code_name": "cu_mta",
     "province_code": "66",
     "administrative_unit_id": 4
@@ -23601,10 +23601,10 @@
   },
   {
     "code": "24829",
-    "name": "B'Lao",
-    "name_en": "B'Lao",
-    "full_name": "Phường B'Lao",
-    "full_name_en": "B'Lao Ward",
+    "name": "BLao",
+    "name_en": "BLao",
+    "full_name": "Phường BLao",
+    "full_name_en": "BLao Ward",
     "code_name": "blao",
     "province_code": "68",
     "administrative_unit_id": 3
@@ -24361,10 +24361,10 @@
   },
   {
     "code": "24934",
-    "name": "D'Ran",
-    "name_en": "D'Ran",
-    "full_name": "Xã D'Ran",
-    "full_name_en": "D'Ran Commune",
+    "name": "DRan",
+    "name_en": "DRan",
+    "full_name": "Xã DRan",
+    "full_name_en": "DRan Commune",
     "code_name": "dran",
     "province_code": "68",
     "administrative_unit_id": 4
@@ -24921,11 +24921,11 @@
   },
   {
     "code": "25231",
-    "name": "Đa Kia",
-    "name_en": "Da Kia",
-    "full_name": "Xã Đa Kia",
-    "full_name_en": "Da Kia Commune",
-    "code_name": "da_kia",
+    "name": "Đa Kia 1",
+    "name_en": "Da Kia 1",
+    "full_name": "Xã Đa Kia 1",
+    "full_name_en": "Da Kia 1 Commune",
+    "code_name": "da_kia_1",
     "province_code": "75",
     "administrative_unit_id": 4
   },
@@ -28161,9 +28161,9 @@
   },
   {
     "code": "28144",
-    "name": "Long Hựu",
+    "name": "Long Hưu",
     "name_en": "Long Huu",
-    "full_name": "Xã Long Hựu",
+    "full_name": "Xã Long Hưu",
     "full_name_en": "Long Huu Commune",
     "code_name": "long_huu",
     "province_code": "80",
@@ -28197,16 +28197,6 @@
     "full_name_en": "My Loc Commune",
     "code_name": "my_loc",
     "province_code": "80",
-    "administrative_unit_id": 4
-  },
-  {
-    "code": "29944",
-    "name": "An Phước",
-    "name_en": "An Phuoc",
-    "full_name": "Xã An Phước",
-    "full_name_en": "An Phuoc Commune",
-    "code_name": "an_phuoc",
-    "province_code": "82",
     "administrative_unit_id": 4
   },
   {
@@ -28936,6 +28926,16 @@
     "full_name": "Xã Tân Thành",
     "full_name_en": "Tan Thanh Commune",
     "code_name": "tan_thanh",
+    "province_code": "82",
+    "administrative_unit_id": 4
+  },
+  {
+    "code": "29944",
+    "name": "An Phước",
+    "name_en": "An Phuoc",
+    "full_name": "Xã An Phước",
+    "full_name_en": "An Phuoc Commune",
+    "code_name": "an_phuoc",
     "province_code": "82",
     "administrative_unit_id": 4
   },
@@ -31441,10 +31441,10 @@
   },
   {
     "code": "31027",
-    "name": "U Minh Thượng",
-    "name_en": "U Minh Thuong",
-    "full_name": "Xã U Minh Thượng",
-    "full_name_en": "U Minh Thuong Commune",
+    "name": "u Minh Thượng",
+    "name_en": "u Minh Thuong",
+    "full_name": "Xã u Minh Thượng",
+    "full_name_en": "u Minh Thuong Commune",
     "code_name": "u_minh_thuong",
     "province_code": "91",
     "administrative_unit_id": 4

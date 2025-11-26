@@ -849,8 +849,7 @@
     "province_code": "14",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Mộc Châu",
-      "Moc Chau District"
+      "Huyện Mộc Châu"
     ]
   },
   {
@@ -1173,8 +1172,7 @@
     "province_code": "19",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Thị xã Phổ Yên",
-      "Pho Yen Town"
+      "Thị xã Phổ Yên"
     ]
   },
   {
@@ -1407,8 +1405,7 @@
     "province_code": "22",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Thị xã Đông Triều",
-      "Dong Trieu Town"
+      "Thị xã Đông Triều"
     ]
   },
   {
@@ -1521,8 +1518,7 @@
     "province_code": "24",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Việt Yên",
-      "Viet Yen District"
+      "Huyện Việt Yên"
     ]
   },
   {
@@ -1805,8 +1801,7 @@
     "province_code": "27",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Quế Võ",
-      "Que Vo District"
+      "Huyện Quế Võ"
     ]
   },
   {
@@ -1839,8 +1834,7 @@
     "province_code": "27",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Thuận Thành",
-      "Thuan Thanh District"
+      "Huyện Thuận Thành"
     ]
   },
   {
@@ -2203,8 +2197,7 @@
     "province_code": "31",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Huyện Thuỷ Nguyên",
-      "Thuy Nguyen District"
+      "Huyện Thuỷ Nguyên"
     ]
   },
   {
@@ -2490,8 +2483,7 @@
     "province_code": "35",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Kim Bảng",
-      "Kim Bang District"
+      "Huyện Kim Bảng"
     ]
   },
   {
@@ -2674,8 +2666,7 @@
     "province_code": "37",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Huyện Hoa Lư",
-      "Hoa Lu District"
+      "Huyện Hoa Lư"
     ]
   },
   {
@@ -3509,9 +3500,7 @@
     "administrative_unit_id": 5,
     "legacy_names": [
       "Huế",
-      "Thành phố Huế",
-      "Hue",
-      "Hue City"
+      "Thành phố Huế"
     ]
   },
   {
@@ -3534,8 +3523,7 @@
     "province_code": "46",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Phong Điền",
-      "Phong Dien District"
+      "Huyện Phong Điền"
     ]
   },
   {
@@ -5069,9 +5057,7 @@
     "administrative_unit_id": 7,
     "legacy_names": [
       "Đạ Tẻh",
-      "Huyện Đạ Tẻh",
-      "Da Teh",
-      "Da Teh District"
+      "Huyện Đạ Tẻh"
     ]
   },
   {
@@ -5184,8 +5170,7 @@
     "province_code": "70",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Chơn Thành",
-      "Chon Thanh District"
+      "Huyện Chơn Thành"
     ]
   },
   {
@@ -5328,8 +5313,7 @@
     "province_code": "74",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Thị xã Bến Cát",
-      "Ben Cat Town"
+      "Thị xã Bến Cát"
     ]
   },
   {
@@ -5352,8 +5336,7 @@
     "province_code": "74",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Thị xã Tân Uyên",
-      "Tan Uyen Town"
+      "Thị xã Tân Uyên"
     ]
   },
   {
@@ -5557,9 +5540,7 @@
     "administrative_unit_id": 7,
     "legacy_names": [
       "Đất Đỏ",
-      "Huyện Đất Đỏ",
-      "Dat Do",
-      "Dat Do District"
+      "Huyện Đất Đỏ"
     ]
   },
   {
@@ -5572,8 +5553,7 @@
     "province_code": "77",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Thị xã Phú Mỹ",
-      "Phu My Town"
+      "Thị xã Phú Mỹ"
     ]
   },
   {
@@ -5664,7 +5644,12 @@
     "full_name_en": "Thu Duc City",
     "code_name": "thu_duc",
     "province_code": "79",
-    "administrative_unit_id": 3
+    "administrative_unit_id": 3,
+    "legacy_names": [
+      "Quận 2",
+      "Quận 9",
+      "Quận Thủ Đức"
+    ]
   },
   {
     "code": "770",
@@ -5976,8 +5961,7 @@
     "province_code": "82",
     "administrative_unit_id": 4,
     "legacy_names": [
-      "Thị xã Gò Công",
-      "Go Cong Town"
+      "Thị xã Gò Công"
     ]
   },
   {
@@ -6520,8 +6504,7 @@
     "province_code": "89",
     "administrative_unit_id": 6,
     "legacy_names": [
-      "Huyện Tịnh Biên",
-      "Tinh Bien District"
+      "Huyện Tịnh Biên"
     ]
   },
   {
