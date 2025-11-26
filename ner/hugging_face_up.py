@@ -1,8 +1,10 @@
 import argparse
 import os
 from pathlib import Path
-
 from huggingface_hub import HfApi
+from dotenv import load_dotenv
+
+load_dotenv()
 
 HF_TOKEN_ENV = "HF_TOKEN"
 DEFAULT_DATASET_DIR = Path("datasets")
@@ -26,7 +28,9 @@ def upload(api: HfApi, folder: Path, repo_id: str, repo_type: str) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Upload dataset/model folders to Hugging Face Hub.")
+    parser = argparse.ArgumentParser(
+        description="Upload dataset/model folders to Hugging Face Hub."
+    )
     parser.add_argument(
         "--upload",
         choices=("dataset", "model", "both"),
@@ -67,7 +71,9 @@ def main() -> None:
     args = parse_args()
     token = os.getenv(args.token_env)
     if not token:
-        raise EnvironmentError(f"Missing Hugging Face token. Set the {args.token_env} environment variable.")
+        raise EnvironmentError(
+            f"Missing Hugging Face token. Set the {args.token_env} environment variable."
+        )
 
     api = HfApi(token=token)
 

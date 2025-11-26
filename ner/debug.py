@@ -1,12 +1,14 @@
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
-
-tokenizer = AutoTokenizer.from_pretrained("artifacts")
-model = AutoModelForTokenClassification.from_pretrained("artifacts")
+import time
+tokenizer = AutoTokenizer.from_pretrained("dathuynh1108/ner-address-electra-base-vn")
+model = AutoModelForTokenClassification.from_pretrained("dathuynh1108/ner-address-electra-base-vn")
 nlp = pipeline("ner", model=model, tokenizer=tokenizer)
 
 # NER TESTING
-test = "50 Ton That Dam Phuong Sai Gon, Q1 TPHCM, Vietnam"
+test = "số 79 đường 339, Phường Phước Long B, Quận 9, Thành phố Hồ Chí Minh, Việt Nam"
+start_time = time.time()
 ner_results = nlp(test)
+print(f"NER processing time: {time.time() - start_time} seconds")
 
 def build_result(ner_results):
     entities = []

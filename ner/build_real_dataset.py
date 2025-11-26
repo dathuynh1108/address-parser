@@ -237,6 +237,7 @@ def collect_aliases(
     full_name: Optional[str],
     *,
     kind: str,
+    extra_aliases: Optional[Iterable[str]] = None,
 ) -> List[str]:
     bases: List[str] = []
     for candidate in (full_name, primary):
@@ -245,6 +246,12 @@ def collect_aliases(
     aliases: List[str] = []
     for base in bases:
         aliases.extend(expand_component_alias(base, kind=kind))
+    if extra_aliases:
+        for alias in extra_aliases:
+            if isinstance(alias, str):
+                cleaned = clean_text(alias, remove_slash=False)
+                if cleaned:
+                    aliases.append(cleaned)
     seen: set[str] = set()
     merged: List[str] = []
     for alias in aliases:
@@ -252,6 +259,28 @@ def collect_aliases(
             merged.append(alias)
             seen.add(alias)
     return merged
+
+
+def extract_aliases(entry: Optional[Dict[str, Any]]) -> List[str]:
+    if not isinstance(entry, dict):
+        return []
+    result: List[str] = []
+
+    def _add(raw: Optional[Union[str, List[str]]]) -> None:
+        if isinstance(raw, str):
+            candidate = raw.strip()
+            if candidate:
+                result.append(candidate)
+        elif isinstance(raw, list):
+            for item in raw:
+                if isinstance(item, str):
+                    candidate = item.strip()
+                    if candidate:
+                        result.append(candidate)
+
+    _add(entry.get("aliases"))
+    _add(entry.get("legacy_names"))
+    return result
 
 
 def write_record(handle, record: Dict[str, Any]) -> None:
@@ -269,6 +298,7 @@ def build_dataset(
     load_mode: str,
     batch_size: Optional[int],
     seed: int,
+    log_skipped: bool,
 ) -> Dict[str, Any]:
     parser = AddressParser()
     rng = random.Random(seed)
@@ -316,9 +346,24 @@ def build_dataset(
             if not (province and ward):
                 continue
             parser_hits += 1
-            province_aliases = collect_aliases(province, province_full, kind="province")
-            district_aliases = collect_aliases(district, district_full, kind="district")
-            ward_aliases = collect_aliases(ward, ward_full, kind="ward")
+            province_aliases = collect_aliases(
+                province,
+                province_full,
+                kind="province",
+                extra_aliases=extract_aliases(province_entry),
+            )
+            district_aliases = collect_aliases(
+                district,
+                district_full,
+                kind="district",
+                extra_aliases=extract_aliases(district_entry),
+            )
+            ward_aliases = collect_aliases(
+                ward,
+                ward_full,
+                kind="ward",
+                extra_aliases=extract_aliases(ward_entry),
+            )
 
             def _iter_or_default(values: List[str], fallback: Optional[str]) -> Iterator[str]:
                 if values:
@@ -358,6 +403,19 @@ def build_dataset(
                     break
 
             if not labeling:
+                if log_skipped:
+                    skip_payload = {
+                        "event": "skip",
+                        "address": address,
+                        "parsed": parsed_result,
+                        "candidates": {
+                            "province": province_candidates,
+                            "district": district_candidates,
+                            "ward": ward_candidates,
+                        },
+                    }
+                    print(json.dumps(skip_payload, ensure_ascii=False))
+                    
                 continue
             tokens = labeling.tokens
             tags = labeling.ner_tags
@@ -439,6 +497,11 @@ def parse_args() -> argparse.Namespace:
         help="How many addresses to read into memory per batch when load-mode=batch.",
     )
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--log-skipped",
+        action="store_true",
+        help="Print parser outputs for addresses that fail labeling",
+    )
     return parser.parse_args()
 
 
@@ -453,6 +516,7 @@ def main() -> None:
         load_mode=args.load_mode,
         batch_size=args.batch_size,
         seed=args.seed,
+        log_skipped=args.log_skipped,
     )
     print(json.dumps(stats, indent=2))
 

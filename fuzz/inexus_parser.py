@@ -4269,7 +4269,11 @@ class AddressParser:
         component: Optional[str],
         extra_aliases: Optional[List[Optional[str]]] = None,
     ) -> Dict[str, Any]:
-        signature: Dict[str, Any] = {"sequences": [], "tokens": set()}
+        signature: Dict[str, Any] = {
+            "sequences": [],
+            "tokens": set(),
+            "abbreviation_sequences": set(),
+        }
         candidates: List[str] = []
         if component:
             candidates.append(component)
@@ -4282,12 +4286,17 @@ class AddressParser:
 
         processed: Set[str] = set()
 
-        def _register(parts: List[str]):
+        def _register(parts: List[str], *, is_abbreviation: bool = False):
             if not parts:
                 return
-            signature["sequences"].append(parts)
-            for token in parts:
+            normalized_parts = [part for part in parts if part]
+            if not normalized_parts:
+                return
+            signature["sequences"].append(normalized_parts)
+            for token in normalized_parts:
                 signature["tokens"].add(token)
+            if is_abbreviation:
+                signature["abbreviation_sequences"].add(tuple(normalized_parts))
 
         for value in candidates:
             standardized = self.standardize_name(value, False)
@@ -4319,13 +4328,13 @@ class AddressParser:
                 abbr_parts.append(part if part.isdigit() else part[0])
             abbr = "".join(abbr_parts)
             if len(abbr) >= 2:
-                _register([abbr])
-                _register([f"tp{abbr}"])
-                _register(["tp", abbr])
+                _register([abbr], is_abbreviation=True)
+                _register([f"tp{abbr}"], is_abbreviation=True)
+                _register(["tp", abbr], is_abbreviation=True)
 
                 split_abbr = re.findall(r"[a-z]+|\d+", abbr)
                 if len(split_abbr) > 1 and all(split_abbr):
-                    _register(split_abbr)
+                    _register(split_abbr, is_abbreviation=True)
 
         return signature
 
@@ -4456,6 +4465,63 @@ class AddressParser:
                 return False
             return _is_admin_generic(neighbor)
 
+        street_descriptor_tokens = {
+            "duong",
+            "d",
+            "dg",
+            "ngo",
+            "ngach",
+            "hem",
+            "hxh",
+            "tuyen",
+            "ql",
+            "quoclo",
+            "tl",
+            "tinhlo",
+            "dailo",
+            "truc",
+            "khu",
+            "kp",
+            "kdc",
+            "kdt",
+            "to",
+            "ap",
+            "thon",
+        }
+
+        def _has_street_descriptor_before(idx: int) -> bool:
+            prev_idx = idx - 1
+            if prev_idx < 0 or prev_idx >= token_count:
+                return False
+            if not _same_segment(idx, prev_idx):
+                return False
+            prev_norm = tokens[prev_idx]["norm"]
+            return bool(prev_norm and prev_norm in street_descriptor_tokens)
+
+        def _looks_like_street_designator(idx: int) -> bool:
+            if idx < 0 or idx >= token_count:
+                return False
+            token_norm = tokens[idx]["norm"]
+            if not token_norm:
+                return False
+            if _has_street_descriptor_before(idx):
+                return True
+            next_norm = None
+            next_next_norm = None
+            if idx + 1 < token_count and _same_segment(idx, idx + 1):
+                next_norm = tokens[idx + 1]["norm"]
+            if idx + 2 < token_count and _same_segment(idx, idx + 2):
+                next_next_norm = tokens[idx + 2]["norm"]
+            if next_norm and next_norm.isdigit():
+                return True
+            if (
+                next_norm == "so"
+                and next_next_norm
+                and next_next_norm.isdigit()
+            ):
+                return True
+            return False
+
         def _segment_match_ratio(segment_idx: int, start_idx: int, length: int) -> float:
             if segment_idx < 0 or segment_idx >= len(segment_token_indices):
                 return 0.0
@@ -4495,7 +4561,6 @@ class AddressParser:
                 )
                 if not (prev_generic or next_generic):
                     return False
-
             indices_to_remove.update(range(start_idx, end_idx))
 
             segment_id = token_segments[start_idx] if start_idx < token_count else -1
@@ -4520,11 +4585,16 @@ class AddressParser:
 
         for profile in profiles.values():
             sequences: List[List[str]] = profile["sequences"]
+            abbreviation_sequences: Set[Tuple[str, ...]] = profile.get(
+                "abbreviation_sequences", set()
+            )
             for seq in sequences:
                 seq = [item for item in seq if item]
                 seq_len = len(seq)
                 if seq_len == 0:
                     continue
+                seq_tuple = tuple(seq)
+                is_abbreviation_seq = seq_tuple in abbreviation_sequences
                 for idx in range(token_count - seq_len + 1):
                     window = tokens[idx : idx + seq_len]
                     if all(window[pos]["norm"] == seq[pos] for pos in range(seq_len)):
@@ -4541,6 +4611,23 @@ class AddressParser:
                                 if coverage >= 0.6:
                                     allow_removal = True
                         if allow_removal:
+                            skip_seq = False
+                            if _has_street_descriptor_before(idx):
+                                skip_seq = True
+                            if (
+                                is_abbreviation_seq
+                                and seq_len == 1
+                                and seq[0] in self._GENERIC_LOCATION_TOKENS
+                                and seq[0] not in self._ADMIN_GENERIC_TOKENS
+                            ):
+                                has_prev_generic = _adjacent_generic(idx, -1)
+                                has_next_generic = _adjacent_generic(idx + seq_len - 1, 1)
+                                if not (has_prev_generic or has_next_generic):
+                                    skip_seq = True
+                                elif _looks_like_street_designator(idx):
+                                    skip_seq = True
+                            if skip_seq:
+                                continue
                             mark_indices(idx, seq_len)
 
         if len(segments) > 1:
@@ -5210,7 +5297,7 @@ class AddressParser:
 if __name__ == "__main__":
     parser = AddressParser()
     tests = [
-        "93/8/4 Đường TX 38, phường Thạnh Xuân, Quận 12, TP Hồ Chí Minh",
+        "74/3 đường Hiệp Thành 17, tổ 23, khu phố 2, Phường Hiệp Thành, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
         # "Số 25/19, Đường số 13, Khu phố Bình Đường 1, Phường An Bình, Thành phố Dĩ An, Tỉnh Bình Dương, Việt Nam",
         # "46/1L Ấp Xuân Thới Đông 2, Xã Xuân Thới Đông, Huyện Hóc Môn, Thành phố Hồ Chí Minh, Việt Nam",
         # "Tiểu khu K1-G3, Đường D1, Khu công nghệ cao, Phường Tân Phú, Quận 9, Thành phố Hồ Chí Minh, Việt Nam",

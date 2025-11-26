@@ -45,53 +45,165 @@ LABELS = [
 
 # Common Vietnamese street names and descriptors for synthetic address generation.
 STREET_NAMES = [
-    "Nguyễn Trãi",
-    "Lê Lợi",
-    "Trần Hưng Đạo",
-    "Lý Thường Kiệt",
-    "Phạm Văn Đồng",
-    "Nguyễn Văn Cừ",
-    "Cách Mạng Tháng Tám",
-    "Pasteur",
-    "Marry Curie",
-    "Võ Thị Sáu",
-    "Võ Văn Kiệt",
-    "Hoàng Diệu",
-    "Phạm Ngũ Lão",
-    "Hai Bà Trưng",
-    "Nam Kỳ Khởi Nghĩa",
-    "Ngô Gia Tự",
-    "Tố Hữu",
-    "Điện Biên Phủ",
-    "Đinh Tiên Hoàng",
-    "Trần Cao Vân",
-    "Đặng Văn Bi",
-    "Phổ Quang",
-    "Tôn Thất Đạm",
-    "Trường Chinh",
-    "Lê Hồng Phong",
-    "Lê Duẩn",
-    "Nguyễn Huệ",
-    "Bạch Đằng",
-    "Trần Phú",
-    "Lý Thái Tổ",
-    "Nguyễn Thái Học",
-    "Trần Nhân Tông",
-    "Phan Đình Phùng",
-    "Nguyễn Đình Chiểu",
+    # Hà Nội
+    "Phố Huế",
+    "Bà Triệu",
+    "Kim Mã",
+    "La Thành",
+    "Giảng Võ",
+    "Thái Hà",
+    "Xã Đàn",
+    "Hàng Bạc",
+    "Hàng Đào",
+    "Hàng Bông",
+    "Cầu Giấy",
+    "Láng Hạ",
+    "Láng",
+    "Hoàng Cầu",
+    "Trần Duy Hưng",
+    "Nguyễn Chí Thanh",
+    "Liễu Giai",
+    "Hoàng Hoa Thám",
+    "Phạm Hồng Thái",
     "Trần Quang Khải",
-    "Lê Quang Định",
+    "Phan Chu Trinh",
+    "Quán Thánh",
+    "Thụy Khuê",
+    "Hồ Tùng Mậu",
+    "Trần Thái Tông",
+    "Nguyễn Phong Sắc",
+
+    # TP. Hồ Chí Minh — bổ sung thêm
+    "Lê Thánh Tôn",
+    "Đồng Khởi",
+    "Nguyễn Thiện Thuật",
     "Phan Xích Long",
-    "Cao Thắng",
-    "Nguyễn Oanh",
-    "Lê Văn Sỹ",
-    "Trần Xuân Soạn",
-    "Nguyễn Ảnh Thủ",
-    "Huỳnh Tấn Phát",
-    "Lương Định Của",
-    "Nguyễn Xiển",
-    "Nguyễn Duy Trinh",
-    "Phạm Hùng",
+    "Hoàng Văn Thụ",
+    "Đào Duy Anh",
+    "Nguyễn Trọng Tuyển",
+    "Phan Đăng Lưu",
+    "Hoàng Văn Thụ",
+    "Phổ Quang",
+    "Cộng Hòa",
+    "Hoàng Diệu 2",
+    "Phạm Văn Đồng",
+    "Quang Trung",
+    "Trường Sa",
+    "Hoàng Sa",
+    "Phan Huy Ích",
+    "Trịnh Đình Trọng",
+    "Lạc Long Quân",
+    "Âu Cơ",
+    "Hồng Bàng",
+    "Võ Văn Tần",
+    "Sư Vạn Hạnh",
+    "Bà Hạt",
+    "Xô Viết Nghệ Tĩnh",
+    "Hoàng Văn Thụ",
+    "Hoàng Sa",
+    "Nguyễn Thượng Hiền",
+    "Cách Mạng Tháng Tám",
+    "CMTT",
+    "CMT8",
+
+    # Miền Trung
+    "Trần Phú",
+    "Bạch Đằng",
+    "Điện Biên Phủ",
+    "Lê Duẩn",
+    "Nguyễn Tất Thành",
+    "Hoàng Sa",
+    "Trường Sa",
+    "Hùng Vương",
+    "Yên Bái",
+    "Phan Châu Trinh",
+    "Nguyễn Văn Linh",
+    "Trần Hưng Đạo",
+    "Hải Phòng",
+    "Ngô Gia Tự",
+    "Quang Trung",
+    
+    # Thừa Thiên Huế
+    "Lê Lợi",
+    "Hùng Vương",
+    "Phan Đăng Lưu",
+    "Trần Cao Vân",
+    "Nguyễn Huệ",
+    "Lý Thường Kiệt",
+
+    # Nha Trang
+    "Trần Phú",
+    "Hoàng Hoa Thám",
+    "Nguyễn Thị Minh Khai",
+    "Hùng Vương",
+    "Biệt Thự",
+    "Vân Đồn",
+    "Củ Chi",
+    "Ngô Gia Tự",
+    "Phạm Văn Đồng",
+    "2/4",
+
+    # Cần Thơ / Miền Tây
+    "Hòa Bình",
+    "30 Tháng 4",
+    "30/4",
+    "3 Tháng 2",
+    "3/2",
+    "Nguyễn Văn Cừ",
+    "Mậu Thân",
+    "Trần Hưng Đạo",
+    "Ngô Quyền",
+    "Phan Đình Phùng",
+    "Nam Kỳ Khởi Nghĩa",
+    "Hai Bà Trưng",
+    "Nguyễn Trãi",
+    "Nguyễn Thái Học",
+
+    # Vũng Tàu
+    "Quang Trung",
+    "Hoàng Hoa Thám",
+    "Phan Chu Trinh",
+    "Bình Giã",
+    "Lê Hồng Phong",
+    "Nguyễn An Ninh",
+    "Trương Công Định",
+
+    # Đà Lạt
+    "Phan Đình Phùng",
+    "Nguyễn Chí Thanh",
+    "Bùi Thị Xuân",
+    "Hai Bà Trưng",
+    "Nguyễn Công Trứ",
+    "Trần Quốc Toản",
+    "Trần Hưng Đạo",
+    "Hoàng Văn Thụ",
+    "Thi Sách",
+    "Phạm Ngọc Thạch",
+    "Đinh Công Tráng",
+    "Đào Duy Từ",
+
+    # Bình Dương / Đồng Nai
+    "Phạm Ngọc Thạch",
+    "Lý Thường Kiệt",
+    "Tân Hiệp",
+    "Yersin",
+    "Ngô Quyền",
+    "Hùng Vương",
+    "Cách Mạng Tháng Tám",
+    "Đồng Khởi",
+
+    # Gia Lai / Kon Tum / Tây Nguyên
+    "Phạm Văn Đồng",
+    "Hùng Vương",
+    "Nguyễn Viết Xuân",
+    "Phan Bội Châu",
+    "Trường Chinh",
+    "Lê Lợi",
+    "Phan Đình Phùng",
+    "Đinh Tiên Hoàng",
+    "Phan Chu Trinh",
+    "Hai Bà Trưng",
+    "Ngô Gia Tự",
 ]
 
 STREET_DESCRIPTORS = [
@@ -194,7 +306,16 @@ class LabelingResult:
 
 
 def _normalized_token(token: str) -> str:
-    return strip_accents(token or "").lower()
+    normalized = strip_accents(token or "").lower()
+    if normalized.isdigit():
+        normalized = normalized.lstrip("0") or "0"
+    return normalized
+
+
+def _is_noise_token(token: str) -> bool:
+    if not token:
+        return True
+    return not any(ch.isalnum() for ch in token)
 
 
 def _normalize_phrase(text: Optional[str]) -> List[str]:
@@ -210,16 +331,29 @@ def tag_phrase(
     phrase_tokens = _normalize_phrase(phrase)
     if not phrase_tokens:
         return False
-    normalized_phrase = [_normalized_token(tok) for tok in phrase_tokens]
+    normalized_phrase = [
+        tok for tok in (_normalized_token(tok) for tok in phrase_tokens)
+        if not _is_noise_token(tok)
+    ]
+    if not normalized_phrase:
+        return False
     normalized_tokens = [_normalized_token(tok) for tok, _ in token_pairs]
-    window = len(phrase_tokens)
-    for start in range(len(token_pairs) - window + 1):
-        if normalized_tokens[start : start + window] != normalized_phrase:
+    significant: List[Tuple[int, str]] = [
+        (idx, value)
+        for idx, value in enumerate(normalized_tokens)
+        if not _is_noise_token(value)
+    ]
+    window = len(normalized_phrase)
+    for start in range(len(significant) - window + 1):
+        segment = [value for _, value in significant[start : start + window]]
+        if segment != normalized_phrase:
             continue
-        token_pairs[start] = (token_pairs[start][0], f"B-{label}")
-        for offset in range(1, window):
-            idx = start + offset
-            token_pairs[idx] = (token_pairs[idx][0], f"I-{label}")
+        indices = [idx for idx, _ in significant[start : start + window]]
+        first = True
+        for idx in indices:
+            prefix = "B" if first else "I"
+            token_pairs[idx] = (token_pairs[idx][0], f"{prefix}-{label}")
+            first = False
         return True
     return False
 
@@ -553,6 +687,24 @@ VARIANT_SPECS: Tuple[VariantSpec, ...] = (
 )
 
 
+SPECIAL_PROVINCE_VARIANTS: Dict[str, List[Tuple[str, bool]]] = {
+    # 79 = Thành phố Hồ Chí Minh
+    "79": [
+        ("TPHCM", True),
+        ("TP.HCM", True),
+        ("TP. HCM", True),
+        ("TP HCM", True),
+        ("HCM", False),
+        ("H.C.M", False),
+        ("HCMC", False),
+    ],
+    # 01 = Thành phố Hà Nội
+    "01": [
+        ("HN", False),
+    ],
+}
+
+
 def strip_accents(text: str) -> str:
     normalized = unicodedata.normalize("NFD", text)
     result = []
@@ -776,16 +928,43 @@ def collect_variants(record: Dict[str, str]) -> List[NameVariant]:
         # ("full_name_en", True),
         ("code_name", False),
     ]
-    for key, default_includes_type in fields:
-        raw = record.get(key)
-        if not raw:
-            continue
-        text = clean_text(raw.replace("_", " "))
+
+    def _append_variant(raw_value: Optional[str], *, default_includes_type: bool) -> None:
+        if not raw_value:
+            return
+        text = clean_text(raw_value.replace("_", " "))
         if not text:
-            continue
+            return
         includes_type = default_includes_type or infer_includes_type(text)
         variants.append(NameVariant(text=text, includes_type=includes_type))
+
+    for key, default_includes_type in fields:
+        raw = record.get(key)
+        _append_variant(raw, default_includes_type=default_includes_type)
+
+    legacy_values = record.get("legacy_names")
+    if isinstance(legacy_values, str):
+        _append_variant(legacy_values, default_includes_type=False)
+    elif isinstance(legacy_values, list):
+        for alias in legacy_values:
+            if isinstance(alias, str):
+                _append_variant(alias, default_includes_type=False)
+    
     return variants
+
+
+def _extend_special_variants(
+    level: str, code: str, entry: Dict[str, object]
+) -> None:
+    if level != "province":
+        return
+    extras = SPECIAL_PROVINCE_VARIANTS.get(code)
+    if not extras:
+        return
+    entry["names"].extend(
+        NameVariant(text=text, includes_type=includes_type)
+        for text, includes_type in extras
+    )
 
 
 def build_components(
@@ -836,6 +1015,7 @@ def build_components(
             if level == "ward":
                 entry["attributes"]["district_code"] = record.get("district_code")
                 entry["attributes"]["province_code"] = record.get("province_code")
+            _extend_special_variants(level, code, entry)
     return data
 
 
@@ -1024,6 +1204,7 @@ def build_hamlet_tokens(rng: random.Random, *, urban: bool = False) -> List[str]
             "ấp.",
             "thôn",
             "xóm",
+            "khóm",
             "làng",
             "buôn",
             "bản",
