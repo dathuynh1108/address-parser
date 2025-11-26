@@ -111,18 +111,22 @@ class AddressParser:
         "ap",
         "to",
         "todanpho",
-        "ward",
-        "district",
-        "city",
-        "province",
-        "town",
-        "commune",
-        "village",
-        "hamlet",
-        "street",
-        "road",
         "d",
         "w",
+    }
+
+    _ADMIN_GENERIC_TOKENS: Set[str] = {
+        "phuong",
+        "p",
+        "xa",
+        "thi",
+        "tran",
+        "quan",
+        "q",
+        "huyen",
+        "tp",
+        "tinh",
+        "thanh",
     }
 
     _LOCATION_PREFIX_SINGLE: Set[str] = {
@@ -138,11 +142,6 @@ class AddressParser:
         "tinh",
         "tx",
         "tt",
-        "city",
-        "district",
-        "ward",
-        "commune",
-        "town",
     }
 
     _LOCATION_PREFIX_MULTI: Set[str] = {
@@ -1243,7 +1242,40 @@ class AddressParser:
             ward or "",
             is_new_format=resolved_is_new_format,
         )
-        street_address = self._extract_street_address(input_string, normalized_node)
+        component_aliases = {
+            "province": self._gather_alias_values(
+                province,
+                province_info,
+                level="province",
+                extra_values=[
+                    detected_components_raw[0] if detected_components_raw else None,
+                    detected_prov,
+                ],
+            ),
+            "district": self._gather_alias_values(
+                district,
+                district_info,
+                level="district",
+                extra_values=[raw_detected_dist, detected_dist],
+            ),
+            "ward": self._gather_alias_values(
+                ward,
+                ward_info,
+                level="ward",
+                extra_values=[raw_detected_ward, normalized_detected_ward_token, detected_ward],
+            ),
+        }
+        street_address = self._extract_street_address(
+            input_string,
+            normalized_node,
+            component_aliases,
+        )
+        if province_component and component_aliases.get("province"):
+            province_component["aliases"] = component_aliases["province"]
+        if district_component and component_aliases.get("district"):
+            district_component["aliases"] = component_aliases["district"]
+        if ward_component and component_aliases.get("ward"):
+            ward_component["aliases"] = component_aliases["ward"]
         return {
             "province": province_component,
             "district": district_component,
@@ -1327,6 +1359,13 @@ class AddressParser:
                 "id": province_id,
                 "name": province_output_name,
             }
+            if isinstance(province_entry, dict):
+                name_with_type = province_entry.get("name_with_type") or province_output_name
+                if name_with_type:
+                    province_info["name_with_type"] = name_with_type
+                legacy_names = legacy_aliases_from(province_entry)
+                if legacy_names:
+                    province_info["legacy_names"] = legacy_names
             for alias_std in province_aliases_std:
                 if not alias_std:
                     continue
@@ -1372,6 +1411,7 @@ class AddressParser:
                 )
                 district_key = district_output_std or ""
                 district_id_value = district_id if district_output_name else None
+                district_legacy_aliases = legacy_aliases_from(district_entry)
 
                 district_info = {
                     "id": district_id_value,
@@ -1379,6 +1419,12 @@ class AddressParser:
                     "province_key": province_output_std,
                     "province_name": province_output_name,
                 }
+                if isinstance(district_entry, dict):
+                    name_with_type = district_entry.get("name_with_type") or district_output_name
+                    if name_with_type:
+                        district_info["name_with_type"] = name_with_type
+                if district_legacy_aliases:
+                    district_info["legacy_names"] = district_legacy_aliases
                 if province_output_std:
                     self.district_lookup[(province_output_std, district_key)] = (
                         district_info
@@ -1386,7 +1432,7 @@ class AddressParser:
                 district_aliases = self._collect_aliases(
                     district_output_name,
                     district_name,
-                    legacy_aliases_from(district_entry),
+                    district_legacy_aliases,
                 )
                 district_aliases = self._augment_aliases(
                     district_aliases, "district"
@@ -1420,6 +1466,7 @@ class AddressParser:
                             if isinstance(ward_meta, dict)
                             else None
                         )
+                        ward_legacy_aliases = legacy_aliases_from(ward_meta)
                         ward_output_name, ward_lookup_name = self._derive_ward_names(
                             ward_name, ward_meta
                         )
@@ -1429,7 +1476,7 @@ class AddressParser:
                         extra_aliases = list(
                             (self._reference_aliases_for_level("ward", ward_code) or [])
                         )
-                        extra_aliases.extend(legacy_aliases_from(ward_meta))
+                        extra_aliases.extend(ward_legacy_aliases)
                         ward_aliases = self._collect_aliases(
                             ward_output_name,
                             ward_name,
@@ -1450,6 +1497,15 @@ class AddressParser:
                             "district_name": district_output_name,
                             "is_new_format": True,
                         }
+                        if isinstance(ward_meta, dict):
+                            name_with_type = ward_meta.get("name_with_type") or ward_output_name
+                            if name_with_type:
+                                ward_info["name_with_type"] = name_with_type
+                            full_name = ward_meta.get("full_name")
+                            if full_name:
+                                ward_info["full_name"] = full_name
+                        if ward_legacy_aliases:
+                            ward_info["legacy_names"] = ward_legacy_aliases
                         if province_output_std and ward_lookup_std:
                             self.ward_lookup[
                                 (province_output_std, district_key, ward_lookup_std)
@@ -1590,6 +1646,7 @@ class AddressParser:
                     ward_code = (
                         ward_meta.get("code") if isinstance(ward_meta, dict) else None
                     )
+                    ward_legacy_aliases = legacy_aliases_from(ward_meta)
                     ward_output_name, ward_lookup_name = self._derive_ward_names(
                         ward_name, ward_meta
                     )
@@ -1599,13 +1656,13 @@ class AddressParser:
                     extra_aliases = list(
                         (self._reference_aliases_for_level("ward", ward_code) or [])
                     )
-                    extra_aliases.extend(legacy_aliases_from(ward_meta))
+                    extra_aliases.extend(ward_legacy_aliases)
                     ward_aliases = self._collect_aliases(
                         ward_output_name,
                         ward_name,
                         extra_aliases,
                     )
-                    ward_aliases.extend(legacy_aliases_from(ward_meta))
+                    ward_aliases.extend(ward_legacy_aliases)
                     custom_aliases = CUSTOM_WARD_ALIASES_BY_CODE.get(str(ward_code))
                     if custom_aliases:
                         ward_aliases.extend(custom_aliases)
@@ -1627,6 +1684,15 @@ class AddressParser:
                         "district_name": district_output_name,
                         "is_new_format": False,
                     }
+                    if isinstance(ward_meta, dict):
+                        name_with_type = ward_meta.get("name_with_type") or ward_output_name
+                        if name_with_type:
+                            ward_info["name_with_type"] = name_with_type
+                        full_name = ward_meta.get("full_name")
+                        if full_name:
+                            ward_info["full_name"] = full_name
+                    if ward_legacy_aliases:
+                        ward_info["legacy_names"] = ward_legacy_aliases
                     if province_output_std and ward_output_std:
                         self.ward_lookup[
                             (province_output_std, district_key, ward_output_std)
@@ -3824,6 +3890,25 @@ class AddressParser:
             component_id = info.get("id")
         if component_id is not None:
             payload["id"] = component_id
+        if info:
+            extended_name = info.get("name_with_type") or info.get("full_name")
+            if extended_name:
+                payload["full_name"] = extended_name
+            code_value = info.get("code")
+            if code_value:
+                payload["code"] = code_value
+            legacy_aliases = info.get("legacy_names")
+            if isinstance(legacy_aliases, str):
+                legacy_aliases = [legacy_aliases]
+            if isinstance(legacy_aliases, list):
+                cleaned_aliases = []
+                for alias in legacy_aliases:
+                    if isinstance(alias, str):
+                        candidate = alias.strip()
+                        if candidate and candidate not in cleaned_aliases:
+                            cleaned_aliases.append(candidate)
+                if cleaned_aliases:
+                    payload["legacy_names"] = cleaned_aliases
         return payload
 
     def _infer_province_from_components(
@@ -4179,70 +4264,94 @@ class AddressParser:
             return False
         return True
 
-    def _build_component_signature(self, component: Optional[str]) -> Dict[str, Any]:
+    def _build_component_signature(
+        self,
+        component: Optional[str],
+        extra_aliases: Optional[List[Optional[str]]] = None,
+    ) -> Dict[str, Any]:
         signature: Dict[str, Any] = {"sequences": [], "tokens": set()}
-        if not component:
+        candidates: List[str] = []
+        if component:
+            candidates.append(component)
+        if extra_aliases:
+            for alias in extra_aliases:
+                if alias:
+                    candidates.append(alias)
+        if not candidates:
             return signature
 
-        standardized = self.standardize_name(component, False)
-        if not standardized:
-            return signature
+        processed: Set[str] = set()
 
-        parts = [p for p in standardized.split() if p]
-        tokens: Set[str] = set()
-        sequences: List[List[str]] = []
+        def _register(parts: List[str]):
+            if not parts:
+                return
+            signature["sequences"].append(parts)
+            for token in parts:
+                signature["tokens"].add(token)
 
-        if parts:
-            sequences.append(parts)
-            tokens.update(parts)
-
-        # Allow matching standalone numeric token when component is like "Quận 1"
-        if len(parts) == 2 and parts[1].isdigit():
-            sequences.append([parts[1]])
-            tokens.add(parts[1])
-            trimmed = parts[1].lstrip("0")
-            if trimmed and trimmed != parts[1]:
-                sequences.append([trimmed])
-                tokens.add(trimmed)
-
-        joined = "".join(parts)
-        if joined:
-            sequences.append([joined])
-            tokens.add(joined)
-
-        abbr_parts: List[str] = []
-        for part in parts:
-            if not part:
+        for value in candidates:
+            standardized = self.standardize_name(value, False)
+            if not standardized or standardized in processed:
                 continue
-            abbr_parts.append(part if part.isdigit() else part[0])
-        abbr = "".join(abbr_parts)
-        if len(abbr) >= 2:
-            sequences.append([abbr])
-            tokens.add(abbr)
-            sequences.append([f"tp{abbr}"])
-            tokens.add(f"tp{abbr}")
-            sequences.append(["tp", abbr])
+            processed.add(standardized)
+            parts = [p for p in standardized.split() if p]
+            if not parts:
+                continue
 
-            # Split abbreviation to match tokenized forms like ["q", "1"]
-            split_abbr = re.findall(r"[a-z]+|\d+", abbr)
-            if len(split_abbr) > 1 and all(split_abbr):
-                sequences.append(split_abbr)
-                tokens.update(split_abbr)
+            _register(parts)
 
-        signature["sequences"] = sequences
-        signature["tokens"] = tokens
+            if len(parts) == 2 and parts[1].isdigit():
+                trimmed = parts[1].lstrip("0")
+                numeric_variants = {parts[1]}
+                if trimmed and trimmed != parts[1]:
+                    numeric_variants.add(trimmed)
+                for variant in numeric_variants:
+                    _register([variant])
+
+            joined = "".join(parts)
+            if joined:
+                _register([joined])
+
+            abbr_parts: List[str] = []
+            for part in parts:
+                if not part:
+                    continue
+                abbr_parts.append(part if part.isdigit() else part[0])
+            abbr = "".join(abbr_parts)
+            if len(abbr) >= 2:
+                _register([abbr])
+                _register([f"tp{abbr}"])
+                _register(["tp", abbr])
+
+                split_abbr = re.findall(r"[a-z]+|\d+", abbr)
+                if len(split_abbr) > 1 and all(split_abbr):
+                    _register(split_abbr)
+
         return signature
 
     def _extract_street_address(
-        self, original: str, node: "AddressParser.AddressNode"
+        self,
+        original: str,
+        node: "AddressParser.AddressNode",
+        component_aliases: Optional[Dict[str, List[str]]] = None,
     ) -> str:
         if not original:
             return ""
 
+        alias_map = component_aliases or {}
         profiles = {
-            "province": self._build_component_signature(node.province_name),
-            "district": self._build_component_signature(node.district_name),
-            "ward": self._build_component_signature(node.ward_name),
+            "province": self._build_component_signature(
+                node.province_name,
+                alias_map.get("province"),
+            ),
+            "district": self._build_component_signature(
+                node.district_name,
+                alias_map.get("district"),
+            ),
+            "ward": self._build_component_signature(
+                node.ward_name,
+                alias_map.get("ward"),
+            ),
         }
 
         if not any(profile["sequences"] for profile in profiles.values()):
@@ -4308,6 +4417,22 @@ class AddressParser:
             token = tokens[idx]
             return self._is_generic_location_token(token.get("raw"), token.get("norm"))
 
+        def _is_admin_generic(idx: int) -> bool:
+            if idx < 0 or idx >= token_count:
+                return False
+            if not _is_generic(idx):
+                return False
+            token_norm = tokens[idx]["norm"]
+            if token_norm in self._ADMIN_GENERIC_TOKENS:
+                return True
+            if token_norm == "pho":
+                prev_idx = idx - 1
+                if prev_idx >= 0 and _same_segment(idx, prev_idx):
+                    prev_norm = tokens[prev_idx]["norm"]
+                    if prev_norm == "thanh":
+                        return True
+            return False
+
         def _same_segment(idx_a: int, idx_b: int) -> bool:
             if idx_a < 0 or idx_b < 0 or idx_a >= token_count or idx_b >= token_count:
                 return False
@@ -4329,7 +4454,7 @@ class AddressParser:
                 return False
             if not _same_segment(idx, neighbor):
                 return False
-            return _is_generic(neighbor)
+            return _is_admin_generic(neighbor)
 
         def _segment_match_ratio(segment_idx: int, start_idx: int, length: int) -> float:
             if segment_idx < 0 or segment_idx >= len(segment_token_indices):
@@ -4498,16 +4623,16 @@ class AddressParser:
 
         # Compile once per call; small overhead compared to overall cost
         province_tinh_pref = re.compile(
-            r"\b(?:tinh|province)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|district|ward|commune|town|thanh pho|city|province)\b|$)"
+            r"\b(?:tinh)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|thanh pho)\b|$)"
         )
         province_pref = re.compile(
-            r"\b(?:thanh pho|tp|tinh|city|province|municipality)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|district|ward|commune|town|thanh pho|city|province)\b|$)"
+            r"\b(?:thanh pho|tp|tinh)\b\s+([a-z0-9 ]+?)(?=\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|thanh pho)\b|$)"
         )
         district_pref = re.compile(
-            r"\b(?P<prefix>quan|q|huyen|thi xa|thi tran|thanh pho|tp|city|municipality|district|county)\b\s+(?P<fragment>[a-z0-9 ]+?)(?=\b(?:phuong|p|xa|thi tran|quan|q|huyen|thi xa|district|ward|commune|town|thanh pho|city|province|tinh|tp)\b|$)"
+            r"\b(?P<prefix>quan|q|huyen|thi xa|thi tran|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?=\b(?:phuong|p|xa|thi tran|quan|q|huyen|thi xa|thanh pho|tinh|tp)\b|$)"
         )
         ward_pref = re.compile(
-            r"\b(?P<prefix>phuong|p|xa|thi tran|dac\s*khu|special administrative region|ward|commune|town)\b\s+(?P<fragment>[a-z0-9 ]+?)(?=\b(?:phuong|p|xa|thi tran|quan|q|huyen|thi xa|district|ward|commune|town|thanh pho|city|province|tinh|tp)\b|$)"
+            r"\b(?P<prefix>phuong|p|xa|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?=\b(?:phuong|p|xa|thi tran|quan|q|huyen|thi xa|thanh pho|tinh|tp)\b|$)"
         )
 
         def _digit_key(value: str) -> str:
@@ -4602,13 +4727,13 @@ class AddressParser:
         dist_num = None
         district_choices = list(self.district_names_std) if self.district_names_std else None
         if district_choices:
-            m_num = re.search(r"\b(?:q|d)\.?\s*(\d{1,3})\b", s)
+            m_num = re.search(r"\b(?:quan)\s*(\d{1,3})\b", s)
             if not m_num:
-                m_num = re.search(r"\b(?:q|d)(\d{1,3})\b", s)
+                m_num = re.search(r"\b(?:quan)(\d{1,3})\b", s)
             if not m_num:
-                m_num = re.search(r"\b(?:quan|district)\s*(\d{1,3})\b", s)
+                m_num = re.search(r"\bq\.?\s*(\d{1,3})\b", s)
             if not m_num:
-                m_num = re.search(r"\b(?:quan|district)(\d{1,3})\b", s)
+                m_num = re.search(r"\bq(\d{1,3})\b", s)
             if m_num:
                 raw = m_num.group(1).strip()
                 for candidate in (
@@ -4627,10 +4752,6 @@ class AddressParser:
                     "huyen": 4,
                     "thi xa": 4,
                     "thi tran": 3,
-                    "district": 3,
-                    "county": 3,
-                    "city": 2,
-                    "municipality": 2,
                     "thanh pho": 2,
                     "tp": 2,
                 }
@@ -4641,7 +4762,7 @@ class AddressParser:
                     return False
                 if prov and candidate == prov:
                     return True
-                if prefix in {"thanh pho", "tp", "city", "municipality"}:
+                if prefix in {"thanh pho", "tp"}:
                     return candidate in self.province_names_std
                 return False
 
@@ -4685,15 +4806,11 @@ class AddressParser:
             def _ward_prefix_priority(prefix: str) -> int:
                 priority_map = {
                     "dac khu": 4,
-                    "special administrative region": 4,
                     "p": 3,
                     "phuong": 3,
-                    "ward": 3,
                     "thi tran": 2,
-                    "town": 2,
                     "thi xa": 2,
                     "xa": 1,
-                    "commune": 1,
                 }
                 return priority_map.get(prefix, 0)
 
@@ -5093,8 +5210,12 @@ class AddressParser:
 if __name__ == "__main__":
     parser = AddressParser()
     tests = [
-        "70 Vũ Tông Phan, Phường An Phú, Quận 2, Thành phố Hồ Chí Minh, Việt Nam",
-        "1/3/3 Đường 160, Phường Tăng Nhơn Phú A, Quận 9, Thành phố Hồ Chí Minh, Việt Nam"
+        "93/8/4 Đường TX 38, phường Thạnh Xuân, Quận 12, TP Hồ Chí Minh",
+        # "Số 25/19, Đường số 13, Khu phố Bình Đường 1, Phường An Bình, Thành phố Dĩ An, Tỉnh Bình Dương, Việt Nam",
+        # "46/1L Ấp Xuân Thới Đông 2, Xã Xuân Thới Đông, Huyện Hóc Môn, Thành phố Hồ Chí Minh, Việt Nam",
+        # "Tiểu khu K1-G3, Đường D1, Khu công nghệ cao, Phường Tân Phú, Quận 9, Thành phố Hồ Chí Minh, Việt Nam",
+        # "70 Vũ Tông Phan, Phường An Phú, Quận 2, Thành phố Hồ Chí Minh, Việt Nam",
+        # "1/3/3 Đường 160, Phường Tăng Nhơn Phú A, Quận 9, Thành phố Hồ Chí Minh, Việt Nam"
         # "83 Triệu Nữ Vương, Phường Hải Châu Ii, Quận Hải Châu, Thành phố Đà Nẵng, Việt Nam",
         # "Số 4 đường 102, Khu phố 1, Phường Tăng Nhơn Phú A, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam",
         # "Thôn Phương Nhị, Xã Liên Ninh, Huyện Thanh Trì, Hà Nội",
