@@ -194,6 +194,16 @@ def main() -> None:
     if optim_name is None and is_xla_available():
         optim_name = "adamw_torch_xla"
 
+    # Optional advanced flags (e.g., bf16) are only set when present in config.
+    optional_kwargs = {
+        "bf16": config.get("bf16"),
+        "fp16": config.get("fp16"),
+        "save_total_limit": config.get("save_total_limit"),
+        "gradient_checkpointing": config.get("gradient_checkpointing"),
+        "logging_dir": config.get("logging_dir"),
+    }
+    optional_kwargs = {k: v for k, v in optional_kwargs.items() if v is not None}
+
     training_kwargs = dict(
         output_dir=str(config["output_dir"]),
         num_train_epochs=config["epochs"],
@@ -213,6 +223,7 @@ def main() -> None:
         push_to_hub=config["push_to_hub"],
         report_to=config.get("report_to"),
     )
+    training_kwargs.update(optional_kwargs)
     if optim_name:
         training_kwargs["optim"] = optim_name
     hub_model_id = config.get("hub_model_id")

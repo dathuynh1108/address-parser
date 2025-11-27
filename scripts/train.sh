@@ -12,11 +12,12 @@ source .venv/bin/activate
 
 # 3) Install deps (Torch first so it picks the right CUDA build; omit --extra-index-url if CPU-only)
 pip install --upgrade pip
-pip install --upgrade torch --index-url https://download.pytorch.org/whl/cu128   # adjust to your CUDA; remove for CPU
+pip install --upgrade torch --index-url https://download.pytorch.org/whl/cu130   # adjust to your CUDA; remove for CPU
 pip install --upgrade -r requirements.txt
 
 # 4) Hugging Face auth (replace with your token)
-export HF_TOKEN="hf_xxx"
+export TORCH_ALLOW_TF32=1
+export HF_TOKEN="XXX"
 export HUGGINGFACE_HUB_TOKEN="$HF_TOKEN"
 huggingface-cli login --token "$HF_TOKEN" --add-to-git-credential --overwrite
 

@@ -13,9 +13,12 @@
   "seed": 42,
   "report": true,
   "optim": null,
-  
+  "logging_dir": "ner/artifacts/runs",
+  "bf16": true,
+  "save_total_limit": 2,
+
   "push_to_hub": true,
-  "report_to": [],
+  "report_to": ["tensorboard"],
   "hub_model_id": "dathuynh1108/ner-address-electra-base-vn",
   "hub_private_repo": false
 }

@@ -7,3 +7,4 @@ datasets>=2.19.0
 accelerate>=0.33.0
 seqeval>=1.2.2
 numpy>=1.26
+tensorboard
