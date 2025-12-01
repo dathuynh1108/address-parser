@@ -3772,7 +3772,21 @@ class AddressParser:
         if len(prioritized) == 1:
             return prioritized[0]
 
-        return candidates[0]
+        # Deterministic fallback: prefer explicit format hints (new before old),
+        # then stable sort by codes/names to avoid hash-order randomness.
+        def _candidate_sort_key(entry: Dict[str, Any]):
+            is_new = entry.get("is_new_format")
+            # Order: True (0) < False (1) < unknown (2)
+            format_rank = 0 if is_new is True else 1 if is_new is False else 2
+            return (
+                format_rank,
+                entry.get("district_key") or "",
+                entry.get("province_key") or "",
+                entry.get("id") or entry.get("code") or "",
+                entry.get("name") or "",
+            )
+
+        return sorted(candidates, key=_candidate_sort_key)[0]
 
     def _recover_district_from_ward_info(
         self,
@@ -4783,7 +4797,7 @@ class AddressParser:
         invert_dict = self.invert_ngrams_idx
 
         # Iterate unique ngrams to avoid redundant counting
-        for ngram in set(input_ngram_list):
+        for ngram in sorted(set(input_ngram_list)):
             if ngram in invert_dict:
                 counter.update(invert_dict[ngram])  # ✅ xử lý hàng loạt
 
