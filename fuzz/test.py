@@ -3,7 +3,8 @@ parser = AddressParser()
 
 if __name__ == "__main__":
     tests = [
-        "Số 269 Văn Cao, Phường Hải An, TP Hải Phòng, Việt Nam",
+        "269 Tăng Bạt Hổ, Khu Vực 05, Phường Lý Thường Kiệt, Thành phố Quy Nhơn, Tỉnh Bình Định, Việt Nam",
+        #"Số 269 Văn Cao, Phường Hải An, TP Hải Phòng, Việt Nam",
         # "Số nhà 14 ngách 222/44 đường 19/5 Văn Quán, Phường Hà Đông, TP Hà Nội, Việt Nam",
         # "Thôn Tân Lập, xã Ea Bông, , Huyện Krông Pắk, Đắk Lắk"
         # "74/3 đường Hiệp Thành 17, tổ 23, khu phố 2, Phường Hiệp Thành, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
@@ -56,8 +57,7 @@ if __name__ == "__main__":
     ]
     
     for test in tests:
-        for i in range(3):
-            result = parser.process(test)
-            print(f"Input: {test}")
-            print(f"Parsed: {result}")
-            print("-" * 40)
+        result = parser.process(test)
+        print(f"Input: {test}")
+        print(f"Parsed: {result}")
+        print("-" * 40)

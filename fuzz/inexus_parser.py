@@ -2303,6 +2303,39 @@ class AddressParser:
         for code, info in provinces_new.items():
             ensure_province(code, info)
 
+        def merge_ward_entry(
+            existing: Dict[str, Any], incoming: Dict[str, Any]
+        ) -> Dict[str, Any]:
+            if not existing:
+                return incoming
+
+            def _set_if_missing(field: str):
+                if existing.get(field) in (None, "") and incoming.get(field) not in (
+                    None,
+                    "",
+                ):
+                    existing[field] = incoming[field]
+
+            for field in (
+                "id",
+                "code",
+                "name_with_type",
+                "full_name",
+                "administrative_unit_id",
+            ):
+                _set_if_missing(field)
+
+            incoming_aliases = incoming.get("legacy_names") or []
+            if incoming_aliases:
+                merged_aliases = list(existing.get("legacy_names") or [])
+                for alias in incoming_aliases:
+                    if alias not in merged_aliases:
+                        merged_aliases.append(alias)
+                if merged_aliases:
+                    existing["legacy_names"] = merged_aliases
+
+            return existing
+
         def attach_district(
             province_entry: Dict[str, Any], code: str, payload: Dict[str, Any]
         ) -> Dict[str, Any]:
@@ -2378,7 +2411,13 @@ class AddressParser:
             }
             if not ward_entry["legacy_names"]:
                 ward_entry.pop("legacy_names")
-            district_entry["wards"][ward_name] = ward_entry
+            existing_ward = district_entry["wards"].get(ward_name)
+            if existing_ward is not None:
+                district_entry["wards"][ward_name] = merge_ward_entry(
+                    existing_ward, ward_entry
+                )
+            else:
+                district_entry["wards"][ward_name] = ward_entry
 
         for code, info in wards_new.items():
             province_code = info.get("parent_code")
@@ -2401,7 +2440,13 @@ class AddressParser:
             }
             if not ward_entry["legacy_names"]:
                 ward_entry.pop("legacy_names")
-            bucket["wards"][ward_name] = ward_entry
+            existing_ward = bucket["wards"].get(ward_name)
+            if existing_ward is not None:
+                bucket["wards"][ward_name] = merge_ward_entry(
+                    existing_ward, ward_entry
+                )
+            else:
+                bucket["wards"][ward_name] = ward_entry
 
         return legacy_view
 
