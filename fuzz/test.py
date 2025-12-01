@@ -1,8 +1,10 @@
-from .inexus_parser import AddressParser
+from inexus_parser import AddressParser
 parser = AddressParser()
 
 if __name__ == "__main__":
     tests = [
+        "Số 426 QL 50, Ấp Tân Tỉnh A, Phường Mỹ Phong, Đồng Tháp, Việt Nam",
+        # "Số nhà 14 ngách 222/44 đường 19/5 Văn Quán, Phường Hà Đông, TP Hà Nội, Việt Nam",
         # "Thôn Tân Lập, xã Ea Bông, , Huyện Krông Pắk, Đắk Lắk"
         # "74/3 đường Hiệp Thành 17, tổ 23, khu phố 2, Phường Hiệp Thành, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
         # "Số 25/19, Đường số 13, Khu phố Bình Đường 1, Phường An Bình, Thành phố Dĩ An, Tỉnh Bình Dương, Việt Nam",
