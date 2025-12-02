@@ -1114,10 +1114,19 @@ class AddressParser:
                 and district_std
                 and (
                     ward_std == district_std
-                    or ward_std.startswith(district_std)
-                    or district_std.startswith(ward_std)
-                    or self._strip_generic_prefix(ward_std)
-                    == self._strip_generic_prefix(district_std)
+                    or (
+                        ward_std.startswith(district_std)
+                        and ward_std.split()[0] in {"phuong", "p", "xa", "thi", "tran"}
+                    )
+                    or (
+                        district_std.startswith(ward_std)
+                        and district_std.split()[0] in {"phuong", "p", "xa", "thi", "tran"}
+                    )
+                    or (
+                        self._strip_generic_prefix(ward_std)
+                        == self._strip_generic_prefix(district_std)
+                        and ward_std.split()[0] in {"phuong", "p", "xa", "thi", "tran"}
+                    )
                 )
             ):
                 district = ""
@@ -2325,6 +2334,21 @@ class AddressParser:
             ):
                 _set_if_missing(field)
 
+            # If both entries have IDs but differ, prefer the one carrying richer metadata.
+            incoming_id = incoming.get("id") or incoming.get("code")
+            existing_id = existing.get("id") or existing.get("code")
+            has_incoming_alias = bool(incoming.get("legacy_names"))
+            has_existing_alias = bool(existing.get("legacy_names"))
+            if (
+                incoming_id
+                and existing_id
+                and incoming_id != existing_id
+                and has_incoming_alias
+                and not has_existing_alias
+            ):
+                existing["id"] = incoming_id
+                existing["code"] = incoming.get("code", incoming_id)
+
             incoming_aliases = incoming.get("legacy_names") or []
             if incoming_aliases:
                 merged_aliases = list(existing.get("legacy_names") or [])
@@ -2525,11 +2549,19 @@ class AddressParser:
                 return False
             return True
 
-        for row in rows:
+        ranked_rows = sorted(
+            rows,
+            key=lambda r: (
+                1 if province_key and r.get("city_id_old") == province_key else 0,
+                1 if district_key and r.get("district_id_old") == district_key else 0,
+            ),
+            reverse=True,
+        )
+        for row in ranked_rows:
             if _match(row):
                 return self._build_new_mapping_response(row)
-        # No strict match, fall back to first entry
-        return self._build_new_mapping_response(rows[0])
+        # No strict match, fall back to best-ranked entry
+        return self._build_new_mapping_response(ranked_rows[0])
 
     def map_new_address_ids_to_old(
         self,
@@ -2545,11 +2577,17 @@ class AddressParser:
             return None
         province_key = self._normalize_id_token(province_id)
 
-        for row in rows:
+        def _rank(row: Dict[str, Any]) -> Tuple[int, int]:
+            city_match = int(bool(province_key and row.get("city_id_new") == province_key))
+            has_old_district = 1 if row.get("district_id_old") else 0
+            return (city_match, has_old_district)
+
+        ranked_rows = sorted(rows, key=_rank, reverse=True)
+        for row in ranked_rows:
             if province_key and row.get("city_id_new") != province_key:
                 continue
             return self._build_old_mapping_response(row)
-        return self._build_old_mapping_response(rows[0])
+        return self._build_old_mapping_response(ranked_rows[0])
 
     def _lookup_new_province_name(self, province_id: Optional[Any]) -> Optional[str]:
         key = self._normalize_id_token(province_id)
@@ -3568,6 +3606,9 @@ class AddressParser:
         candidates: List[Tuple[str, str]] = []
 
         source_norm = source_string if source_string else ""
+        enforce_specificity = (
+            level == "ward" and not expected_province and not expected_district
+        )
 
         def _collect(relax: bool) -> List[Tuple[str, str]]:
             nonlocal fallback
@@ -3655,6 +3696,9 @@ class AddressParser:
 
         if not candidates:
             return fallback
+
+        if enforce_specificity and len(candidates) > 1:
+            return None
 
         if source_norm:
             best_name = None
@@ -3930,9 +3974,33 @@ class AddressParser:
                 return entry
 
         candidates = self.ward_lookup_by_name.get(token, [])
-        entry = _filter(candidates, enforce_province=bool(province_std))
-        if entry:
-            return entry
+        filtered = [
+            entry
+            for entry in candidates
+            if entry.get("is_new_format")
+            and (
+                not province_std
+                or self._entry_aligns_with_province(entry, expected_province)
+            )
+        ]
+        if province_std:
+            entry = _filter(filtered, enforce_province=True)
+            if entry:
+                return entry
+        # When no province hint and multiple new-format entries share the same name,
+        # avoid guessing to prevent cross-province drift.
+        if not province_std and len(filtered) != 1:
+            return None
+        if filtered:
+            filtered_sorted = sorted(
+                filtered,
+                key=lambda e: (
+                    e.get("district_key") or "",
+                    e.get("province_key") or "",
+                    e.get("id") or "",
+                ),
+            )
+            return filtered_sorted[0]
 
         return _filter(candidates, enforce_province=False)
 
@@ -3951,8 +4019,8 @@ class AddressParser:
                 if entry.get("province_name")
                 else None
             )
-        if entry_std == expected_std:
-            return True
+        if entry_std:
+            return entry_std == expected_std
         entry_id = self._normalize_id_token(entry.get("id") or entry.get("code"))
         if not entry_id:
             return False
