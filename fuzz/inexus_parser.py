@@ -4,7 +4,8 @@ import re
 import sys
 import unicodedata
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from threading import Lock
+from typing import Any, ClassVar, Dict, List, Optional, Set, Tuple
 from collections import Counter, defaultdict
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
@@ -58,6 +59,39 @@ CUSTOM_WARD_ALIASES_BY_CODE = {
 
 
 class AddressParser:
+    _STATEFUL_ATTRS: ClassVar[Tuple[str, ...]] = (
+        "address_node_list",
+        "invert_ngrams_idx",
+        "invert_province_to_indices",
+        "invert_district_to_indices",
+        "invert_ward_to_indices",
+        "province_names_std",
+        "district_names_std",
+        "ward_names_std",
+        "province_lookup",
+        "district_lookup",
+        "district_lookup_by_name",
+        "ward_lookup",
+        "ward_lookup_by_name",
+        "ward_lookup_by_province_name",
+        "ward_lookup_by_district_key",
+        "ward_mapping_by_old_code",
+        "ward_mapping_by_new_code",
+        "old_province_records",
+        "old_district_records",
+        "old_ward_records",
+        "new_province_records",
+        "new_ward_records",
+        "external_new_province_records",
+        "external_new_ward_records",
+        "search_engine",
+    )
+    _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
+    _PREPROCESSED_SIGNATURE: ClassVar[
+        Optional[Tuple[Tuple[str, Optional[float], Optional[int]], ...]]
+    ] = None
+    _PREPROCESSED_LOCK: ClassVar[Lock] = Lock()
+
     class AddressNode:
         def __init__(
             self,
@@ -208,7 +242,12 @@ class AddressParser:
         self.search_engine: Optional[AddressSearchEngine] = None
 
         # Pre-process address data once when initializing the Solution object
-        self.preprocess_address()
+        dataset_signature = self._dataset_signature()
+        if not self._hydrate_preprocessed_state(dataset_signature):
+            with self._PREPROCESSED_LOCK:
+                if not self._hydrate_preprocessed_state(dataset_signature):
+                    self.preprocess_address()
+                    self._cache_preprocessed_state(dataset_signature)
 
     def process(self, input_string: str):
         # Chuẩn hóa và tạo n-gram cho input
@@ -1874,6 +1913,52 @@ class AddressParser:
             )
 
         self._rebuild_search_engine()
+
+    def _dataset_signature(
+        self,
+    ) -> Tuple[Tuple[str, Optional[float], Optional[int]], ...]:
+        tracked_paths = (
+            self.new_format_provinces_path,
+            self.new_format_wards_path,
+            self.new_format_mapping_path,
+            self.old_provinces_path,
+            self.old_districts_path,
+            self.old_wards_path,
+        )
+        signature: List[Tuple[str, Optional[float], Optional[int]]] = []
+        for path in tracked_paths:
+            try:
+                stat_result = os.stat(path)
+                signature.append((path, stat_result.st_mtime, stat_result.st_size))
+            except OSError:
+                signature.append((path, None, None))
+        return tuple(signature)
+
+    def _hydrate_preprocessed_state(
+        self,
+        signature: Tuple[Tuple[str, Optional[float], Optional[int]], ...],
+    ) -> bool:
+        cls = self.__class__
+        cache = cls._PREPROCESSED_CACHE
+        if cache and cls._PREPROCESSED_SIGNATURE == signature:
+            self._apply_preprocessed_state(cache)
+            return True
+        return False
+
+    def _cache_preprocessed_state(
+        self,
+        signature: Tuple[Tuple[str, Optional[float], Optional[int]], ...],
+    ) -> None:
+        cls = self.__class__
+        cls._PREPROCESSED_CACHE = self._capture_preprocessed_state()
+        cls._PREPROCESSED_SIGNATURE = signature
+
+    def _capture_preprocessed_state(self) -> Dict[str, Any]:
+        return {attr: getattr(self, attr) for attr in self._STATEFUL_ATTRS}
+
+    def _apply_preprocessed_state(self, state: Dict[str, Any]) -> None:
+        for attr, value in state.items():
+            setattr(self, attr, value)
 
     def _normalize_code_str(self, value: Any) -> Optional[str]:
         if value is None:
