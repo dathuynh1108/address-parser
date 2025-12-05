@@ -1,5 +1,7 @@
 import json
+import logging
 import os
+import pickle
 import re
 import sys
 import unicodedata
@@ -10,6 +12,8 @@ from collections import Counter, defaultdict
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
 from rapidfuzz import fuzz as rf_fuzz
+
+logger = logging.getLogger(__name__)
 
 try:
     from .search_engine import AddressSearchEngine
@@ -86,6 +90,8 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
+    _CACHE_VERSION: ClassVar[int] = 1
+    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v1.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
         Optional[Tuple[Tuple[str, Optional[float], Optional[int]], ...]]
@@ -190,6 +196,7 @@ class AddressParser:
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self.data_dir = os.path.join(base_dir, "data")
+        self._cache_path = os.path.join(self.data_dir, self._CACHE_FILENAME)
         self.new_format_provinces_path = os.path.join(self.data_dir, "provinces.json")
         self.new_format_wards_path = os.path.join(self.data_dir, "wards.json")
         self.new_format_mapping_path = os.path.join(self.data_dir, "ward_mappings.json")
@@ -246,8 +253,13 @@ class AddressParser:
         if not self._hydrate_preprocessed_state(dataset_signature):
             with self._PREPROCESSED_LOCK:
                 if not self._hydrate_preprocessed_state(dataset_signature):
-                    self.preprocess_address()
-                    self._cache_preprocessed_state(dataset_signature)
+                    if not self._hydrate_persistent_state(dataset_signature):
+                        self.preprocess_address()
+                        self._cache_preprocessed_state(dataset_signature)
+                        self._persist_preprocessed_state(dataset_signature)
+                    else:
+                        # Re-cache in-memory for subsequent instances in the same process
+                        self._cache_preprocessed_state(dataset_signature)
 
     def process(self, input_string: str):
         # Chuẩn hóa và tạo n-gram cho input
@@ -1926,6 +1938,13 @@ class AddressParser:
             self.old_wards_path,
         )
         signature: List[Tuple[str, Optional[float], Optional[int]]] = []
+        signature.append(
+            (
+                "__cache_version__",
+                float(self._CACHE_VERSION),
+                len(self._STATEFUL_ATTRS),
+            )
+        )
         for path in tracked_paths:
             try:
                 stat_result = os.stat(path)
@@ -1944,6 +1963,54 @@ class AddressParser:
             self._apply_preprocessed_state(cache)
             return True
         return False
+
+    def _cache_payload(
+        self,
+        signature: Tuple[Tuple[str, Optional[float], Optional[int]], ...],
+    ) -> Dict[str, Any]:
+        return {
+            "version": self._CACHE_VERSION,
+            "signature": signature,
+            "state": self._capture_preprocessed_state(),
+        }
+
+    def _persist_preprocessed_state(
+        self,
+        signature: Tuple[Tuple[str, Optional[float], Optional[int]], ...],
+    ) -> None:
+        if not self._cache_path:
+            return
+        payload = self._cache_payload(signature)
+        try:
+            with open(self._cache_path, "wb") as f:
+                pickle.dump(payload, f, protocol=pickle.HIGHEST_PROTOCOL)
+        except Exception as exc:
+            logger.debug("Failed to persist AddressParser cache: %s", exc)
+
+    def _hydrate_persistent_state(
+        self,
+        signature: Tuple[Tuple[str, Optional[float], Optional[int]], ...],
+    ) -> bool:
+        path = getattr(self, "_cache_path", None)
+        if not path or not os.path.exists(path):
+            return False
+        try:
+            with open(path, "rb") as f:
+                payload = pickle.load(f)
+        except Exception as exc:
+            logger.debug("Failed to load AddressParser cache: %s", exc)
+            return False
+
+        if not isinstance(payload, dict):
+            return False
+        if payload.get("version") != self._CACHE_VERSION:
+            return False
+        cached_signature = payload.get("signature")
+        state = payload.get("state")
+        if cached_signature != signature or not isinstance(state, dict):
+            return False
+        self._apply_preprocessed_state(state)
+        return True
 
     def _cache_preprocessed_state(
         self,
