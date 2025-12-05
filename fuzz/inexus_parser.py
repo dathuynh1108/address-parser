@@ -1347,6 +1347,12 @@ class AddressParser:
         elif province_info and province_info.get("id") is not None:
             province_id = province_info["id"]
 
+        if resolved_is_new_format is True:
+            province_id_new = self._lookup_new_province_id_by_name(province)
+            if province_id_new:
+                province_id = province_id_new
+                province_info = self.new_province_records.get(province_id_new) or province_info
+
         province_for_lookup = province if province else None
         district_info = (
             self._lookup_district_info(district, province_for_lookup)
@@ -2415,18 +2421,28 @@ class AddressParser:
             return fallback
 
         def ensure_province(
-            code: Optional[str], payload: Optional[Dict[str, Any]]
+            code: Optional[str],
+            payload: Optional[Dict[str, Any]],
+            *,
+            prefer_name: bool = False,
         ) -> Dict[str, Any]:
             payload = payload or {}
             normalized_code = str(code) if code is not None else payload.get("code")
             normalized_code = str(normalized_code).strip() if normalized_code else None
             name = _preferred_name(payload, normalized_code or "Unknown Province")
 
+            entry_by_name = legacy_view.get(name)
+            entry_by_code = (
+                province_entries_by_code.get(normalized_code) if normalized_code else None
+            )
+
             entry = None
-            if normalized_code:
-                entry = province_entries_by_code.get(normalized_code)
-            if entry is None:
-                entry = legacy_view.get(name)
+            if prefer_name and entry_by_name is not None:
+                entry = entry_by_name
+            if entry is None and entry_by_code is not None:
+                entry = entry_by_code
+            if entry is None and entry_by_name is not None:
+                entry = entry_by_name
 
             if entry is None:
                 entry = {
@@ -2455,14 +2471,17 @@ class AddressParser:
                     if alias not in legacy_bucket:
                         legacy_bucket.append(alias)
 
-            if normalized_code and normalized_code not in province_entries_by_code:
-                province_entries_by_code[normalized_code] = entry
+            if normalized_code:
+                if prefer_name and entry_by_name is not None:
+                    province_entries_by_code[normalized_code] = entry
+                elif normalized_code not in province_entries_by_code:
+                    province_entries_by_code[normalized_code] = entry
             return entry
 
         for code, info in provinces_old.items():
             ensure_province(code, info)
         for code, info in provinces_new.items():
-            ensure_province(code, info)
+            ensure_province(code, info, prefer_name=True)
 
         def merge_ward_entry(
             existing: Dict[str, Any], incoming: Dict[str, Any]
@@ -2597,11 +2616,9 @@ class AddressParser:
 
         for code, info in wards_new.items():
             province_code = info.get("parent_code")
-            province_entry = province_entries_by_code.get(str(province_code))
-            if province_entry is None:
-                province_entry = ensure_province(
-                    province_code, provinces_new.get(str(province_code))
-                )
+            province_entry = ensure_province(
+                province_code, provinces_new.get(str(province_code)), prefer_name=True
+            )
             bucket = new_format_bucket(province_entry)
             ward_name = _preferred_name(info, code)
             ward_entry = {
@@ -2749,6 +2766,24 @@ class AddressParser:
         if not isinstance(entry, dict):
             return None
         return entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+
+    def _lookup_new_province_id_by_name(
+        self, province_name: Optional[str]
+    ) -> Optional[str]:
+        if not province_name:
+            return None
+        target_std = self.standardize_name(province_name, False)
+        if not target_std:
+            return None
+        for code, entry in self.new_province_records.items():
+            if not isinstance(entry, dict):
+                continue
+            for key in ("name_with_type", "full_name", "name"):
+                value = entry.get(key)
+                value_std = self.standardize_name(value, False) if value else None
+                if value_std and value_std == target_std:
+                    return str(code)
+        return None
 
     def _lookup_new_ward_name(self, ward_id: Optional[Any]) -> Optional[str]:
         key = self._normalize_id_token(ward_id)
@@ -5557,6 +5592,7 @@ class AddressParser:
         input_set = input_ngram_set
         input_set_length = len(input_set)
         filtered_entries: list[Tuple[int, float]] = []
+        dice_entries: list[Tuple[int, float]] = []
 
         index = 0
         for idx_count in ngram_address_piece_list:
@@ -5570,6 +5606,7 @@ class AddressParser:
                     intersection += 1
 
             dice_score = (2 * intersection) / (input_set_length + len(candidate_ngrams))
+            dice_entries.append((idx, dice_score))
             index += 1
 
             if dice_score >= self.DICE_GATE:
@@ -5578,7 +5615,14 @@ class AddressParser:
                 # Counter is ordered by frequency; dice will only go down after this point
                 break
         if not filtered_entries:
-            return []
+            if dice_entries:
+                # Fall back to the best-overlapping candidates when Dice is too strict,
+                # so long free-text inputs with street info still produce candidates.
+                filtered_entries = sorted(
+                    dice_entries, key=lambda item: item[1], reverse=True
+                )[:80]
+            if not filtered_entries:
+                return []
 
         # Optional prefix-based filtering to favour nodes aligned with detected components
         prefix_filter: Optional[Set[int]] = None
