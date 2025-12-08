@@ -57,10 +57,14 @@ if __name__ == "__main__":
         # "Số nhà 11, ngõ 229, khu 10, phố Bình Lộc, Phường Tân Bình, Thành phố Hải Dương, Tỉnh Hải Dương, Việt Nam",
     ]
     
-    for test in tests:
-        result = parser.process(test)
-        print(f"Input: {test}")
-        print(f"Parsed: {result}")
-        print("-" * 40)
+    # for test in tests:
+    #     result = parser.process(test)
+    #     print(f"Input: {test}")
+    #     print(f"Parsed: {result}")
+    #     print("-" * 40)
     
-    # parser.search_province()
+    wards = parser.search_ward(
+        "Phường Bình Thạnh", 
+    )
+    for ward in wards:
+        print(ward)

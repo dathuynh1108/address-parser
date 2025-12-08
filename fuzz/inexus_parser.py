@@ -90,8 +90,8 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 1
-    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v1.pkl"
+    _CACHE_VERSION: ClassVar[int] = 11
+    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v11.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
         Optional[Tuple[Tuple[str, Optional[float], Optional[int]], ...]]
@@ -1511,11 +1511,6 @@ class AddressParser:
                 "name": province_output_name,
             }
             if isinstance(province_entry, dict):
-                name_with_type = (
-                    province_entry.get("name_with_type") or province_output_name
-                )
-                if name_with_type:
-                    province_info["name_with_type"] = name_with_type
                 legacy_names = legacy_aliases_from(province_entry)
                 if legacy_names:
                     province_info["legacy_names"] = legacy_names
@@ -1570,12 +1565,6 @@ class AddressParser:
                     "province_key": province_output_std,
                     "province_name": province_output_name,
                 }
-                if isinstance(district_entry, dict):
-                    name_with_type = (
-                        district_entry.get("name_with_type") or district_output_name
-                    )
-                    if name_with_type:
-                        district_info["name_with_type"] = name_with_type
                 if district_legacy_aliases:
                     district_info["legacy_names"] = district_legacy_aliases
                 if province_output_std:
@@ -1643,11 +1632,6 @@ class AddressParser:
                             "is_new_format": True,
                         }
                         if isinstance(ward_meta, dict):
-                            name_with_type = (
-                                ward_meta.get("name_with_type") or ward_output_name
-                            )
-                            if name_with_type:
-                                ward_info["name_with_type"] = name_with_type
                             full_name = ward_meta.get("full_name")
                             if full_name:
                                 ward_info["full_name"] = full_name
@@ -1827,11 +1811,6 @@ class AddressParser:
                         "is_new_format": False,
                     }
                     if isinstance(ward_meta, dict):
-                        name_with_type = (
-                            ward_meta.get("name_with_type") or ward_output_name
-                        )
-                        if name_with_type:
-                            ward_info["name_with_type"] = name_with_type
                         full_name = ward_meta.get("full_name")
                         if full_name:
                             ward_info["full_name"] = full_name
@@ -2185,8 +2164,9 @@ class AddressParser:
                 "code": code_str,
                 "id": self._normalize_code_str(code_str),
                 "name": entry.get("name"),
-                "name_with_type": entry.get("full_name") or entry.get("name"),
             }
+            if "full_name" in entry and isinstance(entry["full_name"], str):
+                normalized["full_name"] = entry["full_name"]
             if parent_key:
                 parent_value = entry.get(parent_key)
                 normalized["parent_code"] = (
@@ -2233,9 +2213,9 @@ class AddressParser:
                 "code": code,
                 "id": self._normalize_code_str(entry.get("code") or code),
                 "name": entry.get("name"),
-                "name_with_type": entry.get("full_name") or entry.get("name"),
                 "name_en": entry.get("name_en"),
                 "full_name_en": entry.get("full_name_en"),
+                "full_name": entry.get("full_name"),
             }
 
         new_wards: Dict[str, Dict[str, Any]] = {}
@@ -2250,7 +2230,6 @@ class AddressParser:
                 "code": code,
                 "id": self._normalize_code_str(entry.get("code") or code),
                 "name": entry.get("name"),
-                "name_with_type": entry.get("full_name") or entry.get("name"),
                 "full_name": entry.get("full_name"),
                 "name_en": entry.get("name_en"),
                 "full_name_en": entry.get("full_name_en"),
@@ -2413,11 +2392,9 @@ class AddressParser:
 
         def _preferred_name(entity: Dict[str, Any], fallback: str) -> str:
             name_raw = entity.get("name") if isinstance(entity, dict) else None
-            name_with_type = (
-                entity.get("name_with_type") if isinstance(entity, dict) else None
-            )
             name = name_raw.strip() if isinstance(name_raw, str) else ""
-            extended = name_with_type.strip() if isinstance(name_with_type, str) else ""
+            full_name_raw = entity.get("full_name") if isinstance(entity, dict) else None
+            extended = full_name_raw.strip() if isinstance(full_name_raw, str) else ""
             if name and not name.replace(" ", "").isdigit():
                 return name
             if extended:
@@ -2456,7 +2433,7 @@ class AddressParser:
                         payload.get("id") or normalized_code
                     ),
                     "code": normalized_code,
-                    "name_with_type": payload.get("name_with_type") or name,
+                    "full_name": payload.get("full_name") or name,
                     "districts": {},
                     "legacy_names": extract_legacy_names(payload),
                 }
@@ -2470,8 +2447,8 @@ class AddressParser:
                     entry["id"] = self._normalize_code_str(
                         payload.get("id") or normalized_code
                     )
-                if not entry.get("name_with_type") and payload.get("name_with_type"):
-                    entry["name_with_type"] = payload["name_with_type"]
+                if not entry.get("full_name") and payload.get("full_name"):
+                    entry["full_name"] = payload["full_name"]
                 legacy_bucket = entry.setdefault("legacy_names", [])
                 for alias in extract_legacy_names(payload):
                     if alias not in legacy_bucket:
@@ -2505,7 +2482,6 @@ class AddressParser:
             for field in (
                 "id",
                 "code",
-                "name_with_type",
                 "full_name",
                 "administrative_unit_id",
             ):
@@ -2546,7 +2522,7 @@ class AddressParser:
                 district_entry = {
                     "id": self._normalize_code_str(payload.get("id") or code),
                     "code": payload.get("code") or code,
-                    "name_with_type": payload.get("name_with_type") or district_name,
+                    "full_name": payload.get("full_name") or district_name,
                     "wards": {},
                     "legacy_names": extract_legacy_names(payload),
                 }
@@ -2576,7 +2552,7 @@ class AddressParser:
                 bucket = {
                     "id": None,
                     "code": None,
-                    "name_with_type": "",
+                    "full_name": "",
                     "is_new_format": True,
                     "wards": {},
                 }
@@ -2604,9 +2580,8 @@ class AddressParser:
             ward_entry = {
                 "id": self._normalize_code_str(info.get("id") or code),
                 "code": info.get("code") or code,
-                "name_with_type": info.get("name_with_type") or ward_name,
                 "parent_code": info.get("parent_code"),
-                "full_name": info.get("full_name") or info.get("name_with_type"),
+                "full_name": info.get("full_name") or info.get("name"),
                 "administrative_unit_id": info.get("administrative_unit_id"),
                 "legacy_names": extract_legacy_names(info),
             }
@@ -2630,7 +2605,6 @@ class AddressParser:
             ward_entry = {
                 "id": self._normalize_code_str(info.get("id") or code),
                 "code": info.get("code") or code,
-                "name_with_type": info.get("name_with_type") or ward_name,
                 "parent_code": info.get("parent_code"),
                 "is_new_format": True,
                 "full_name": info.get("full_name"),
@@ -2771,7 +2745,7 @@ class AddressParser:
         entry = self.new_province_records.get(key)
         if not isinstance(entry, dict):
             return None
-        return entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+        return entry.get("full_name") or entry.get("name") or entry.get("slug")
 
     def _lookup_new_province_id_by_name(
         self, province_name: Optional[str]
@@ -2784,7 +2758,7 @@ class AddressParser:
         for code, entry in self.new_province_records.items():
             if not isinstance(entry, dict):
                 continue
-            for key in ("name_with_type", "full_name", "name"):
+            for key in ("full_name", "name"):
                 value = entry.get(key)
                 value_std = self.standardize_name(value, False) if value else None
                 if value_std and value_std == target_std:
@@ -2798,7 +2772,7 @@ class AddressParser:
         entry = self.new_ward_records.get(key)
         if not isinstance(entry, dict):
             return None
-        return entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+        return entry.get("full_name") or entry.get("name") or entry.get("slug")
 
     def _build_new_mapping_response(self, row: Dict[str, Any]) -> Dict[str, Any]:
         province_id_new = row.get("city_id_new")
@@ -2831,7 +2805,7 @@ class AddressParser:
         entry = self.old_province_records.get(key)
         if not isinstance(entry, dict):
             return None
-        return entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+        return entry.get("full_name") or entry.get("name") or entry.get("slug")
 
     def _lookup_old_district_name(self, district_id: Optional[Any]) -> Optional[str]:
         key = self._normalize_id_token(district_id)
@@ -2840,7 +2814,7 @@ class AddressParser:
         entry = self.old_district_records.get(key)
         if not isinstance(entry, dict):
             return None
-        return entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+        return entry.get("full_name") or entry.get("name") or entry.get("slug")
 
     def _lookup_old_ward_name(self, ward_id: Optional[Any]) -> Optional[str]:
         key = self._normalize_id_token(ward_id)
@@ -2849,7 +2823,7 @@ class AddressParser:
         entry = self.old_ward_records.get(key)
         if not isinstance(entry, dict):
             return None
-        return entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+        return entry.get("full_name") or entry.get("name") or entry.get("slug")
 
     def _project_component(
         self, entry: Optional[Dict[str, Any]], component_id: Optional[Any]
@@ -2861,7 +2835,7 @@ class AddressParser:
             "id": normalized_id or entry.get("code"),
             "code": entry.get("code"),
             "name": entry.get("name"),
-            "name_with_type": entry.get("name_with_type"),
+            "full_name": entry.get("full_name"),
             "slug": entry.get("slug"),
             "type": entry.get("type"),
         }
@@ -2887,7 +2861,7 @@ class AddressParser:
         for entry in (ward, district, province):
             if not entry:
                 continue
-            name = entry.get("name_with_type") or entry.get("name") or entry.get("slug")
+            name = entry.get("full_name") or entry.get("name") or entry.get("slug")
             if name:
                 pieces.append(name)
         if not pieces:
@@ -3076,7 +3050,7 @@ class AddressParser:
         district_code: Optional[Any] = None,
         include_new: bool = True,
         include_old: bool = True,
-        limit: int = 10,
+        limit: int = 100,
     ) -> List[Dict[str, Any]]:
         engine = self.search_engine
         if not engine or limit <= 0:
@@ -3088,7 +3062,7 @@ class AddressParser:
             allowed_sources.append("old")
         if not allowed_sources:
             return []
-        return engine.search(
+        results = engine.search(
             query,
             level="ward",
             allowed_sources=allowed_sources,
@@ -3096,26 +3070,185 @@ class AddressParser:
             district_code=district_code,
             limit=limit,
         )
+        return self._filter_results_by_unit(query, results, level="ward")
+
+    def _detect_unit_token_from_query(self, query: Optional[str]) -> Optional[str]:
+        if not query:
+            return None
+        normalized = self.standardize_name(query, False)
+        if not normalized:
+            return None
+        tokens = normalized.split()
+        if not tokens:
+            return None
+
+        def _has_sequence(first: str, second: str) -> bool:
+            try:
+                i = tokens.index(first)
+                j = tokens.index(second, i + 1)
+                return i < j
+            except ValueError:
+                return False
+
+        if "phuong" in tokens or "p" in tokens or "w" in tokens:
+            return "phuong"
+        if "xa" in tokens or "x" in tokens:
+            return "xa"
+        if _has_sequence("thi", "tran") or "tt" in tokens:
+            return "thi tran"
+        if _has_sequence("thi", "xa"):
+            return "thi xa"
+        return None
+
+    def _unit_tokens_match(
+        self, required: Optional[str], candidate: Optional[str]
+    ) -> bool:
+        if not required:
+            return True
+        required_norm = self._normalize_unit_token(required)
+        candidate_norm = self._normalize_unit_token(candidate)
+        if not candidate_norm:
+            return False
+        return required_norm == candidate_norm
+
+    def _extract_unit_token(
+        self,
+        record: Optional[Dict[str, Any]],
+        *,
+        level: str,
+    ) -> Optional[str]:
+        if level != "ward" or not isinstance(record, dict):
+            return None
+        token = self._unit_token_from_admin_id(record.get("administrative_unit_id"))
+        if token:
+            return token
+        text = record.get("full_name") or record.get("name")
+        return self._unit_token_from_text(text)
+
+    @staticmethod
+    def _unit_token_from_admin_id(unit_id: Optional[Any]) -> Optional[str]:
+        try:
+            value = int(unit_id) if unit_id is not None else None
+        except (TypeError, ValueError):
+            return None
+        mapping = {
+            3: "phuong",
+            4: "xa",
+            5: "thi tran",
+        }
+        return mapping.get(value)
+
+    def _unit_token_from_text(self, name: Optional[str]) -> Optional[str]:
+        if not name:
+            return None
+        normalized = self.standardize_name(name, False)
+        if not normalized:
+            return None
+        tokens = normalized.split()
+        if not tokens:
+            return None
+        if tokens[0] in ("phuong", "p", "w"):
+            return "phuong"
+        if tokens[0] in ("xa", "x"):
+            return "xa"
+        if len(tokens) >= 2 and tokens[0] == "thi" and tokens[1] == "tran":
+            return "thi tran"
+        if len(tokens) >= 2 and tokens[0] == "thi" and tokens[1] == "xa":
+            return "thi xa"
+        if tokens[0] == "tt":
+            return "thi tran"
+        return None
+
+    def _normalize_unit_token(self, token: Optional[str]) -> Optional[str]:
+        if not token:
+            return None
+        normalized = self.standardize_name(str(token), False)
+        if not normalized:
+            return None
+        tokens = normalized.split()
+        if not tokens:
+            return None
+        head = tokens[0]
+        tail = tokens[1] if len(tokens) > 1 else ""
+        if head in ("p", "w"):
+            return "phuong"
+        if head == "phuong":
+            return "phuong"
+        if head in ("x", "xa"):
+            return "xa"
+        if head == "tt" or (head == "thi" and tail == "tran"):
+            return "thi tran"
+        if head == "thi" and tail == "xa":
+            return "thi xa"
+        return head or None
+
+    def _filter_results_by_unit(
+        self,
+        query: Optional[str],
+        results: List[Dict[str, Any]],
+        *,
+        level: str,
+    ) -> List[Dict[str, Any]]:
+        if level != "ward" or not results:
+            return results
+
+        unit_token = self._detect_unit_token_from_query(query)
+        if not unit_token:
+            return results
+
+        filtered: List[Dict[str, Any]] = []
+        for result in results:
+            if self._unit_tokens_match(unit_token, result.get("unit_token")):
+                filtered.append(result)
+
+        if filtered:
+            return filtered
+        return results
+
+
+    @staticmethod
+    def _tokens_in_order(
+        needles: List[str],
+        haystack: List[str],
+    ) -> bool:
+        if not needles:
+            return True
+        doc_pos = 0
+        for token in needles:
+            while doc_pos < len(haystack) and haystack[doc_pos] != token:
+                doc_pos += 1
+            if doc_pos == len(haystack):
+                return False
+            doc_pos += 1
+        return True
+
+    def _tokenize_with_diacritics(self, text: Optional[str]) -> List[str]:
+        if not text:
+            return []
+        normalized = unicodedata.normalize("NFC", str(text)).casefold()
+        cleaned = "".join(ch if ch.isalnum() or ch.isspace() else " " for ch in normalized)
+        return [token for token in cleaned.split() if token]
+
+    def _contains_diacritics(self, text: Optional[str]) -> bool:
+        if not text:
+            return False
+        normalized = unicodedata.normalize("NFD", str(text))
+        return any(unicodedata.category(ch) == "Mn" for ch in normalized)
 
     def _collect_search_text_fields(
         self, entry: Dict[str, Any], *, level: str
     ) -> List[str]:
         fields: List[str] = []
-        # Restrict searchable fields to plain name variants to avoid parent-path matches
-        for key in (
-            "name_with_type",
-            "name",
-        ):
-            value = entry.get(key)
-            if isinstance(value, str):
-                trimmed = value.strip()
-                if trimmed:
-                    fields.append(trimmed)
+        # Use one primary label (prefer full_name, fall back to name) to avoid duplicate tokens
+        primary = entry.get("full_name") or entry.get("name")
+        if isinstance(primary, str):
+            trimmed = primary.strip()
+            if trimmed:
+                fields.append(trimmed)
 
         if level == "province":
             canonical_name = (
-                entry.get("name_with_type")
-                or entry.get("full_name")
+                entry.get("full_name")
                 or entry.get("name")
             )
             aliases = self._get_special_province_aliases(canonical_name)
@@ -3127,9 +3260,20 @@ class AddressParser:
         if not text:
             return []
         normalized = self.standardize_name(text, False)
-        if not normalized:
-            return []
-        return [token for token in normalized.split() if token]
+        tokens: List[str] = []
+        if normalized:
+            tokens.extend(token for token in normalized.split() if token)
+
+        # Add diacritic-preserving tokens so accented queries/documents can match directly
+        accented_tokens = self._tokenize_with_diacritics(text)
+        for tok in accented_tokens:
+            if tok not in tokens:
+                tokens.append(tok)
+
+        unit_token = self._detect_unit_token_from_query(text)
+        if unit_token and unit_token not in tokens:
+            tokens.append(unit_token)
+        return tokens
 
     def _rebuild_search_engine(self) -> None:
         self.search_engine = AddressSearchEngine(
@@ -3148,6 +3292,7 @@ class AddressParser:
         ) -> None:
             if not isinstance(record, dict):
                 return
+            unit_token = self._extract_unit_token(record, level=level)
             engine.add_document(
                 text_fields=self._collect_search_text_fields(record, level=level),
                 metadata={
@@ -3156,6 +3301,7 @@ class AddressParser:
                     "record": record,
                     "province_code": province_code,
                     "district_code": district_code,
+                    "unit_token": unit_token,
                 },
             )
 
@@ -3469,7 +3615,7 @@ class AddressParser:
         _add(current_value)
 
         if isinstance(info, dict):
-            for key in ("name_with_type", "full_name", "name"):
+            for key in ("full_name", "name"):
                 _add(info.get(key))
             legacy = info.get("legacy_names")
             if isinstance(legacy, str):
@@ -4304,7 +4450,7 @@ class AddressParser:
         if component_id is not None:
             payload["id"] = component_id
         if info:
-            extended_name = info.get("name_with_type") or info.get("full_name")
+            extended_name = info.get("full_name")
             if extended_name:
                 payload["full_name"] = extended_name
             code_value = info.get("code")

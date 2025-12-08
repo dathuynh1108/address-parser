@@ -17,6 +17,8 @@ class AddressSearchEngine:
         self._analyzer = analyzer
         self._normalize_id = normalize_id
         self._token_corpus: List[List[str]] = []
+        # Keep per-field token sequences to enforce in-order matching on each name field
+        self._field_tokens: List[List[List[str]]] = []
         self._metadata: List[Dict[str, Any]] = []
         self._token_sets: List[Set[str]] = []
         self._bm25: Optional[BM25Okapi] = None
@@ -27,12 +29,18 @@ class AddressSearchEngine:
         text_fields: Sequence[Optional[str]],
         metadata: Dict[str, Any],
     ) -> None:
-        text = " ".join(
-            value.strip()
-            for value in text_fields
-            if isinstance(value, str) and value.strip()
-        )
-        tokens = self._analyzer(text) if text else []
+        field_tokens: List[List[str]] = []
+        for value in text_fields:
+            if not isinstance(value, str):
+                continue
+            trimmed = value.strip()
+            if not trimmed:
+                continue
+            tokens = self._analyzer(trimmed)
+            if tokens:
+                field_tokens.append(tokens)
+
+        tokens = [token for seq in field_tokens for token in seq]
         if not tokens:
             fallback = (
                 metadata.get("record", {}).get("code")
@@ -42,8 +50,10 @@ class AddressSearchEngine:
             normalized_fallback = self._normalize_id(fallback)
             if normalized_fallback:
                 tokens = [normalized_fallback]
+                field_tokens = [tokens[:]]
         if not tokens:
             tokens = ["_"]  # BM25 requires non-empty documents
+            field_tokens = [tokens[:]]
 
         meta: Dict[str, Any] = dict(metadata)
         record = meta.get("record")
@@ -61,6 +71,7 @@ class AddressSearchEngine:
 
         self._metadata.append(meta)
         self._token_corpus.append(tokens)
+        self._field_tokens.append(field_tokens)
         self._token_sets.append(set(tokens))
 
     def finalize(self) -> None:
@@ -105,6 +116,18 @@ class AddressSearchEngine:
         query_token_set = set(tokenized_query)
         scored_indices: Dict[int, float] = {}
 
+        def _is_subsequence(needles: List[str], haystack: List[str]) -> bool:
+            if not needles:
+                return True
+            doc_pos = 0
+            for token in needles:
+                while doc_pos < len(haystack) and haystack[doc_pos] != token:
+                    doc_pos += 1
+                if doc_pos == len(haystack):
+                    return False
+                doc_pos += 1
+            return True
+
         def _register(idx: int, score: float) -> None:
             previous = scored_indices.get(idx)
             if previous is None or score > previous:
@@ -121,15 +144,12 @@ class AddressSearchEngine:
             if not query_token_set.issubset(token_set):
                 return False
 
-            doc_tokens = self._token_corpus[idx]
-            doc_pos = 0
-            for token in tokenized_query:
-                while doc_pos < len(doc_tokens) and doc_tokens[doc_pos] != token:
-                    doc_pos += 1
-                if doc_pos == len(doc_tokens):
-                    return False
-                doc_pos += 1
-            return True
+            ordered_fields = (
+                self._field_tokens[idx]
+                if idx < len(self._field_tokens) and self._field_tokens[idx]
+                else [self._token_corpus[idx]]
+            )
+            return any(_is_subsequence(tokenized_query, seq) for seq in ordered_fields)
 
         for idx, meta in enumerate(self._metadata):
             if not self._passes_filters(
