@@ -3,15 +3,15 @@ parser = AddressParser()
 
 if __name__ == "__main__":
     tests = [
-        "So 78, Tran Nhat Duat, Hoan Kiem, Ha Noi",
-        "Ap Hoa Hiep 2, Xa Hiep Hoa, Tinh Tay Ninh",
+        "So 78, Phường Cầu Kho, TPHCM",
+        # "Ap Hoa Hiep 2, Xa Hiep Hoa, Tinh Tay Ninh",
         #"Số 269 Văn Cao, Phường Hải An, TP Hải Phòng, Việt Nam",
         # "Số nhà 14 ngách 222/44 đường 19/5 Văn Quán, Phường Hà Đông, TP Hà Nội, Việt Nam",
         # "Thôn Tân Lập, xã Ea Bông, , Huyện Krông Pắk, Đắk Lắk"
-        "74/3 đường Hiệp Thành 17, tổ 23, khu phố 2, Phường Hiệp Thành, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
-        "Số 25/19, Đường số 13, Khu phố Bình Đường 1, Phường An Bình, Thành phố Dĩ An, Tỉnh Bình Dương, Việt Nam",
-        "46/1L Ấp Xuân Thới Đông 2, Xã Xuân Thới Đông, Huyện Hóc Môn, Thành phố Hồ Chí Minh, Việt Nam",
-        "Tiểu khu K1-G3, Đường D1, Khu công nghệ cao, Phường Tân Phú, Quận 9, Thành phố Hồ Chí Minh, Việt Nam",
+        # "74/3 đường Hiệp Thành 17, tổ 23, khu phố 2, Phường Hiệp Thành, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
+        # "Số 25/19, Đường số 13, Khu phố Bình Đường 1, Phường An Bình, Thành phố Dĩ An, Tỉnh Bình Dương, Việt Nam",
+        # "46/1L Ấp Xuân Thới Đông 2, Xã Xuân Thới Đông, Huyện Hóc Môn, Thành phố Hồ Chí Minh, Việt Nam",
+        # "Tiểu khu K1-G3, Đường D1, Khu công nghệ cao, Phường Tân Phú, Quận 9, Thành phố Hồ Chí Minh, Việt Nam",
         # "70 Vũ Tông Phan, Phường An Phú, Quận 2, Thành phố Hồ Chí Minh, Việt Nam",
         # "1/3/3 Đường 160, Phường Tăng Nhơn Phú A, Quận 9, Thành phố Hồ Chí Minh, Việt Nam"
         # "83 Triệu Nữ Vương, Phường Hải Châu Ii, Quận Hải Châu, Thành phố Đà Nẵng, Việt Nam",

@@ -1262,8 +1262,13 @@ class AddressParser:
             resolved_is_new_format = _update_format(resolved_is_new_format, ward_info)
 
         if ward and not district and not district_hint_in_input:
-            resolved_is_new_format = True
-            candidate_is_new_format = True
+            ward_format_hint = ward_info.get("is_new_format") if ward_info else None
+            if ward_format_hint is False or resolved_is_new_format is False:
+                resolved_is_new_format = False
+                candidate_is_new_format = False
+            else:
+                resolved_is_new_format = True
+                candidate_is_new_format = True
 
         if district_hint_in_input and resolved_is_new_format is not False:
             resolved_is_new_format = False
@@ -1283,7 +1288,7 @@ class AddressParser:
             else candidate_is_new_format
         )
         if (
-            preferred_lookup_format is not True
+            preferred_lookup_format is None
             and not district_hint_in_input
             and (raw_detected_ward or normalized_detected_ward_token or detected_ward)
         ):
@@ -1328,6 +1333,7 @@ class AddressParser:
 
         if (
             preferred_lookup_format is True
+            and resolved_is_new_format is not False
             and not district_hint_in_input
             and district
             and not _appears_in_input(district)
@@ -4071,7 +4077,13 @@ class AddressParser:
         province_name: Optional[str],
         province_info: Optional[Dict[str, Any]],
     ) -> Tuple[Optional[str], Optional[str]]:
-        if not ward_info or ward_info.get("district_name"):
+        if not ward_info:
+            return None, None
+
+        known_district = ward_info.get("district_name")
+        if known_district:
+            if ward_info.get("is_new_format") is False:
+                return known_district, ward_info.get("district_id")
             return None, None
 
         ward_std = self.standardize_name(ward_name, False) if ward_name else ""
