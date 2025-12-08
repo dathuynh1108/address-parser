@@ -111,11 +111,25 @@ class AddressSearchEngine:
                 scored_indices[idx] = score
 
         def _matches_all_tokens(idx: int) -> bool:
-            if not query_token_set:
+            if not tokenized_query:
                 return True
             if idx >= len(self._token_sets):
                 return False
-            return query_token_set.issubset(self._token_sets[idx])
+
+            # Fast fail on missing tokens, then enforce in-order subsequence.
+            token_set = self._token_sets[idx]
+            if not query_token_set.issubset(token_set):
+                return False
+
+            doc_tokens = self._token_corpus[idx]
+            doc_pos = 0
+            for token in tokenized_query:
+                while doc_pos < len(doc_tokens) and doc_tokens[doc_pos] != token:
+                    doc_pos += 1
+                if doc_pos == len(doc_tokens):
+                    return False
+                doc_pos += 1
+            return True
 
         for idx, meta in enumerate(self._metadata):
             if not self._passes_filters(
