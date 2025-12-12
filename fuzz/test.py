@@ -63,8 +63,10 @@ if __name__ == "__main__":
     #     print(f"Parsed: {result}")
     #     print("-" * 40)
     
-    wards = parser.search_ward(
-        "Phường Bình Thạnh", 
+    res = parser.map_address_ids(
+        province_id='30',
+        district_id='288',
+        ward_id='10522',
+        is_new_format=False,
     )
-    for ward in wards:
-        print(ward)
+    print(res)

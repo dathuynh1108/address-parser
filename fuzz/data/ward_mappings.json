@@ -26049,7 +26049,7 @@
     "old_district_code": "199",
     "old_ward_name": "Xã Hải Lạng",
     "new_province_code": "22",
-    "new_ward_code": "06970"
+    "new_ward_code": "06978"
   },
   {
     "old_province_code": "22",
@@ -26325,7 +26325,7 @@
     "old_district_code": "202",
     "old_ward_name": "Thị trấn Ba Chẽ",
     "new_province_code": "22",
-    "new_ward_code": "06970"
+    "new_ward_code": "06978"
   },
   {
     "old_province_code": "22",
@@ -26337,7 +26337,7 @@
     "old_district_code": "202",
     "old_ward_name": "Xã Thanh Sơn",
     "new_province_code": "22",
-    "new_ward_code": "06970"
+    "new_ward_code": "06978"
   },
   {
     "old_province_code": "22",
@@ -26373,7 +26373,7 @@
     "old_district_code": "202",
     "old_ward_name": "Xã Nam Sơn",
     "new_province_code": "22",
-    "new_ward_code": "06970"
+    "new_ward_code": "06978"
   },
   {
     "old_province_code": "22",
@@ -26397,7 +26397,7 @@
     "old_district_code": "202",
     "old_ward_name": "Xã Đồn Đạc",
     "new_province_code": "22",
-    "new_ward_code": "06970"
+    "new_ward_code": "06978"
   },
   {
     "old_province_code": "22",
@@ -120525,7 +120525,7 @@
     "old_district_code": "305",
     "old_ward_name": "Phường Niệm Nghĩa",
     "new_province_code": "31",
-    "new_ward_code": "11371"
+    "new_ward_code": "11407"
   },
   {
     "old_province_code": "31",
@@ -120537,7 +120537,7 @@
     "old_district_code": "312",
     "old_ward_name": "Xã Bắc Sơn",
     "new_province_code": "31",
-    "new_ward_code": "11401"
+    "new_ward_code": "11581"
   },
   {
     "old_province_code": "48",
@@ -120549,7 +120549,7 @@
     "old_district_code": "493",
     "old_ward_name": "Phường An Hải Đông",
     "new_province_code": "48",
-    "new_ward_code": "11614"
+    "new_ward_code": "20275"
   },
   {
     "old_province_code": "83",
@@ -120585,7 +120585,7 @@
     "old_district_code": "774",
     "old_ward_name": "Phường 6",
     "new_province_code": "79",
-    "new_ward_code": "11623"
+    "new_ward_code": "27316"
   },
   {
     "old_province_code": "01",
@@ -120597,7 +120597,7 @@
     "old_district_code": "001",
     "old_ward_name": "Phường Nguyễn Trung Trực",
     "new_province_code": "01",
-    "new_ward_code": "14776"
+    "new_ward_code": "00004"
   },
   {
     "old_province_code": "66",
@@ -120705,7 +120705,7 @@
     "old_district_code": "311",
     "old_ward_name": "Xã Gia Minh",
     "new_province_code": "31",
-    "new_ward_code": "00244"
+    "new_ward_code": "11473"
   },
   {
     "old_province_code": "31",
@@ -120717,7 +120717,7 @@
     "old_district_code": "311",
     "old_ward_name": "Xã Gia Đức",
     "new_province_code": "31",
-    "new_ward_code": "00244"
+    "new_ward_code": "11473"
   },
   {
     "old_province_code": "24",
@@ -120813,7 +120813,7 @@
     "old_district_code": "771",
     "old_ward_name": "Phường 7",
     "new_province_code": "79",
-    "new_ward_code": "23560"
+    "new_ward_code": "27169"
   },
   {
     "old_province_code": "79",
@@ -120825,7 +120825,7 @@
     "old_district_code": "771",
     "old_ward_name": "Phường 5",
     "new_province_code": "79",
-    "new_ward_code": "23560"
+    "new_ward_code": "27169"
   },
   {
     "old_province_code": "35",
@@ -120837,7 +120837,7 @@
     "old_district_code": "349",
     "old_ward_name": "Xã Mộc Nam",
     "new_province_code": "37",
-    "new_ward_code": "10696"
+    "new_ward_code": "13330"
   },
   {
     "old_province_code": "31",
@@ -120849,7 +120849,7 @@
     "old_district_code": "304",
     "old_ward_name": "Phường Lê Lợi",
     "new_province_code": "31",
-    "new_ward_code": "11341"
+    "new_ward_code": "11359"
   },
   {
     "old_province_code": "79",
@@ -120897,7 +120897,7 @@
     "old_district_code": "369",
     "old_ward_name": "Phường Phúc Thành",
     "new_province_code": "37",
-    "new_ward_code": "23572"
+    "new_ward_code": "14329"
   },
   {
     "old_province_code": "37",
@@ -120909,7 +120909,7 @@
     "old_district_code": "369",
     "old_ward_name": "Phường Thanh Bình",
     "new_province_code": "37",
-    "new_ward_code": "23572"
+    "new_ward_code": "14329"
   },
   {
     "old_province_code": "37",
@@ -120921,7 +120921,7 @@
     "old_district_code": "374",
     "old_ward_name": "Xã Ninh Xuân",
     "new_province_code": "37",
-    "new_ward_code": "23572"
+    "new_ward_code": "14329"
   },
   {
     "old_province_code": "35",
@@ -120969,7 +120969,7 @@
     "old_district_code": "311",
     "old_ward_name": "Xã Thủy Triều",
     "new_province_code": "31",
-    "new_ward_code": "11527"
+    "new_ward_code": "11533"
   },
   {
     "old_province_code": "48",
@@ -121005,7 +121005,7 @@
     "old_district_code": "407",
     "old_ward_name": "Xã Hải Yến",
     "new_province_code": "38",
-    "new_ward_code": "16633"
+    "new_ward_code": "16645"
   },
   {
     "old_province_code": "48",
@@ -121017,7 +121017,7 @@
     "old_district_code": "492",
     "old_ward_name": "Phường Hải Châu II",
     "new_province_code": "48",
-    "new_ward_code": "16564"
+    "new_ward_code": "20242"
   },
   {
     "old_province_code": "48",
@@ -121029,7 +121029,7 @@
     "old_district_code": "492",
     "old_ward_name": "Phường Nam Dương",
     "new_province_code": "48",
-    "new_ward_code": "16564"
+    "new_ward_code": "20242"
   },
   {
     "old_province_code": "48",
@@ -121041,7 +121041,7 @@
     "old_district_code": "492",
     "old_ward_name": "Phường Bình Hiên",
     "new_province_code": "48",
-    "new_ward_code": "16564"
+    "new_ward_code": "20242"
   },
   {
     "old_province_code": "31",
@@ -121077,7 +121077,7 @@
     "old_district_code": "193",
     "old_ward_name": "Phường Yết Kiêu",
     "new_province_code": "22",
-    "new_ward_code": "06691"
+    "new_ward_code": "06685"
   },
   {
     "old_province_code": "35",
@@ -121101,7 +121101,7 @@
     "old_district_code": "256",
     "old_ward_name": "Phường Tiền An",
     "new_province_code": "24",
-    "new_ward_code": "09172"
+    "new_ward_code": "09187"
   },
   {
     "old_province_code": "27",
@@ -121113,7 +121113,7 @@
     "old_district_code": "256",
     "old_ward_name": "Phường Vệ An",
     "new_province_code": "24",
-    "new_ward_code": "09172"
+    "new_ward_code": "09187"
   },
   {
     "old_province_code": "31",
@@ -121197,7 +121197,7 @@
     "old_district_code": "883",
     "old_ward_name": "Phường Đông Xuyên",
     "new_province_code": "91",
-    "new_ward_code": "10738"
+    "new_ward_code": "30307"
   },
   {
     "old_province_code": "31",
@@ -121257,7 +121257,7 @@
     "old_district_code": "288",
     "old_ward_name": "Phường Phạm Ngũ Lão",
     "new_province_code": "31",
-    "new_ward_code": "10534"
+    "new_ward_code": "10532"
   },
   {
     "old_province_code": "31",
@@ -121413,7 +121413,7 @@
     "old_district_code": "866",
     "old_ward_name": "Phường 11",
     "new_province_code": "82",
-    "new_ward_code": "29881"
+    "new_ward_code": "29884"
   },
   {
     "old_province_code": "82",
@@ -121713,7 +121713,7 @@
     "old_district_code": "593",
     "old_ward_name": "Phường Đức Thắng",
     "new_province_code": "68",
-    "new_ward_code": "02200"
+    "new_ward_code": "22945"
   },
   {
     "old_province_code": "60",
@@ -121725,7 +121725,7 @@
     "old_district_code": "593",
     "old_ward_name": "Phường Đức Nghĩa",
     "new_province_code": "68",
-    "new_ward_code": "02200"
+    "new_ward_code": "22945"
   },
   {
     "old_province_code": "46",
@@ -122001,7 +122001,7 @@
     "old_district_code": "009",
     "old_ward_name": "Phường Thanh Xuân Nam",
     "new_province_code": "01",
-    "new_ward_code": "26764"
+    "new_ward_code": "00367"
   },
   {
     "old_province_code": "31",
@@ -122037,7 +122037,7 @@
     "old_district_code": "412",
     "old_ward_name": "Phường Đội Cung",
     "new_province_code": "40",
-    "new_ward_code": "07966"
+    "new_ward_code": "16681"
   },
   {
     "old_province_code": "40",
@@ -122049,7 +122049,7 @@
     "old_district_code": "412",
     "old_ward_name": "Phường Lê Mao",
     "new_province_code": "40",
-    "new_ward_code": "07966"
+    "new_ward_code": "16681"
   },
   {
     "old_province_code": "31",
@@ -122109,7 +122109,7 @@
     "old_district_code": "356",
     "old_ward_name": "Xã Lộc An",
     "new_province_code": "37",
-    "new_ward_code": "13657"
+    "new_ward_code": "13777"
   },
   {
     "old_province_code": "36",
@@ -122121,7 +122121,7 @@
     "old_district_code": "356",
     "old_ward_name": "Phường Văn Miếu",
     "new_province_code": "37",
-    "new_ward_code": "13657"
+    "new_ward_code": "13777"
   },
   {
     "old_province_code": "36",
@@ -122133,7 +122133,7 @@
     "old_district_code": "359",
     "old_ward_name": "Xã Tân Thành",
     "new_province_code": "37",
-    "new_ward_code": "13657"
+    "new_ward_code": "13777"
   },
   {
     "old_province_code": "36",
@@ -122145,7 +122145,7 @@
     "old_district_code": "359",
     "old_ward_name": "Xã Liên Bảo",
     "new_province_code": "37",
-    "new_ward_code": "13657"
+    "new_ward_code": "13777"
   },
   {
     "old_province_code": "40",
@@ -122277,7 +122277,7 @@
     "old_district_code": "006",
     "old_ward_name": "Phường Phương Liên",
     "new_province_code": "01",
-    "new_ward_code": "00181"
+    "new_ward_code": "00226"
   },
   {
     "old_province_code": "01",
@@ -122289,7 +122289,7 @@
     "old_district_code": "006",
     "old_ward_name": "Phường Trung Phụng",
     "new_province_code": "01",
-    "new_ward_code": "00181"
+    "new_ward_code": "00226"
   },
   {
     "old_province_code": "01",
@@ -122301,7 +122301,7 @@
     "old_district_code": "006",
     "old_ward_name": "Phường Quốc Tử Giám",
     "new_province_code": "01",
-    "new_ward_code": "00181"
+    "new_ward_code": "00226"
   },
   {
     "old_province_code": "79",
@@ -122397,7 +122397,7 @@
     "old_district_code": "291",
     "old_ward_name": "Xã Phú Điền",
     "new_province_code": "31",
-    "new_ward_code": "10504"
+    "new_ward_code": "10645"
   },
   {
     "old_province_code": "51",
@@ -122409,7 +122409,7 @@
     "old_district_code": "522",
     "old_ward_name": "Xã Nghĩa Phú",
     "new_province_code": "51",
-    "new_ward_code": "10504"
+    "new_ward_code": "21034"
   },
   {
     "old_province_code": "64",
@@ -122433,7 +122433,7 @@
     "old_district_code": "018",
     "old_ward_name": "Xã Kim Lan",
     "new_province_code": "01",
-    "new_ward_code": "00583"
+    "new_ward_code": "00577"
   },
   {
     "old_province_code": "01",
@@ -122445,7 +122445,7 @@
     "old_district_code": "018",
     "old_ward_name": "Xã Đông Dư",
     "new_province_code": "01",
-    "new_ward_code": "00583"
+    "new_ward_code": "00577"
   },
   {
     "old_province_code": "35",
@@ -122457,7 +122457,7 @@
     "old_district_code": "352",
     "old_ward_name": "Xã Bối Cầu",
     "new_province_code": "37",
-    "new_ward_code": "02290"
+    "new_ward_code": "13540"
   },
   {
     "old_province_code": "35",
@@ -122469,7 +122469,7 @@
     "old_district_code": "352",
     "old_ward_name": "Xã Hưng Công",
     "new_province_code": "37",
-    "new_ward_code": "02290"
+    "new_ward_code": "13540"
   },
   {
     "old_province_code": "82",
@@ -122481,7 +122481,7 @@
     "old_district_code": "821",
     "old_ward_name": "Xã Hữu Đạo",
     "new_province_code": "82",
-    "new_ward_code": "02080"
+    "new_ward_code": "28564"
   },
   {
     "old_province_code": "82",
@@ -122493,7 +122493,7 @@
     "old_district_code": "821",
     "old_ward_name": "Xã Dưỡng Điềm",
     "new_province_code": "82",
-    "new_ward_code": "02080"
+    "new_ward_code": "28564"
   },
   {
     "old_province_code": "40",
@@ -122565,7 +122565,7 @@
     "old_district_code": "230",
     "old_ward_name": "Xã Minh Lương",
     "new_province_code": "25",
-    "new_ward_code": "07981"
+    "new_ward_code": "07996"
   },
   {
     "old_province_code": "80",
@@ -122589,7 +122589,7 @@
     "old_district_code": "259",
     "old_ward_name": "Xã Hán Quảng",
     "new_province_code": "24",
-    "new_ward_code": "06034"
+    "new_ward_code": "09313"
   },
   {
     "old_province_code": "25",
@@ -122601,7 +122601,7 @@
     "old_district_code": "230",
     "old_ward_name": "Xã Vụ Quang",
     "new_province_code": "25",
-    "new_ward_code": "08044"
+    "new_ward_code": "08038"
   },
   {
     "old_province_code": "25",
@@ -122613,7 +122613,7 @@
     "old_district_code": "230",
     "old_ward_name": "Xã Minh Tiến",
     "new_province_code": "25",
-    "new_ward_code": "08044"
+    "new_ward_code": "08038"
   },
   {
     "old_province_code": "33",
@@ -122625,7 +122625,7 @@
     "old_district_code": "330",
     "old_ward_name": "Xã Đại Hưng",
     "new_province_code": "33",
-    "new_ward_code": "06013"
+    "new_ward_code": "12271"
   },
   {
     "old_province_code": "33",
@@ -122637,7 +122637,7 @@
     "old_district_code": "330",
     "old_ward_name": "Xã Nhuế Dương",
     "new_province_code": "33",
-    "new_ward_code": "06013"
+    "new_ward_code": "12271"
   },
   {
     "old_province_code": "25",
@@ -122733,7 +122733,7 @@
     "old_district_code": "271",
     "old_ward_name": "Xã Châu Sơn",
     "new_province_code": "01",
-    "new_ward_code": "09628"
+    "new_ward_code": "09634"
   },
   {
     "old_province_code": "01",
@@ -122745,7 +122745,7 @@
     "old_district_code": "271",
     "old_ward_name": "Xã Tản Hồng",
     "new_province_code": "01",
-    "new_ward_code": "09628"
+    "new_ward_code": "09634"
   },
   {
     "old_province_code": "66",
@@ -122757,7 +122757,7 @@
     "old_district_code": "653",
     "old_ward_name": "Xã Hòa Tân",
     "new_province_code": "66",
-    "new_ward_code": "24451"
+    "new_ward_code": "24454"
   },
   {
     "old_province_code": "34",
@@ -122793,7 +122793,7 @@
     "old_district_code": "574",
     "old_ward_name": "Xã Diên Đồng",
     "new_province_code": "56",
-    "new_ward_code": "16810"
+    "new_ward_code": "22660"
   },
   {
     "old_province_code": "40",
@@ -122817,7 +122817,7 @@
     "old_district_code": "278",
     "old_ward_name": "Xã Xuân Dương",
     "new_province_code": "01",
-    "new_ward_code": "10168"
+    "new_ward_code": "10180"
   },
   {
     "old_province_code": "66",
@@ -122877,7 +122877,7 @@
     "old_district_code": "831",
     "old_ward_name": "Xã Phú An Hòa",
     "new_province_code": "86",
-    "new_ward_code": "14209"
+    "new_ward_code": "28807"
   },
   {
     "old_province_code": "83",
@@ -122889,7 +122889,7 @@
     "old_district_code": "831",
     "old_ward_name": "Xã An Hóa",
     "new_province_code": "86",
-    "new_ward_code": "14209"
+    "new_ward_code": "28807"
   },
   {
     "old_province_code": "45",
@@ -122973,7 +122973,7 @@
     "old_district_code": "294",
     "old_ward_name": "Xã Việt Hồng",
     "new_province_code": "31",
-    "new_ward_code": "15280"
+    "new_ward_code": "10816"
   },
   {
     "old_province_code": "30",
@@ -122985,7 +122985,7 @@
     "old_district_code": "294",
     "old_ward_name": "Xã Vĩnh Lập",
     "new_province_code": "31",
-    "new_ward_code": "15319"
+    "new_ward_code": "10882"
   },
   {
     "old_province_code": "01",
@@ -122997,7 +122997,7 @@
     "old_district_code": "277",
     "old_ward_name": "Xã Hồng Phong",
     "new_province_code": "01",
-    "new_ward_code": "10108"
+    "new_ward_code": "10096"
   },
   {
     "old_province_code": "01",
@@ -123009,7 +123009,7 @@
     "old_district_code": "277",
     "old_ward_name": "Xã Phú Nam An",
     "new_province_code": "01",
-    "new_ward_code": "10108"
+    "new_ward_code": "10096"
   },
   {
     "old_province_code": "01",
@@ -123069,7 +123069,7 @@
     "old_district_code": "235",
     "old_ward_name": "Xã Phú Lạc",
     "new_province_code": "25",
-    "new_ward_code": "06061"
+    "new_ward_code": "08416"
   },
   {
     "old_province_code": "25",
@@ -123081,7 +123081,7 @@
     "old_district_code": "235",
     "old_ward_name": "Xã Văn Khúc",
     "new_province_code": "25",
-    "new_ward_code": "06061"
+    "new_ward_code": "08416"
   },
   {
     "old_province_code": "40",
@@ -123117,7 +123117,7 @@
     "old_district_code": "275",
     "old_ward_name": "Xã Đại Thành",
     "new_province_code": "01",
-    "new_ward_code": "09934"
+    "new_ward_code": "09931"
   },
   {
     "old_province_code": "01",
@@ -123129,7 +123129,7 @@
     "old_district_code": "275",
     "old_ward_name": "Xã Tân Hòa",
     "new_province_code": "01",
-    "new_ward_code": "09934"
+    "new_ward_code": "09931"
   },
   {
     "old_province_code": "01",
@@ -123153,7 +123153,7 @@
     "old_district_code": "425",
     "old_ward_name": "Xã Diễn Hùng",
     "new_province_code": "40",
-    "new_ward_code": "14311"
+    "new_ward_code": "17419"
   },
   {
     "old_province_code": "22",
@@ -123225,7 +123225,7 @@
     "old_district_code": "366",
     "old_ward_name": "Xã Hải Triều",
     "new_province_code": "37",
-    "new_ward_code": "06745"
+    "new_ward_code": "14308"
   },
   {
     "old_province_code": "36",
@@ -123237,7 +123237,7 @@
     "old_district_code": "366",
     "old_ward_name": "Xã Hải Cường",
     "new_province_code": "37",
-    "new_ward_code": "06745"
+    "new_ward_code": "14308"
   },
   {
     "old_province_code": "08",
@@ -123297,7 +123297,7 @@
     "old_district_code": "223",
     "old_ward_name": "Xã Thái Sơn",
     "new_province_code": "24",
-    "new_ward_code": "07858"
+    "new_ward_code": "07864"
   },
   {
     "old_province_code": "24",
@@ -123309,7 +123309,7 @@
     "old_district_code": "223",
     "old_ward_name": "Xã Hòa Sơn",
     "new_province_code": "24",
-    "new_ward_code": "07858"
+    "new_ward_code": "07864"
   },
   {
     "old_province_code": "24",
@@ -123321,7 +123321,7 @@
     "old_district_code": "223",
     "old_ward_name": "Xã Đại Thành",
     "new_province_code": "24",
-    "new_ward_code": "07858"
+    "new_ward_code": "07864"
   },
   {
     "old_province_code": "20",
@@ -123405,7 +123405,7 @@
     "old_district_code": "439",
     "old_ward_name": "Xã Sơn Hàm",
     "new_province_code": "42",
-    "new_ward_code": "08977"
+    "new_ward_code": "18223"
   },
   {
     "old_province_code": "40",
@@ -123417,7 +123417,7 @@
     "old_district_code": "430",
     "old_ward_name": "Xã Hồng Long",
     "new_province_code": "40",
-    "new_ward_code": "10783"
+    "new_ward_code": "17971"
   },
   {
     "old_province_code": "30",
@@ -123513,7 +123513,7 @@
     "old_district_code": "251",
     "old_ward_name": "Xã Hồng Phương",
     "new_province_code": "25",
-    "new_ward_code": "10171"
+    "new_ward_code": "09064"
   },
   {
     "old_province_code": "51",
@@ -123537,7 +123537,7 @@
     "old_district_code": "752",
     "old_ward_name": "Xã An Nhứt",
     "new_province_code": "79",
-    "new_ward_code": "31981"
+    "new_ward_code": "26659"
   },
   {
     "old_province_code": "77",
@@ -123549,7 +123549,7 @@
     "old_district_code": "752",
     "old_ward_name": "Xã An Ngãi",
     "new_province_code": "79",
-    "new_ward_code": "31981"
+    "new_ward_code": "26659"
   },
   {
     "old_province_code": "34",
@@ -123561,7 +123561,7 @@
     "old_district_code": "343",
     "old_ward_name": "Xã Đình Phùng",
     "new_province_code": "33",
-    "new_ward_code": "10243"
+    "new_ward_code": "13120"
   },
   {
     "old_province_code": "34",
@@ -123573,7 +123573,7 @@
     "old_district_code": "343",
     "old_ward_name": "Xã Thượng Hiền",
     "new_province_code": "33",
-    "new_ward_code": "10243"
+    "new_ward_code": "13120"
   },
   {
     "old_province_code": "38",
@@ -123597,7 +123597,7 @@
     "old_district_code": "331",
     "old_ward_name": "Xã Nhân La",
     "new_province_code": "33",
-    "new_ward_code": "02062"
+    "new_ward_code": "12280"
   },
   {
     "old_province_code": "22",
@@ -123633,7 +123633,7 @@
     "old_district_code": "217",
     "old_ward_name": "Xã Yên Mỹ",
     "new_province_code": "24",
-    "new_ward_code": "03094"
+    "new_ward_code": "07375"
   },
   {
     "old_province_code": "83",
@@ -123645,7 +123645,7 @@
     "old_district_code": "835",
     "old_ward_name": "Xã Phú Vang",
     "new_province_code": "86",
-    "new_ward_code": "25288"
+    "new_ward_code": "29077"
   },
   {
     "old_province_code": "30",
@@ -123681,7 +123681,7 @@
     "old_district_code": "359",
     "old_ward_name": "Xã Minh Thuận",
     "new_province_code": "37",
-    "new_ward_code": "10351"
+    "new_ward_code": "13750"
   },
   {
     "old_province_code": "83",
@@ -123849,7 +123849,7 @@
     "old_district_code": "327",
     "old_ward_name": "Xã Nghĩa Hiệp",
     "new_province_code": "33",
-    "new_ward_code": "12055"
+    "new_ward_code": "12064"
   },
   {
     "old_province_code": "40",
@@ -123909,7 +123909,7 @@
     "old_district_code": "122",
     "old_ward_name": "Xã Huy Bắc",
     "new_province_code": "14",
-    "new_ward_code": "10339"
+    "new_ward_code": "03910"
   },
   {
     "old_province_code": "01",
@@ -123921,7 +123921,7 @@
     "old_district_code": "018",
     "old_ward_name": "Xã Đình Xuyên",
     "new_province_code": "01",
-    "new_ward_code": "00544"
+    "new_ward_code": "00541"
   },
   {
     "old_province_code": "01",
@@ -123933,7 +123933,7 @@
     "old_district_code": "018",
     "old_ward_name": "Xã Trung Mầu",
     "new_province_code": "01",
-    "new_ward_code": "00544"
+    "new_ward_code": "00541"
   },
   {
     "old_province_code": "25",
@@ -123957,7 +123957,7 @@
     "old_district_code": "171",
     "old_ward_name": "Xã Na Mao",
     "new_province_code": "19",
-    "new_ward_code": "02482"
+    "new_ward_code": "05800"
   },
   {
     "old_province_code": "83",
@@ -123969,7 +123969,7 @@
     "old_district_code": "831",
     "old_ward_name": "Xã Sơn Hòa",
     "new_province_code": "86",
-    "new_ward_code": "10294"
+    "new_ward_code": "28810"
   },
   {
     "old_province_code": "01",
@@ -123981,7 +123981,7 @@
     "old_district_code": "280",
     "old_ward_name": "Xã Quang Trung",
     "new_province_code": "01",
-    "new_ward_code": "05797"
+    "new_ward_code": "10273"
   },
   {
     "old_province_code": "01",
@@ -123993,7 +123993,7 @@
     "old_district_code": "279",
     "old_ward_name": "Xã Thống Nhất",
     "new_province_code": "01",
-    "new_ward_code": "05797"
+    "new_ward_code": "10273"
   },
   {
     "old_province_code": "01",
@@ -124017,7 +124017,7 @@
     "old_district_code": "282",
     "old_ward_name": "Xã Mỹ Thành",
     "new_province_code": "01",
-    "new_ward_code": "02299"
+    "new_ward_code": "10459"
   },
   {
     "old_province_code": "01",
@@ -124029,7 +124029,7 @@
     "old_district_code": "272",
     "old_ward_name": "Xã Thượng Cốc",
     "new_province_code": "01",
-    "new_ward_code": "17917"
+    "new_ward_code": "09715"
   },
   {
     "old_province_code": "01",
@@ -124041,7 +124041,7 @@
     "old_district_code": "272",
     "old_ward_name": "Xã Tích Giang",
     "new_province_code": "01",
-    "new_ward_code": "17917"
+    "new_ward_code": "09715"
   },
   {
     "old_province_code": "77",
@@ -124053,7 +124053,7 @@
     "old_district_code": "753",
     "old_ward_name": "Xã Lộc An",
     "new_province_code": "79",
-    "new_ward_code": "22894"
+    "new_ward_code": "26686"
   },
   {
     "old_province_code": "01",
@@ -124077,7 +124077,7 @@
     "old_district_code": "216",
     "old_ward_name": "Xã Đại Hóa",
     "new_province_code": "24",
-    "new_ward_code": "10006"
+    "new_ward_code": "07333"
   },
   {
     "old_province_code": "24",
@@ -124089,7 +124089,7 @@
     "old_district_code": "216",
     "old_ward_name": "Xã Lan Giới",
     "new_province_code": "24",
-    "new_ward_code": "10006"
+    "new_ward_code": "07333"
   },
   {
     "old_province_code": "24",
@@ -124101,7 +124101,7 @@
     "old_district_code": "216",
     "old_ward_name": "Xã Phúc Sơn",
     "new_province_code": "24",
-    "new_ward_code": "10006"
+    "new_ward_code": "07333"
   },
   {
     "old_province_code": "40",
@@ -124113,7 +124113,7 @@
     "old_district_code": "426",
     "old_ward_name": "Xã Hợp Thành",
     "new_province_code": "40",
-    "new_ward_code": "19018"
+    "new_ward_code": "17521"
   },
   {
     "old_province_code": "40",
@@ -124137,7 +124137,7 @@
     "old_district_code": "275",
     "old_ward_name": "Xã Phượng Cách",
     "new_province_code": "01",
-    "new_ward_code": "25132"
+    "new_ward_code": "09895"
   },
   {
     "old_province_code": "34",
@@ -124209,7 +124209,7 @@
     "old_district_code": "421",
     "old_ward_name": "Xã Quỳnh Nghĩa",
     "new_province_code": "40",
-    "new_ward_code": "09493"
+    "new_ward_code": "17212"
   },
   {
     "old_province_code": "40",
@@ -124221,7 +124221,7 @@
     "old_district_code": "421",
     "old_ward_name": "Xã Quỳnh Thọ",
     "new_province_code": "40",
-    "new_ward_code": "09493"
+    "new_ward_code": "17212"
   },
   {
     "old_province_code": "40",
@@ -124233,7 +124233,7 @@
     "old_district_code": "421",
     "old_ward_name": "Xã Quỳnh Long",
     "new_province_code": "40",
-    "new_ward_code": "09493"
+    "new_ward_code": "17212"
   },
   {
     "old_province_code": "40",
@@ -124245,7 +124245,7 @@
     "old_district_code": "421",
     "old_ward_name": "Xã Quỳnh Mỹ",
     "new_province_code": "40",
-    "new_ward_code": "07702"
+    "new_ward_code": "17170"
   },
   {
     "old_province_code": "49",
@@ -124269,7 +124269,7 @@
     "old_district_code": "246",
     "old_ward_name": "Xã Đình Chu",
     "new_province_code": "25",
-    "new_ward_code": "09613"
+    "new_ward_code": "08866"
   },
   {
     "old_province_code": "30",
@@ -124293,7 +124293,7 @@
     "old_district_code": "372",
     "old_ward_name": "Xã Sơn Thành",
     "new_province_code": "37",
-    "new_ward_code": "05041"
+    "new_ward_code": "14434"
   },
   {
     "old_province_code": "49",
@@ -124353,7 +124353,7 @@
     "old_district_code": "391",
     "old_ward_name": "Xã Thạch Đồng",
     "new_province_code": "38",
-    "new_ward_code": "14395"
+    "new_ward_code": "15211"
   },
   {
     "old_province_code": "33",
@@ -124401,7 +124401,7 @@
     "old_district_code": "217",
     "old_ward_name": "Xã Mỹ Hà",
     "new_province_code": "24",
-    "new_ward_code": "07393"
+    "new_ward_code": "07381"
   },
   {
     "old_province_code": "33",
@@ -124425,7 +124425,7 @@
     "old_district_code": "315",
     "old_ward_name": "Xã Toàn Thắng",
     "new_province_code": "31",
-    "new_ward_code": "11800"
+    "new_ward_code": "11791"
   },
   {
     "old_province_code": "31",
@@ -124437,7 +124437,7 @@
     "old_district_code": "315",
     "old_ward_name": "Xã Bạch Đằng",
     "new_province_code": "31",
-    "new_ward_code": "11800"
+    "new_ward_code": "11791"
   },
   {
     "old_province_code": "45",
@@ -124485,7 +124485,7 @@
     "old_district_code": "264",
     "old_ward_name": "Xã Lai Hạ",
     "new_province_code": "24",
-    "new_ward_code": "09502"
+    "new_ward_code": "09499"
   },
   {
     "old_province_code": "30",
@@ -124521,7 +124521,7 @@
     "old_district_code": "138",
     "old_ward_name": "Xã Đào Thịnh",
     "new_province_code": "15",
-    "new_ward_code": "06370"
+    "new_ward_code": "04498"
   },
   {
     "old_province_code": "30",
@@ -124533,7 +124533,7 @@
     "old_district_code": "291",
     "old_ward_name": "Xã Nam Chính",
     "new_province_code": "31",
-    "new_ward_code": "10099"
+    "new_ward_code": "10633"
   },
   {
     "old_province_code": "75",
@@ -124545,7 +124545,7 @@
     "old_district_code": "735",
     "old_ward_name": "Xã Hiếu Liêm",
     "new_province_code": "75",
-    "new_ward_code": "26176"
+    "new_ward_code": "26170"
   },
   {
     "old_province_code": "30",
@@ -124617,7 +124617,7 @@
     "old_district_code": "360",
     "old_ward_name": "Xã Yên Minh",
     "new_province_code": "37",
-    "new_ward_code": "00406"
+    "new_ward_code": "13807"
   },
   {
     "old_province_code": "36",
@@ -124629,7 +124629,7 @@
     "old_district_code": "360",
     "old_ward_name": "Xã Yên Tân",
     "new_province_code": "37",
-    "new_ward_code": "00406"
+    "new_ward_code": "13807"
   },
   {
     "old_province_code": "36",
@@ -124641,7 +124641,7 @@
     "old_district_code": "360",
     "old_ward_name": "Xã Yên Nghĩa",
     "new_province_code": "37",
-    "new_ward_code": "00406"
+    "new_ward_code": "13807"
   },
   {
     "old_province_code": "36",
@@ -124653,7 +124653,7 @@
     "old_district_code": "360",
     "old_ward_name": "Xã Yên Trung",
     "new_province_code": "37",
-    "new_ward_code": "00406"
+    "new_ward_code": "13807"
   },
   {
     "old_province_code": "40",
@@ -124665,7 +124665,7 @@
     "old_district_code": "423",
     "old_ward_name": "Xã Tân Long",
     "new_province_code": "40",
-    "new_ward_code": "09124"
+    "new_ward_code": "17272"
   },
   {
     "old_province_code": "44",
@@ -124677,7 +124677,7 @@
     "old_district_code": "452",
     "old_ward_name": "Xã Hóa Phúc",
     "new_province_code": "44",
-    "new_ward_code": "01162"
+    "new_ward_code": "18919"
   },
   {
     "old_province_code": "44",
@@ -124689,7 +124689,7 @@
     "old_district_code": "452",
     "old_ward_name": "Xã Hóa Thanh",
     "new_province_code": "44",
-    "new_ward_code": "01162"
+    "new_ward_code": "18919"
   },
   {
     "old_province_code": "14",
@@ -124821,7 +124821,7 @@
     "old_district_code": "426",
     "old_ward_name": "Xã Đại Thành",
     "new_province_code": "40",
-    "new_ward_code": "12160"
+    "new_ward_code": "17560"
   },
   {
     "old_province_code": "40",
@@ -124833,7 +124833,7 @@
     "old_district_code": "426",
     "old_ward_name": "Xã Lý Thành",
     "new_province_code": "40",
-    "new_ward_code": "10261"
+    "new_ward_code": "17611"
   },
   {
     "old_province_code": "40",
@@ -124845,7 +124845,7 @@
     "old_district_code": "426",
     "old_ward_name": "Xã Khánh Thành",
     "new_province_code": "40",
-    "new_ward_code": "10261"
+    "new_ward_code": "17611"
   },
   {
     "old_province_code": "01",
@@ -124929,7 +124929,7 @@
     "old_district_code": "316",
     "old_ward_name": "Xã Vĩnh Long",
     "new_province_code": "31",
-    "new_ward_code": "11185"
+    "new_ward_code": "11848"
   },
   {
     "old_province_code": "31",
@@ -124941,7 +124941,7 @@
     "old_district_code": "316",
     "old_ward_name": "Xã An Hòa",
     "new_province_code": "31",
-    "new_ward_code": "11185"
+    "new_ward_code": "11848"
   },
   {
     "old_province_code": "26",
@@ -124953,7 +124953,7 @@
     "old_district_code": "252",
     "old_ward_name": "Xã Tân Tiến",
     "new_province_code": "25",
-    "new_ward_code": "10951"
+    "new_ward_code": "09100"
   },
   {
     "old_province_code": "31",
@@ -125013,7 +125013,7 @@
     "old_district_code": "252",
     "old_ward_name": "Xã Lý Nhân",
     "new_province_code": "25",
-    "new_ward_code": "09157"
+    "new_ward_code": "09154"
   },
   {
     "old_province_code": "26",
@@ -125025,7 +125025,7 @@
     "old_district_code": "252",
     "old_ward_name": "Xã Vĩnh Ninh",
     "new_province_code": "25",
-    "new_ward_code": "09157"
+    "new_ward_code": "09154"
   },
   {
     "old_province_code": "26",
@@ -125037,7 +125037,7 @@
     "old_district_code": "252",
     "old_ward_name": "Xã Việt Xuân",
     "new_province_code": "25",
-    "new_ward_code": "17587"
+    "new_ward_code": "09106"
   },
   {
     "old_province_code": "26",
@@ -125049,7 +125049,7 @@
     "old_district_code": "252",
     "old_ward_name": "Xã Cao Đại",
     "new_province_code": "25",
-    "new_ward_code": "17587"
+    "new_ward_code": "09106"
   },
   {
     "old_province_code": "26",
@@ -125085,7 +125085,7 @@
     "old_district_code": "171",
     "old_ward_name": "Xã Vạn Thọ",
     "new_province_code": "19",
-    "new_ward_code": "10216"
+    "new_ward_code": "05845"
   },
   {
     "old_province_code": "51",
@@ -125109,7 +125109,7 @@
     "old_district_code": "364",
     "old_ward_name": "Xã Xuân Đài",
     "new_province_code": "37",
-    "new_ward_code": "00424"
+    "new_ward_code": "14104"
   },
   {
     "old_province_code": "36",
@@ -125121,7 +125121,7 @@
     "old_district_code": "364",
     "old_ward_name": "Xã Xuân Thủy",
     "new_province_code": "37",
-    "new_ward_code": "00424"
+    "new_ward_code": "14104"
   },
   {
     "old_province_code": "36",
@@ -125133,7 +125133,7 @@
     "old_district_code": "364",
     "old_ward_name": "Xã Xuân Bắc",
     "new_province_code": "37",
-    "new_ward_code": "15535"
+    "new_ward_code": "14122"
   },
   {
     "old_province_code": "36",
@@ -125145,7 +125145,7 @@
     "old_district_code": "364",
     "old_ward_name": "Xã Xuân Trung",
     "new_province_code": "37",
-    "new_ward_code": "15535"
+    "new_ward_code": "14122"
   },
   {
     "old_province_code": "40",
@@ -125157,7 +125157,7 @@
     "old_district_code": "428",
     "old_ward_name": "Xã Thanh Dương",
     "new_province_code": "40",
-    "new_ward_code": "18055"
+    "new_ward_code": "17779"
   },
   {
     "old_province_code": "40",
@@ -125169,7 +125169,7 @@
     "old_district_code": "428",
     "old_ward_name": "Xã Thanh Yên",
     "new_province_code": "40",
-    "new_ward_code": "18055"
+    "new_ward_code": "17779"
   },
   {
     "old_province_code": "40",
@@ -125181,7 +125181,7 @@
     "old_district_code": "428",
     "old_ward_name": "Xã Thanh Khai",
     "new_province_code": "40",
-    "new_ward_code": "18055"
+    "new_ward_code": "17779"
   },
   {
     "old_province_code": "36",
@@ -125229,7 +125229,7 @@
     "old_district_code": "327",
     "old_ward_name": "Xã Lý Thường Kiệt",
     "new_province_code": "33",
-    "new_ward_code": "00661"
+    "new_ward_code": "12073"
   },
   {
     "old_province_code": "34",
@@ -125241,7 +125241,7 @@
     "old_district_code": "342",
     "old_ward_name": "Xã Tây Tiến",
     "new_province_code": "33",
-    "new_ward_code": "06610"
+    "new_ward_code": "13021"
   },
   {
     "old_province_code": "36",
@@ -125301,7 +125301,7 @@
     "old_district_code": "429",
     "old_ward_name": "Xã Nghi Thịnh",
     "new_province_code": "40",
-    "new_ward_code": "16015"
+    "new_ward_code": "17878"
   },
   {
     "old_province_code": "34",
@@ -125373,7 +125373,7 @@
     "old_district_code": "513",
     "old_ward_name": "Xã Bình Định Nam",
     "new_province_code": "48",
-    "new_ward_code": "12811"
+    "new_ward_code": "20818"
   },
   {
     "old_province_code": "24",
@@ -125397,7 +125397,7 @@
     "old_district_code": "361",
     "old_ward_name": "Xã Nghĩa Minh",
     "new_province_code": "37",
-    "new_ward_code": "05572"
+    "new_ward_code": "13900"
   },
   {
     "old_province_code": "36",
@@ -125409,7 +125409,7 @@
     "old_district_code": "361",
     "old_ward_name": "Xã Nghĩa Đồng",
     "new_province_code": "37",
-    "new_ward_code": "05572"
+    "new_ward_code": "13900"
   },
   {
     "old_province_code": "33",
@@ -125421,7 +125421,7 @@
     "old_district_code": "331",
     "old_ward_name": "Xã Phú Thịnh",
     "new_province_code": "33",
-    "new_ward_code": "12316"
+    "new_ward_code": "12313"
   },
   {
     "old_province_code": "01",
@@ -125457,6 +125457,6 @@
     "old_district_code": "312",
     "old_ward_name": "Xã Quốc Tuấn",
     "new_province_code": "31",
-    "new_ward_code": "11401"
+    "new_ward_code": "11581"
   }
 ]
