@@ -1344,6 +1344,18 @@ class AddressParser:
             resolved_is_new_format = True
             candidate_is_new_format = True
 
+        # If we have a ward_info and a district hint, prefer the canonical ward name/full_name
+        # over legacy aliases that might match a district name.
+        if ward_info and ward:
+            canonical_name = ward_info.get("name") or ward_info.get("full_name")
+            canonical_std = _std(canonical_name)
+            ward_std = _std(ward)
+            if canonical_std and canonical_std != ward_std and (
+                canonical_std in input_string_basic or district_hint_in_input
+            ):
+                ward = canonical_name
+                ward_id = ward_info.get("id") or ward_id
+
         # Final guard: if we only saw a ward-prefixed token (no district prefix),
         # treat it as 2-level data and drop any inherited district.
         # Refresh lookup metadata to reflect any late-stage overrides
@@ -1369,6 +1381,24 @@ class AddressParser:
             district_id = None
         elif district_info and district_info.get("id") is not None:
             district_id = district_info["id"]
+
+        # Final canonicalization: if we have structured ward info, trust its canonical name/id.
+        if ward_info:
+            canonical_ward = ward_info.get("name") or ward_info.get("full_name")
+            if canonical_ward:
+                ward = canonical_ward
+            if ward_info.get("id") is not None:
+                ward_id = ward_info["id"]
+            # Rehydrate from source records to avoid legacy-only aliases overriding canonical names
+            record = self.old_ward_records.get(ward_info["id"]) or self.new_ward_records.get(
+                ward_info["id"]
+            )
+            if isinstance(record, dict):
+                canonical_from_record = record.get("full_name") or record.get("name")
+                if canonical_from_record:
+                    ward = canonical_from_record
+                    ward_info["full_name"] = record.get("full_name") or ward_info.get("full_name")
+                    ward_info["name"] = record.get("name") or ward_info.get("name")
 
         district_component = self._format_component(
             district, district_id, district_info
@@ -3705,24 +3735,22 @@ class AddressParser:
         if not value:
             return ""
         tokens = value.split()
-        while tokens and tokens[0] in {
-            "phuong",
-            "p",
-            "xa",
-            "thi",
-            "tran",
-            "thi tran",
-            "quan",
-            "q",
-            "huyen",
-            "h",
-            "tp",
-            "thanh",
-            "pho",
-            "thanh pho",
-            "tinh",
-        }:
-            tokens.pop(0)
+
+        def _is_pair_generic(tok0: str, tok1: str) -> bool:
+            return (tok0 == "thanh" and tok1 == "pho") or (
+                tok0 == "thi" and tok1 in {"tran", "xa"}
+            )
+
+        while tokens:
+            tok0 = tokens[0]
+            if tok0 in {"phuong", "p", "xa", "x", "quan", "q", "huyen", "h", "tp", "tinh"}:
+                tokens.pop(0)
+                continue
+            if len(tokens) >= 2 and _is_pair_generic(tokens[0], tokens[1]):
+                tokens.pop(0)
+                tokens.pop(0)
+                continue
+            break
         return " ".join(tokens)
 
     def _reference_aliases_for_level(
@@ -4097,6 +4125,13 @@ class AddressParser:
         ward_key = self.standardize_name(ward_name, False)
         if not ward_key:
             return None
+        province_key = (
+            self.standardize_name(province_name, False) if province_name else None
+        )
+        district_key = (
+            self.standardize_name(district_name, False) if district_name else None
+        )
+
         ward_keys = [ward_key]
         normalized_numeric_key = self._normalize_numeric_component_key(
             ward_key,
@@ -4105,12 +4140,15 @@ class AddressParser:
         if normalized_numeric_key and normalized_numeric_key not in ward_keys:
             ward_keys.append(normalized_numeric_key)
 
-        province_key = (
-            self.standardize_name(province_name, False) if province_name else None
-        )
-        district_key = (
-            self.standardize_name(district_name, False) if district_name else None
-        )
+        # Only broaden with stripped variants when we have a regional hint.
+        if province_key or district_key:
+            stripped_key = self._strip_generic_prefix(ward_key)
+            if stripped_key and stripped_key not in ward_keys:
+                ward_keys.append(stripped_key)
+            if normalized_numeric_key:
+                stripped_numeric = self._strip_generic_prefix(normalized_numeric_key)
+                if stripped_numeric and stripped_numeric not in ward_keys:
+                    ward_keys.append(stripped_numeric)
 
         if province_key and district_key:
             for key in ward_keys:
@@ -4167,11 +4205,21 @@ class AddressParser:
                 candidates = province_matches
 
         if district_key:
+            district_key_stripped = self._strip_generic_prefix(district_key)
             district_matches = [
                 c
                 for c in candidates
-                if (c.get("district_key") and c["district_key"] == district_key)
-                or _std(c.get("district_name")) == district_key
+                if (
+                    (c.get("district_key") and c["district_key"] == district_key)
+                    or _std(c.get("district_name")) == district_key
+                    or (
+                        district_key_stripped
+                        and (
+                            c.get("district_key") == district_key_stripped
+                            or _std(c.get("district_name")) == district_key_stripped
+                        )
+                    )
+                )
             ]
             if district_matches:
                 candidates = district_matches
@@ -4200,13 +4248,40 @@ class AddressParser:
         if len(prioritized) == 1:
             return prioritized[0]
 
-        # Deterministic fallback: prefer explicit format hints (new before old),
-        # then stable sort by codes/names to avoid hash-order randomness.
+        # Contextual fallback:
+        # - If only province is known (no district), prefer new-format (2-level) wards.
+        # - If no province/district hints, prefer old-format to avoid drifting to floating new entries.
+        # - When district hint exists, prefer candidates whose canonical name/full_name matches the request
+        #   (to avoid legacy-alias-only matches).
+        prefer_new = bool(province_key and not district_key)
+        prefer_old = bool(not province_key and not district_key)
+        ward_key_set = {k for k in ward_keys if k}
+
         def _candidate_sort_key(entry: Dict[str, Any]):
             is_new = entry.get("is_new_format")
-            # Order: True (0) < False (1) < unknown (2)
-            format_rank = 0 if is_new is True else 1 if is_new is False else 2
+            if prefer_new:
+                format_rank = 0 if is_new is True else 1 if is_new is False else 2
+            elif prefer_old:
+                format_rank = 0 if is_new is False else 1 if is_new is True else 2
+            else:
+                # Default: True (0) < False (1) < unknown (2)
+                format_rank = 0 if is_new is True else 1 if is_new is False else 2
+
+            name_std = self.standardize_name(entry.get("name"), False) if entry.get("name") else None
+            full_std = (
+                self.standardize_name(entry.get("full_name"), False)
+                if entry.get("full_name")
+                else None
+            )
+            matches_canonical = 0
+            if ward_key_set:
+                if name_std and name_std in ward_key_set:
+                    matches_canonical = -1  # prefer exact name match
+                elif full_std and full_std in ward_key_set:
+                    matches_canonical = -1
+
             return (
+                matches_canonical,
                 format_rank,
                 entry.get("district_key") or "",
                 entry.get("province_key") or "",
@@ -4263,16 +4338,6 @@ class AddressParser:
         ward_id = ward_info.get("id")
         if not ward_id:
             return None, None
-
-        province_id = (
-            province_info.get("id") if isinstance(province_info, dict) else None
-        )
-        mapping = self.map_new_address_ids_to_old(
-            province_id=province_id,
-            ward_id=ward_id,
-        )
-        if mapping and mapping.get("district_name_old"):
-            return mapping.get("district_name_old"), mapping.get("district_id_old")
 
         return None, None
 
@@ -4366,23 +4431,6 @@ class AddressParser:
             )
         if entry_std:
             return entry_std == expected_std
-        entry_id = self._normalize_id_token(entry.get("id") or entry.get("code"))
-        if not entry_id:
-            return False
-        mappings = self.ward_mapping_by_new_code.get(entry_id, [])
-        if not mappings:
-            return False
-
-        def _matches(value: Optional[str]) -> bool:
-            if not value:
-                return False
-            return self.standardize_name(value, False) == expected_std
-
-        for mapping in mappings:
-            if _matches(mapping.get("new_province_name")) or _matches(
-                mapping.get("old_province_name")
-            ):
-                return True
         return False
 
     def _prefer_hierarchical_ward_entry(

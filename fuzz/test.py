@@ -3,7 +3,7 @@ parser = AddressParser()
 
 if __name__ == "__main__":
     tests = [
-        "So 78, Phường Cầu Kho, TPHCM",
+        "816/63 Quốc lộ 1A, Khu phố 5, Phường Thạnh Xuân, Quận 12, Thành phố Hồ Chí Minh, Việt Nam",
         # "Ap Hoa Hiep 2, Xa Hiep Hoa, Tinh Tay Ninh",
         #"Số 269 Văn Cao, Phường Hải An, TP Hải Phòng, Việt Nam",
         # "Số nhà 14 ngách 222/44 đường 19/5 Văn Quán, Phường Hà Đông, TP Hà Nội, Việt Nam",
@@ -57,16 +57,8 @@ if __name__ == "__main__":
         # "Số nhà 11, ngõ 229, khu 10, phố Bình Lộc, Phường Tân Bình, Thành phố Hải Dương, Tỉnh Hải Dương, Việt Nam",
     ]
     
-    # for test in tests:
-    #     result = parser.process(test)
-    #     print(f"Input: {test}")
-    #     print(f"Parsed: {result}")
-    #     print("-" * 40)
-    
-    res = parser.map_address_ids(
-        province_id='30',
-        district_id='288',
-        ward_id='10522',
-        is_new_format=False,
-    )
-    print(res)
+    for test in tests:
+        result = parser.process(test)
+        print(f"Input: {test}")
+        print(f"Parsed: {result}")
+        print("-" * 40)
