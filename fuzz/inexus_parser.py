@@ -354,6 +354,84 @@ class AddressParser:
         district_hint_in_input = bool(raw_detected_dist)
         district_present_in_input = district_hint_in_input
 
+        # If any comma-separated segment explicitly starts with a district-level
+        # prefix (e.g. "Huyện ...", "Quận ...", "Thị xã ..."), treat the input as
+        # old format even if prefix-based name resolution fails.
+        district_prefix_in_input = False
+        if input_segments:
+            for segment_std, segment_raw in input_segments:
+                if not segment_std:
+                    continue
+                tokens = [tok for tok in segment_std.split() if tok]
+                if not tokens:
+                    continue
+                first = tokens[0]
+                if first in {"huyen", "quan", "q", "tx"}:
+                    district_prefix_in_input = True
+                    district_hint_in_input = True
+                    district_present_in_input = True
+                    break
+                if first == "h":
+                    raw = (segment_raw or "").strip().lower()
+                    if raw.startswith(("h.", "huyện", "huyen")):
+                        district_prefix_in_input = True
+                        district_hint_in_input = True
+                        district_present_in_input = True
+                        break
+                if len(tokens) >= 2 and f"{tokens[0]} {tokens[1]}" == "thi xa":
+                    district_prefix_in_input = True
+                    district_hint_in_input = True
+                    district_present_in_input = True
+                    break
+                if first == "tp" and len(tokens) >= 2:
+                    city_name = " ".join(tokens[1:]).strip()
+                    if city_name:
+                        normalized_city_name = (
+                            self._detect_special_province_token(city_name) or city_name
+                        )
+                        province_id_new = self._lookup_new_province_id_by_name(
+                            normalized_city_name
+                        )
+                        province_record = (
+                            self.external_new_province_records.get(province_id_new)
+                            or self.new_province_records.get(province_id_new)
+                            if province_id_new
+                            else None
+                        )
+                        is_central_municipality = bool(
+                            isinstance(province_record, dict)
+                            and province_record.get("administrative_unit_id") == 1
+                        )
+                        if not is_central_municipality:
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                if len(tokens) >= 3 and f"{tokens[0]} {tokens[1]}" == "thanh pho":
+                    city_name = " ".join(tokens[2:]).strip()
+                    if city_name:
+                        normalized_city_name = (
+                            self._detect_special_province_token(city_name) or city_name
+                        )
+                        province_id_new = self._lookup_new_province_id_by_name(
+                            normalized_city_name
+                        )
+                        province_record = (
+                            self.external_new_province_records.get(province_id_new)
+                            or self.new_province_records.get(province_id_new)
+                            if province_id_new
+                            else None
+                        )
+                        is_central_municipality = bool(
+                            isinstance(province_record, dict)
+                            and province_record.get("administrative_unit_id") == 1
+                        )
+                        if not is_central_municipality:
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+
         def _expected_district_for_resolution() -> Optional[str]:
             if not district_hint_in_input:
                 return None
@@ -916,7 +994,11 @@ class AddressParser:
                 province_confident = bool(detected_prov) or _appears_in_input(province)
                 entry_aligns_province = True
             ward_district = ward_info.get("district_name")
-            if ward_district and (entry_aligns_province or not province_confident):
+            if (
+                ward_district
+                and district_hint_in_input
+                and (entry_aligns_province or not province_confident)
+            ):
                 district = ward_district
                 district_id = None
                 district_info = None
@@ -928,7 +1010,7 @@ class AddressParser:
                 else None
             )
 
-        if ward_info and not district:
+        if ward_info and not district and district_hint_in_input:
             recovered_district_name, recovered_district_id = (
                 self._recover_district_from_ward_info(
                     ward_info,
@@ -1254,6 +1336,61 @@ class AddressParser:
             key = re.sub(r"^(tinh|thanh pho|tp)\s+", "", key).strip()
             return key
 
+        # If the inferred district collapses to the same region key as the province and the
+        # input does not explicitly contain a district-level prefix, treat it as a 2-level
+        # (ward+province) "new" address. This prevents overfitting to old-format candidates
+        # where the city-of-province shares the same name as the province.
+        explicit_city_district_in_input = False
+        if input_segments and province:
+            province_key = _canonical_region_key(province)
+            if province_key:
+                seen_tinh = False
+                seen_tp = False
+                for segment_std, _ in input_segments:
+                    if not segment_std:
+                        continue
+                    segment_key = _canonical_region_key(segment_std)
+                    if not segment_key or segment_key != province_key:
+                        continue
+                    if segment_std.startswith("tinh "):
+                        seen_tinh = True
+                    if segment_std.startswith("tp ") or segment_std.startswith("thanh pho "):
+                        seen_tp = True
+                explicit_city_district_in_input = seen_tinh and seen_tp
+
+        if (
+            province
+            and district
+            and not district_prefix_in_input
+            and not explicit_city_district_in_input
+            and _canonical_region_key(district)
+            and _canonical_region_key(district) == _canonical_region_key(province)
+        ):
+            district = ""
+            district_id = None
+            district_info = None
+            district_hint_in_input = False
+            resolved_is_new_format = True
+            candidate_is_new_format = True
+
+        # If there is no district prefix/hint in the input, avoid "inventing" a district
+        # purely from the selected old-format candidate / ward metadata unless the district
+        # is clearly present as its own comma-separated segment.
+        if province and district and not district_hint_in_input and not district_prefix_in_input:
+            district_key = _canonical_region_key(district)
+            has_explicit_district_segment = False
+            if district_key and input_segments:
+                for segment_std, _ in input_segments:
+                    if _canonical_region_key(segment_std) == district_key:
+                        has_explicit_district_segment = True
+                        break
+            if not has_explicit_district_segment:
+                district = ""
+                district_id = None
+                district_info = None
+                resolved_is_new_format = True
+                candidate_is_new_format = True
+
         canonical_changed = False
         if ward_info:
             canonical_province = ward_info.get("province_name")
@@ -1319,14 +1456,31 @@ class AddressParser:
                 ward_id = ward_info["id"]
             resolved_is_new_format = _update_format(resolved_is_new_format, ward_info)
 
+        # 2-level guard: when the input contains only ward+province (no district hint/prefix),
+        # treat it as new-format regardless of whether the ward record originates from the
+        # old or new registry. This avoids classifying genuine 2-level strings as "old"
+        # merely because a matching ward exists in the old dataset.
         if ward and not district and not district_hint_in_input:
-            ward_format_hint = ward_info.get("is_new_format") if ward_info else None
-            if ward_format_hint is False or resolved_is_new_format is False:
-                resolved_is_new_format = False
-                candidate_is_new_format = False
-            else:
-                resolved_is_new_format = True
-                candidate_is_new_format = True
+            resolved_is_new_format = True
+            candidate_is_new_format = True
+
+            # If we ended up mapping the ward to an old-record entry (e.g. same name exists
+            # in both registries with different codes), attempt to upgrade to the new-format
+            # ward so IDs line up with `wards.json`.
+            if ward_info and ward_info.get("is_new_format") is False:
+                upgraded = self._lookup_ward_info(
+                    ward,
+                    province if province else None,
+                    None,
+                    preferred_format=True,
+                )
+                if upgraded:
+                    ward_info = upgraded
+                    if upgraded.get("id") is not None:
+                        ward_id = upgraded["id"]
+                    canonical = upgraded.get("full_name") or upgraded.get("name")
+                    if canonical:
+                        ward = canonical
 
         if district_hint_in_input and resolved_is_new_format is not False:
             resolved_is_new_format = False
@@ -1345,12 +1499,17 @@ class AddressParser:
             if resolved_is_new_format is not None
             else candidate_is_new_format
         )
-        if (
-            preferred_lookup_format is None
-            and not district_hint_in_input
-            and (raw_detected_ward or normalized_detected_ward_token or detected_ward)
+        if not district_hint_in_input and (
+            raw_detected_ward or normalized_detected_ward_token or detected_ward
         ):
-            preferred_lookup_format = True
+            if preferred_lookup_format is None:
+                preferred_lookup_format = True
+            elif (
+                preferred_lookup_format is False
+                and district
+                and not _appears_in_input(district)
+            ):
+                preferred_lookup_format = True
 
         def _std(value: Optional[str]) -> str:
             return self.standardize_name(value, False) if value else ""
@@ -1391,7 +1550,6 @@ class AddressParser:
 
         if (
             preferred_lookup_format is True
-            and resolved_is_new_format is not False
             and not district_hint_in_input
             and district
             and not _appears_in_input(district)
@@ -1413,6 +1571,13 @@ class AddressParser:
             ):
                 ward = canonical_name
                 ward_id = ward_info.get("id") or ward_id
+
+        # Late new-format guard: classification may be decided before ward resolution,
+        # so ensure we still mark province-only / ward+province inputs as "new" when there
+        # is no explicit district hint in the text.
+        if (province or ward) and not district and not district_hint_in_input:
+            resolved_is_new_format = True
+            candidate_is_new_format = True
 
         # Final guard: if we only saw a ward-prefixed token (no district prefix),
         # treat it as 2-level data and drop any inherited district.
@@ -1447,10 +1612,18 @@ class AddressParser:
                 ward = canonical_ward
             if ward_info.get("id") is not None:
                 ward_id = ward_info["id"]
-            # Rehydrate from source records to avoid legacy-only aliases overriding canonical names
-            record = self.old_ward_records.get(ward_info["id"]) or self.new_ward_records.get(
-                ward_info["id"]
-            )
+            # Rehydrate from source records to avoid legacy-only aliases overriding canonical
+            # names. Prefer the registry that matches the resolved output format to avoid
+            # collisions where an old and new ward share the same numeric code.
+            ward_record_id = ward_info["id"]
+            if resolved_is_new_format is True:
+                record = self.new_ward_records.get(ward_record_id) or self.old_ward_records.get(
+                    ward_record_id
+                )
+            else:
+                record = self.old_ward_records.get(ward_record_id) or self.new_ward_records.get(
+                    ward_record_id
+                )
             if isinstance(record, dict):
                 canonical_from_record = record.get("full_name") or record.get("name")
                 if canonical_from_record:
@@ -5459,6 +5632,7 @@ class AddressParser:
         if has_segment_separators:
             admin_boundary = r"(?:\||$)"
             sub_admin_boundary = r"(?:\||$)"
+            prefix_anchor = r"(?:^|\|)\s*"
         else:
             admin_boundary = (
                 r"(?:\b(?:quan|q|huyen|h|thi xa|tx|thi tran|tt|phuong|p|xa|x|tp|tinh|thanh pho)\b|\||$)"
@@ -5466,19 +5640,20 @@ class AddressParser:
             sub_admin_boundary = (
                 r"(?:\b(?:phuong|p|xa|x|thi tran|tt|quan|q|huyen|h|thi xa|tx|thanh pho|tinh|tp)\b|\||$)"
             )
+            prefix_anchor = ""
 
         # Compile once per call; small overhead compared to overall cost
         province_tinh_pref = re.compile(
-            rf"\b(?:tinh)\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
+            rf"{prefix_anchor}\b(?:tinh)\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
         )
         province_pref = re.compile(
-            rf"\b(?:thanh pho|tp|tinh)\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
+            rf"{prefix_anchor}\b(?:thanh pho|tp|tinh)\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
         )
         district_pref = re.compile(
-            rf"\b(?P<prefix>quan|q|huyen|thi xa|thi tran|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
+            rf"{prefix_anchor}\b(?P<prefix>quan|q|huyen|thi xa|thi tran|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
         )
         ward_pref = re.compile(
-            rf"\b(?P<prefix>phuong|p|xa|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
+            rf"{prefix_anchor}\b(?P<prefix>phuong|p|xa|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
         )
 
         def _digit_key(value: str) -> str:
@@ -5577,7 +5752,13 @@ class AddressParser:
 
         dist_num = None
         district_choices = (
-            sorted(self.district_names_std) if self.district_names_std else None
+            sorted(
+                candidate
+                for candidate in self.district_names_std
+                if not candidate.isdigit() and len(candidate) >= 3
+            )
+            if self.district_names_std
+            else None
         )
         if district_choices:
             m_num = re.search(r"\b(?:quan)\s*(\d{1,3})\b", s)
@@ -5587,6 +5768,11 @@ class AddressParser:
                 m_num = re.search(r"\bq\.?\s*(\d{1,3})\b", s)
             if not m_num:
                 m_num = re.search(r"\bq(\d{1,3})\b", s)
+            if m_num:
+                # Avoid false positives from lot codes like "Lô Q10-03" where "Q10" is not "Quận 10".
+                prefix_context = s[max(0, m_num.start() - 8) : m_num.start()]
+                if re.search(r"\b(lo|lot)\s*$", prefix_context):
+                    m_num = None
             if m_num:
                 raw = m_num.group(1).strip()
                 for candidate in (
@@ -5628,9 +5814,25 @@ class AddressParser:
                 prefix = (match.group("prefix") or "").strip()
                 if not fragment or not prefix:
                     continue
+                # "TP/Thành phố" segments frequently denote the province-level municipality
+                # ("TP Hà Nội", "TP Đà Nẵng", ...). When the fragment matches a known province,
+                # do not treat it as a district hint.
+                if prefix in {"thanh pho", "tp"} and self.province_names_std:
+                    if fragment in self.province_names_std:
+                        continue
+                    if prov and partial_ratio(fragment, prov) >= 90:
+                        continue
+                # Avoid false positives from road names like "đường huyện 74":
+                # a numeric fragment after "huyện/tx/..." is not a valid district name.
+                if fragment.isdigit() and prefix not in {"quan", "q"}:
+                    continue
                 # Skip false positives where the fragment immediately starts with a ward token
-                frag_first_token = fragment.split()[0] if fragment.split() else ""
-                if frag_first_token in {"phuong", "p", "xa", "thi", "tran", "thi tran"}:
+                frag_tokens = fragment.split()
+                frag_first_token = frag_tokens[0] if frag_tokens else ""
+                frag_second_token = frag_tokens[1] if len(frag_tokens) >= 2 else ""
+                if frag_first_token in {"phuong", "p", "xa", "x"}:
+                    continue
+                if frag_first_token == "thi" and frag_second_token == "tran":
                     continue
                 candidate = _pick_best(fragment, district_choices)
                 if not candidate:
