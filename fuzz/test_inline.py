@@ -7,7 +7,7 @@ import json
 import sys
 from typing import Dict, List
 
-from inexus_parser import AddressParser
+from parser import AddressParser
 
 
 tests = [

@@ -16,12 +16,12 @@ from rapidfuzz import fuzz as rf_fuzz
 logger = logging.getLogger(__name__)
 
 # Make the module import path stable for pickled cache objects.
-# The cache may be created when importing as either `inexus_parser` (script usage)
-# or `fuzz.inexus_parser` (package usage); alias both to avoid cache invalidation.
-if __name__ == "inexus_parser":
-    sys.modules.setdefault("fuzz.inexus_parser", sys.modules[__name__])
-elif __name__ == "fuzz.inexus_parser":
-    sys.modules.setdefault("inexus_parser", sys.modules[__name__])
+# The cache may be created when importing as either `parser` (script usage)
+# or `fuzz.parser` (package usage); alias both to avoid cache invalidation.
+if __name__ == "parser":
+    sys.modules.setdefault("fuzz.parser", sys.modules[__name__])
+elif __name__ == "fuzz.parser":
+    sys.modules.setdefault("parser", sys.modules[__name__])
 
 try:
     from .search_engine import AddressSearchEngine

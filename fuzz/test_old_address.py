@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from inexus_parser import AddressParser
+from parser import AddressParser
 
 
 def _is_province_level_city(parser: AddressParser, city_key: str) -> bool:

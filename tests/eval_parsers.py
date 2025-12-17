@@ -3,7 +3,7 @@ import json
 import os
 import sys
 from collections import Counter
-from typing import Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 
 def _normalize_value(value: str) -> str:
@@ -27,14 +27,18 @@ def _load_reference_parser(repo_root: str):
     )
     if maso_root not in sys.path:
         sys.path.insert(0, maso_root)
-    from masothue.utils import parse_full_address  # type: ignore
+    try:
+        from masothue.utils import parse_full_address  # type: ignore
 
-    return parse_full_address
+        return parse_full_address
+    except ModuleNotFoundError:
+        return None
 
 
 def _load_new_parser(repo_root: str):
-    sys.path.insert(0, os.path.join(repo_root, "inexus"))
-    from inexus_parser import AddressParser  # type: ignore
+    if repo_root not in sys.path:
+        sys.path.insert(0, repo_root)
+    from fuzz.parser import AddressParser  # type: ignore
 
     return AddressParser()
 
@@ -73,8 +77,15 @@ def _adapt_new_result(result: Dict) -> Dict:
     }
 
 
-def evaluate(dataset_path: str, repo_root: str, max_samples: int) -> Dict:
-    ref_parser = _load_reference_parser(repo_root)
+def evaluate(
+    dataset_path: str,
+    repo_root: str,
+    max_samples: int,
+    *,
+    baseline: str,
+    baseline_field: str,
+) -> Dict:
+    ref_parser = _load_reference_parser(repo_root) if baseline == "masothue" else None
     new_parser = _load_new_parser(repo_root)
     summary = Counter()
     mismatches = []
@@ -89,7 +100,15 @@ def evaluate(dataset_path: str, repo_root: str, max_samples: int) -> Dict:
                 continue
             payload = json.loads(line)
             address = payload.get("mst_address") or ""
-            ref = _normalize_result(ref_parser(address))
+            if ref_parser is not None:
+                ref = _normalize_result(ref_parser(address))
+            else:
+                baseline_value = payload.get(baseline_field)
+                if not isinstance(baseline_value, dict):
+                    raise ValueError(
+                        f"Dataset mode requires '{baseline_field}' dict field, missing at id={payload.get('id')}"
+                    )
+                ref = _normalize_result(baseline_value)
             new = _normalize_result(_adapt_new_result(new_parser.process(address)))
 
             diff = False
@@ -115,6 +134,10 @@ def evaluate(dataset_path: str, repo_root: str, max_samples: int) -> Dict:
 
 
 def main():
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
     repo_root = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..")
     )
@@ -136,6 +159,17 @@ def main():
         help="Optional limit of records to evaluate.",
     )
     parser.add_argument(
+        "--baseline",
+        choices=("dataset", "masothue"),
+        default="dataset",
+        help="Which baseline to compare against.",
+    )
+    parser.add_argument(
+        "--baseline-field",
+        default="old_parsed",
+        help="When --baseline=dataset, use this field as baseline dict.",
+    )
+    parser.add_argument(
         "--max-mismatches",
         type=int,
         default=20,
@@ -146,7 +180,13 @@ def main():
     if not os.path.exists(args.dataset):
         raise FileNotFoundError(f"Dataset not found: {args.dataset}")
 
-    report = evaluate(args.dataset, repo_root, args.limit)
+    report = evaluate(
+        args.dataset,
+        repo_root,
+        args.limit,
+        baseline=args.baseline,
+        baseline_field=args.baseline_field,
+    )
     print(f"Total records: {report['total']}")
     print(f"Field diff counts: {report['diff_counts']}")
 

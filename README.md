@@ -2,7 +2,7 @@
 This repo combines a fuzzy address parser with a full synthetic/real dataset pipeline for training Electra-based Named Entity Recognition models that understand the Vietnamese administrative hierarchy (old 3-level + new 2-level).
 
 ## Highlights
-- **Hybrid parser** (`inexus/inexus_parser.py`): Fuzzy matching across wards/districts/provinces, aware of legacy→modern mappings.
+- **Hybrid parser** (`inexus/parser.py`): Fuzzy matching across wards/districts/provinces, aware of legacy→modern mappings.
 - **Synthetic dataset builder** (`ner/build_standard_dataset.py`): Generates millions of auto-labeled addresses (Street/Ward/District/Province) with configurable variants (accentless, abbreviations, compact forms, etc.).
 - **Real dataset ingester** (`ner/build_real_dataset.py`): Parses raw address dumps (JSON/JSONL), labels street + administrative spans, and supports `--load-mode memory|batch|stream` so you can toggle between full RAM, chunked batches, or low-RAM streaming.
 - **Dataset merger** (`ner/merge_datasets.py`): Concatenates any number of JSONL splits and re-splits with deterministic shuffling.
