@@ -15,6 +15,14 @@ from rapidfuzz import fuzz as rf_fuzz
 
 logger = logging.getLogger(__name__)
 
+# Make the module import path stable for pickled cache objects.
+# The cache may be created when importing as either `inexus_parser` (script usage)
+# or `fuzz.inexus_parser` (package usage); alias both to avoid cache invalidation.
+if __name__ == "inexus_parser":
+    sys.modules.setdefault("fuzz.inexus_parser", sys.modules[__name__])
+elif __name__ == "fuzz.inexus_parser":
+    sys.modules.setdefault("inexus_parser", sys.modules[__name__])
+
 try:
     from .search_engine import AddressSearchEngine
 except ImportError:  # Running as a standalone script without package context
@@ -318,6 +326,31 @@ class AddressParser:
                 source_string=input_string_basic,
             )
             raw_detected_dist = resolved_hint
+            if not raw_detected_dist:
+                recovered = self._prefer_component_alias_from_segments(
+                    [detected_dist],
+                    input_segments,
+                    require_prefix=True,
+                    level="district",
+                ) or self._recover_component_from_input(detected_dist, input_segments)
+                if recovered:
+                    cleaned = recovered.strip()
+                    parts = [part for part in cleaned.split() if part]
+                    if parts:
+                        first_std = self.standardize_name(parts[0], False)
+                        second_std = (
+                            self.standardize_name(parts[1], False)
+                            if len(parts) >= 2
+                            else ""
+                        )
+                        if first_std in {"huyen", "quan", "tp"}:
+                            cleaned = " ".join(parts[1:])
+                        elif first_std == "thi" and second_std == "xa":
+                            cleaned = " ".join(parts[2:])
+                        elif first_std == "thanh" and second_std == "pho":
+                            cleaned = " ".join(parts[2:])
+                    recovered = cleaned.strip()
+                raw_detected_dist = recovered
         district_hint_in_input = bool(raw_detected_dist)
         district_present_in_input = district_hint_in_input
 
@@ -400,6 +433,9 @@ class AddressParser:
             )
             if resolved_district:
                 district = resolved_district
+                district_id = None
+            elif raw_detected_dist:
+                district = raw_detected_dist
                 district_id = None
 
         if district and detected_dist and district != detected_dist:
@@ -933,9 +969,31 @@ class AddressParser:
             ),
             input_segments,
             require_prefix=True,
+            level="ward",
         )
         if preferred_ward_from_input:
+            ward_before = ward
             ward = preferred_ward_from_input
+            if self.standardize_name(ward_before or "", False) != self.standardize_name(
+                ward, False
+            ):
+                ward_info = self._lookup_ward_info(
+                    ward,
+                    province_for_lookup,
+                    district_for_lookup,
+                    preferred_format=candidate_is_new_format,
+                )
+                if ward_info is None:
+                    ward_info = self._lookup_ward_info(
+                        ward, preferred_format=candidate_is_new_format
+                    )
+                ward_id = ward_info.get("id") if ward_info else None
+                resolved_is_new_format = _update_format(resolved_is_new_format, ward_info)
+                ward_district = ward_info.get("district_name") if ward_info else None
+                if ward_district and not district:
+                    district = ward_district
+                    district_id = None
+                    district_info = None
 
         if detected_ward and district:
             district_std = self.standardize_name(district, False)
@@ -1407,6 +1465,13 @@ class AddressParser:
             province, province_id, province_info
         )
         ward_component = self._format_component(ward, ward_id, ward_info)
+
+        # Hard rule: if the input explicitly includes a district-level prefix
+        # (e.g. 'Huyện/Quận'), treat the address as old format regardless of any
+        # ward mapping that may point to new-format records.
+        if district_hint_in_input:
+            resolved_is_new_format = False
+            candidate_is_new_format = False
 
         fmt = (
             "new"
@@ -2028,7 +2093,37 @@ class AddressParser:
             return False
         cached_signature = payload.get("signature")
         state = payload.get("state")
-        if cached_signature != signature or not isinstance(state, dict):
+
+        def _signature_equivalent_ignoring_mtime(
+            cached: Any,
+            current: Any,
+        ) -> bool:
+            if not isinstance(cached, tuple) or not isinstance(current, tuple):
+                return False
+            if len(cached) != len(current) or not cached:
+                return False
+            for idx, (a, b) in enumerate(zip(cached, current)):
+                if not isinstance(a, tuple) or not isinstance(b, tuple):
+                    return False
+                if len(a) != 3 or len(b) != 3:
+                    return False
+                if a[0] != b[0]:
+                    return False
+                # Keep strict equality for the cache header entry.
+                if idx == 0:
+                    if a != b:
+                        return False
+                    continue
+                # Ignore mtime differences; size is enough to detect most dataset changes.
+                if a[2] != b[2]:
+                    return False
+            return True
+
+        if not isinstance(state, dict):
+            return False
+        if cached_signature != signature and not _signature_equivalent_ignoring_mtime(
+            cached_signature, signature
+        ):
             return False
         self._apply_preprocessed_state(state)
         return True
@@ -3676,9 +3771,41 @@ class AddressParser:
         segments: List[Tuple[str, str]],
         *,
         require_prefix: bool = False,
+        level: Optional[str] = None,
     ) -> Optional[str]:
         if not alias_values or not segments:
             return None
+
+        def _segment_matches_level_prefix(segment_std: str, target_level: str) -> bool:
+            tokens = [token for token in segment_std.split() if token]
+            if not tokens:
+                return False
+            first = tokens[0]
+            second = tokens[1] if len(tokens) >= 2 else ""
+            pair = f"{first} {second}".strip() if second else ""
+
+            if target_level == "province":
+                if first in {"tinh", "tp"}:
+                    return True
+                if pair == "thanh pho":
+                    return True
+                return False
+
+            if target_level == "district":
+                if first in {"quan", "q", "huyen", "h", "tx"}:
+                    return True
+                if pair in {"thi xa"}:
+                    return True
+                return False
+
+            if target_level == "ward":
+                if first in {"phuong", "p", "xa", "x", "tt"}:
+                    return True
+                if pair in {"thi tran", "dac khu"}:
+                    return True
+                return False
+
+            return False
 
         alias_norms: List[str] = []
         seen: Set[str] = set()
@@ -3696,8 +3823,12 @@ class AddressParser:
             segment_std, raw_value = segments[idx]
             if not segment_std:
                 continue
-            if require_prefix and not self._segment_has_location_prefix(segment_std):
-                continue
+            if require_prefix:
+                if level:
+                    if not _segment_matches_level_prefix(segment_std, level):
+                        continue
+                elif not self._segment_has_location_prefix(segment_std):
+                    continue
             for alias_std in alias_norms:
                 if (
                     alias_std == segment_std
@@ -5320,12 +5451,21 @@ class AddressParser:
         if not s:
             return None, None, None
 
-        admin_boundary = (
-            r"(?:\b(?:quan|huyen|thi xa|thi tran|phuong|xa|tp|tinh|thanh pho)\b|\||$)"
-        )
-        sub_admin_boundary = (
-            r"(?:\b(?:phuong|p|xa|thi tran|quan|q|huyen|thi xa|thanh pho|tinh|tp)\b|\||$)"
-        )
+        # When we already have explicit segment separators (we inject `|` between
+        # comma-separated parts), do not use token boundaries like `tinh`/`tp`.
+        # Those tokens can legitimately appear inside names (e.g. "Sơn Tịnh"),
+        # causing premature truncation (e.g. "son" -> fuzzy-match "son la").
+        has_segment_separators = "|" in s
+        if has_segment_separators:
+            admin_boundary = r"(?:\||$)"
+            sub_admin_boundary = r"(?:\||$)"
+        else:
+            admin_boundary = (
+                r"(?:\b(?:quan|q|huyen|h|thi xa|tx|thi tran|tt|phuong|p|xa|x|tp|tinh|thanh pho)\b|\||$)"
+            )
+            sub_admin_boundary = (
+                r"(?:\b(?:phuong|p|xa|x|thi tran|tt|quan|q|huyen|h|thi xa|tx|thanh pho|tinh|tp)\b|\||$)"
+            )
 
         # Compile once per call; small overhead compared to overall cost
         province_tinh_pref = re.compile(
@@ -5433,11 +5573,11 @@ class AddressParser:
             ):
                 prov = "ho chi minh"
             else:
-                prov = _pick_best(fragment, list(self.province_names_std))
+                prov = _pick_best(fragment, sorted(self.province_names_std))
 
         dist_num = None
         district_choices = (
-            list(self.district_names_std) if self.district_names_std else None
+            sorted(self.district_names_std) if self.district_names_std else None
         )
         if district_choices:
             m_num = re.search(r"\b(?:quan)\s*(\d{1,3})\b", s)
@@ -5612,7 +5752,7 @@ class AddressParser:
                     fragment = f"{prefix} {limited}".strip() if limited else prefix
                 candidate = _try_prefixed_candidate(prefix, fragment)
                 if not candidate:
-                    candidate = _pick_best(fragment, list(self.ward_names_std))
+                    candidate = _pick_best(fragment, sorted(self.ward_names_std))
                 if not candidate:
                     continue
                 priority = _ward_prefix_priority(prefix)
