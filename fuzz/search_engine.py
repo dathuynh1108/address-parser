@@ -2,9 +2,19 @@
 
 from __future__ import annotations
 
+import sys
+
 from typing import Any, Callable, Dict, List, Optional, Sequence, Set
 
 from rank_bm25 import BM25Okapi
+
+# Keep module import paths stable for pickled caches.
+# The cache may be created when importing as either `search_engine` (script usage)
+# or `fuzz.search_engine` (package usage); alias both to avoid cache invalidation.
+if __name__ == "search_engine":
+    sys.modules.setdefault("fuzz.search_engine", sys.modules[__name__])
+elif __name__ == "fuzz.search_engine":
+    sys.modules.setdefault("search_engine", sys.modules[__name__])
 
 
 class AddressSearchEngine:
