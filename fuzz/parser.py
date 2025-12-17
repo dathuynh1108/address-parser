@@ -1474,7 +1474,7 @@ class AddressParser:
                     None,
                     preferred_format=True,
                 )
-                if upgraded:
+                if upgraded and upgraded.get("is_new_format") is True:
                     ward_info = upgraded
                     if upgraded.get("id") is not None:
                         ward_id = upgraded["id"]
@@ -1631,6 +1631,28 @@ class AddressParser:
                     ward_info["full_name"] = record.get("full_name") or ward_info.get("full_name")
                     ward_info["name"] = record.get("name") or ward_info.get("name")
 
+        if not district and ward_id:
+            ward_record_key = self._normalize_id_token(ward_id)
+            if (
+                ward_record_key
+                and ward_record_key in self.old_ward_records
+                and ward_record_key not in self.new_ward_records
+            ):
+                old_record = self.old_ward_records.get(ward_record_key) or {}
+                parent_code = self._normalize_id_token(old_record.get("parent_code"))
+                district_entry = (
+                    self.old_district_records.get(parent_code) if parent_code else None
+                )
+                recovered = None
+                if isinstance(district_entry, dict):
+                    recovered = district_entry.get("name") or district_entry.get("full_name")
+                if recovered:
+                    district = recovered
+                    district_id = parent_code
+                    district_info = district_entry if isinstance(district_entry, dict) else None
+                    resolved_is_new_format = False
+                    candidate_is_new_format = False
+
         district_component = self._format_component(
             district, district_id, district_info
         )
@@ -1695,7 +1717,7 @@ class AddressParser:
             district_component["aliases"] = component_aliases["district"]
         if ward_component and component_aliases.get("ward"):
             ward_component["aliases"] = component_aliases["ward"]
-        return {
+        payload = {
             "province": province_component,
             "district": district_component,
             "ward": ward_component,
@@ -1707,6 +1729,7 @@ class AddressParser:
                 else False if resolved_is_new_format is False else None
             ),
         }
+        return payload
 
     def preprocess_address(self):
         raw_data = self._build_raw_dataset()
@@ -3866,13 +3889,38 @@ class AddressParser:
             return []
         segments: List[Tuple[str, str]] = []
         for part in re.split(r"[,;\n]+", original):
-            cleaned = part.strip()
-            if not cleaned:
+            raw = part.strip()
+            if not raw:
                 continue
-            std = self.standardize_name(cleaned, False)
-            if not std:
-                continue
-            segments.append((std, cleaned))
+
+            # Some sources use hyphen separators instead of commas, e.g.
+            # "Số ... - Quận ... - Hà Nội". Only split on dashes when they
+            # behave like segment separators (i.e. at least one chunk looks
+            # like an administrative segment).
+            subparts = [raw]
+            dash_parts = [p.strip() for p in re.split(r"\s+[-–—]\s+", raw) if p.strip()]
+            if len(dash_parts) > 1:
+                # Only treat dashes as separators when the right-hand side looks like
+                # an admin segment (explicit prefix) or a province name. This avoids
+                # splitting ward names like "Phường X - Đà Lạt" where the suffix is a
+                # locality hint, not a separate component.
+                should_split = False
+                for chunk in dash_parts[1:]:
+                    chunk_std = self.standardize_name(chunk, False)
+                    if self._segment_has_location_prefix(chunk_std):
+                        should_split = True
+                        break
+                    if chunk_std and chunk_std in self.province_names_std:
+                        should_split = True
+                        break
+                if should_split:
+                    subparts = dash_parts
+
+            for cleaned in subparts:
+                std = self.standardize_name(cleaned, False)
+                if not std:
+                    continue
+                segments.append((std, cleaned))
         return segments
 
     def _segment_has_location_prefix(self, segment_std: Optional[str]) -> bool:
@@ -5306,17 +5354,17 @@ class AddressParser:
             if curr_norm == "xa" and prev_norm in {"cu", "khu"}:
                 protected_generics.add(idx)
 
-        # Pre-compute comma-separated segments so we can avoid crossing them
+        # Pre-compute comma/dash-separated segments so we can avoid crossing them
         segments: List[Tuple[int, int]] = []
         segment_token_indices: List[List[int]] = []
         token_segments: List[int] = [-1] * token_count
         if token_count > 0:
-            comma_positions = [m.start() for m in re.finditer(",", original)]
-            if comma_positions:
+            separator_matches = list(re.finditer(r",|\s+[-–—]\s+", original))
+            if separator_matches:
                 start_char = 0
-                for pos in comma_positions:
-                    segments.append((start_char, pos))
-                    start_char = pos + 1
+                for match in separator_matches:
+                    segments.append((start_char, match.start()))
+                    start_char = match.end()
                 segments.append((start_char, len(original)))
             else:
                 segments.append((0, len(original)))
@@ -5580,6 +5628,7 @@ class AddressParser:
         filtered_chars = [ch for pos, ch in enumerate(original) if not mask[pos]]
         street = "".join(filtered_chars)
         street = re.sub(r"[,\.;:]+\s*", " ", street)
+        street = re.sub(r"\s+[-–—]+\s+", " ", street)
         street = re.sub(r"\s+", " ", street).strip(" ,;.-")
         if street:
             street = re.sub(
@@ -5732,23 +5781,60 @@ class AddressParser:
             return " ".join(tokens)
 
         prov = dist = ward = None
-        m = province_tinh_pref.search(s) or province_pref.search(s)
-        if m and self.province_names_std:
-            fragment = (m.group(1) or "").strip()
-            fragment = _trim_province_fragment(fragment)
-            frag_tokens = [tok for tok in fragment.split() if tok]
-            if len(frag_tokens) == 1 and len(frag_tokens[0]) <= 2:
-                fragment = ""
-                frag_tokens = []
-            while frag_tokens and frag_tokens[-1] in {"viet", "nam", "vietnam"}:
-                frag_tokens.pop()
-            fragment = " ".join(frag_tokens)
-            if fragment in {"hcm", "hcmc", "sai gon", "saigon", "sg"} or (
-                frag_tokens and frag_tokens[0] in {"hcm", "hcmc", "sg"}
-            ):
-                prov = "ho chi minh"
+        if self.province_names_std:
+            province_choices = sorted(self.province_names_std)
+
+            def _is_central_municipality(candidate_std: str) -> bool:
+                if not candidate_std:
+                    return False
+                province_id_new = self._lookup_new_province_id_by_name(candidate_std)
+                if not province_id_new:
+                    return False
+                record = self.external_new_province_records.get(
+                    province_id_new
+                ) or self.new_province_records.get(province_id_new)
+                return bool(
+                    isinstance(record, dict)
+                    and record.get("administrative_unit_id") == 1
+                )
+
+            m = province_tinh_pref.search(s)
+            if m:
+                fragment = (m.group(1) or "").strip()
+                fragment = _trim_province_fragment(fragment)
+                frag_tokens = [tok for tok in fragment.split() if tok]
+                if len(frag_tokens) == 1 and len(frag_tokens[0]) <= 2:
+                    fragment = ""
+                    frag_tokens = []
+                while frag_tokens and frag_tokens[-1] in {"viet", "nam", "vietnam"}:
+                    frag_tokens.pop()
+                fragment = " ".join(frag_tokens)
+                if fragment in {"hcm", "hcmc", "sai gon", "saigon", "sg"} or (
+                    frag_tokens and frag_tokens[0] in {"hcm", "hcmc", "sg"}
+                ):
+                    prov = "ho chi minh"
+                else:
+                    prov = _pick_best(fragment, province_choices)
             else:
-                prov = _pick_best(fragment, sorted(self.province_names_std))
+                m_city = re.search(
+                    rf"{prefix_anchor}\b(?:thanh pho|tp)\b\s+([a-z0-9 ]+?)(?={admin_boundary})",
+                    s,
+                )
+                if m_city:
+                    fragment = (m_city.group(1) or "").strip()
+                    fragment = _trim_province_fragment(fragment)
+                    frag_tokens = [tok for tok in fragment.split() if tok]
+                    while frag_tokens and frag_tokens[-1] in {"viet", "nam", "vietnam"}:
+                        frag_tokens.pop()
+                    fragment = " ".join(frag_tokens)
+                    if fragment in {"hcm", "hcmc", "sai gon", "saigon", "sg"} or (
+                        frag_tokens and frag_tokens[0] in {"hcm", "hcmc", "sg"}
+                    ):
+                        prov = "ho chi minh"
+                    else:
+                        candidate = _pick_best(fragment, province_choices)
+                        if candidate and _is_central_municipality(candidate):
+                            prov = candidate
 
         dist_num = None
         district_choices = (

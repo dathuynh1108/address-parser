@@ -185,7 +185,19 @@ def main() -> int:
 
         # For curated "new" dataset: when there is no district prefix, the parser must
         # return new format (2-level) and not invent a district.
+        #
+        # Exception: some real-world "new-looking" inputs may contain wards that only exist
+        # in the legacy registry; in those cases the parser may recover the district from
+        # old metadata and mark the address as old format.
         if not has_prefix and is_new is not True and fmt != "new":
+            ward_id = (parsed.get("ward") or {}).get("id")
+            ward_key = parser._normalize_id_token(ward_id)
+            if (
+                ward_key
+                and ward_key in parser.old_ward_records
+                and ward_key not in parser.new_ward_records
+            ):
+                continue
             failures.append(
                 {
                     "i": idx,
