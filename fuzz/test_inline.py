@@ -69,6 +69,9 @@ tests = [
   },
   {
     "mst_address": "149A Dương Đình Hội, Phường Phước Long B, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
+  },
+  {
+      "mst_address": "Tổ dân phố Tó, Phường Tây Mỗ, Quận Nam Từ Liêm, Thành phố Hà Nội, Việt Nam"
   }
 ]
 

@@ -6189,6 +6189,11 @@ class AddressParser:
                 if not fragment or not prefix:
                     continue
                 blocker = _preceding_token(m.start())
+                # When we inject `|` separators between comma-separated segments, do not let
+                # the previous segment's tail token (e.g. "tổ/khu/ấp") suppress a ward prefix
+                # in the next segment.
+                if has_segment_separators and m.start() < len(s) and s[m.start()] == "|":
+                    blocker = None
                 if blocker and blocker in hamlet_prefix_blockers:
                     continue
                 if prefix == "xa":
