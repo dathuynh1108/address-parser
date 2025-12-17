@@ -255,6 +255,8 @@ class AddressParser:
         self.external_new_ward_records: Dict[str, Dict[str, Any]] = {}
 
         self.search_engine: Optional[AddressSearchEngine] = None
+        self._old_ward_name_index: Optional[Dict[str, List[str]]] = None
+        self._old_ward_raw_name_index: Optional[Dict[str, List[str]]] = None
 
         # Pre-process address data once when initializing the Solution object
         dataset_signature = self._dataset_signature()
@@ -920,6 +922,36 @@ class AddressParser:
         enforce_locked_new_format = enforced_new_ward_entry is not None
         if enforced_new_ward_entry is not None:
             ward_info = enforced_new_ward_entry
+
+        raw_ward_segment = None
+        if input_segments:
+            for segment_std, segment_raw in input_segments:
+                if not segment_std or not segment_raw:
+                    continue
+                if segment_std.startswith(("phuong ", "p ", "xa ", "thi tran ")):
+                    raw_ward_segment = str(segment_raw).strip(" ,;.-")
+                    break
+
+        if raw_ward_segment:
+            exact_old = self._lookup_old_ward_record_by_exact_name(raw_ward_segment)
+            exact_old_id = (
+                self._normalize_id_token(exact_old.get("id") or exact_old.get("code"))
+                if isinstance(exact_old, dict)
+                else None
+            )
+            if exact_old and exact_old_id and exact_old_id not in self.new_ward_records:
+                ward_info = {**exact_old, "is_new_format": False}
+                ward_id = exact_old_id
+                ward = (
+                    exact_old.get("full_name")
+                    or exact_old.get("name")
+                    or ward
+                )
+                candidate_is_new_format = False
+                if not district_present_in_input:
+                    district = ""
+                    district_id = None
+                    district_info = None
         if not ward:
             ward_id = None
         elif ward_info and ward_info.get("id") is not None:
@@ -1456,31 +1488,52 @@ class AddressParser:
                 ward_id = ward_info["id"]
             resolved_is_new_format = _update_format(resolved_is_new_format, ward_info)
 
-        # 2-level guard: when the input contains only ward+province (no district hint/prefix),
-        # treat it as new-format regardless of whether the ward record originates from the
-        # old or new registry. This avoids classifying genuine 2-level strings as "old"
-        # merely because a matching ward exists in the old dataset.
-        if ward and not district and not district_hint_in_input:
-            resolved_is_new_format = True
-            candidate_is_new_format = True
+        if ward and ward_info is None:
+            ward_key = self.standardize_name(ward, False)
+            if ward_key and self.ward_lookup_by_name.get(ward_key):
+                legacy_record = None
+            else:
+                legacy_record = self._lookup_old_ward_record_by_name(ward)
+            if legacy_record:
+                ward_info = {**legacy_record, "is_new_format": False}
+                if ward_info.get("id") is not None:
+                    ward_id = ward_info["id"]
+                if resolved_is_new_format is not False:
+                    resolved_is_new_format = False
+                    candidate_is_new_format = False
 
-            # If we ended up mapping the ward to an old-record entry (e.g. same name exists
-            # in both registries with different codes), attempt to upgrade to the new-format
-            # ward so IDs line up with `wards.json`.
-            if ward_info and ward_info.get("is_new_format") is False:
-                upgraded = self._lookup_ward_info(
-                    ward,
-                    province if province else None,
-                    None,
-                    preferred_format=True,
-                )
-                if upgraded and upgraded.get("is_new_format") is True:
-                    ward_info = upgraded
-                    if upgraded.get("id") is not None:
-                        ward_id = upgraded["id"]
-                    canonical = upgraded.get("full_name") or upgraded.get("name")
-                    if canonical:
-                        ward = canonical
+        # 2-level guard: when the input contains only ward+province (no district hint/prefix),
+        # treat it as new-format unless the ward can only be resolved via the legacy registry.
+        # In that case, keep legacy ward IDs stable and let district inference (from old metadata)
+        # decide whether to promote the result to old format.
+        if ward and not district and not district_hint_in_input:
+            ward_record_key = self._normalize_id_token(ward_id)
+            is_legacy_only_ward = bool(
+                ward_record_key
+                and ward_record_key in self.old_ward_records
+                and ward_record_key not in self.new_ward_records
+            )
+            if not is_legacy_only_ward:
+                resolved_is_new_format = True
+                candidate_is_new_format = True
+
+                # If we ended up mapping the ward to an old-record entry (e.g. same name exists
+                # in both registries with different codes), attempt to upgrade to the new-format
+                # ward so IDs line up with `wards.json`.
+                if ward_info and ward_info.get("is_new_format") is False:
+                    upgraded = self._lookup_ward_info(
+                        ward,
+                        province if province else None,
+                        None,
+                        preferred_format=True,
+                    )
+                    if upgraded and upgraded.get("is_new_format") is True:
+                        ward_info = upgraded
+                        if upgraded.get("id") is not None:
+                            ward_id = upgraded["id"]
+                        canonical = upgraded.get("full_name") or upgraded.get("name")
+                        if canonical:
+                            ward = canonical
 
         if district_hint_in_input and resolved_is_new_format is not False:
             resolved_is_new_format = False
@@ -1576,8 +1629,15 @@ class AddressParser:
         # so ensure we still mark province-only / ward+province inputs as "new" when there
         # is no explicit district hint in the text.
         if (province or ward) and not district and not district_hint_in_input:
-            resolved_is_new_format = True
-            candidate_is_new_format = True
+            ward_record_key = self._normalize_id_token(ward_id)
+            is_legacy_only_ward = bool(
+                ward_record_key
+                and ward_record_key in self.old_ward_records
+                and ward_record_key not in self.new_ward_records
+            )
+            if not is_legacy_only_ward:
+                resolved_is_new_format = True
+                candidate_is_new_format = True
 
         # Final guard: if we only saw a ward-prefixed token (no district prefix),
         # treat it as 2-level data and drop any inherited district.
@@ -1613,15 +1673,29 @@ class AddressParser:
             if ward_info.get("id") is not None:
                 ward_id = ward_info["id"]
             # Rehydrate from source records to avoid legacy-only aliases overriding canonical
-            # names. Prefer the registry that matches the resolved output format to avoid
-            # collisions where an old and new ward share the same numeric code.
+            # names. Prefer the registry that matches the resolved ward record (new vs old)
+            # to avoid collisions where an old and new ward share the same numeric code.
             ward_record_id = ward_info["id"]
-            if resolved_is_new_format is True:
+            ward_prefers_new = ward_info.get("is_new_format")
+            prefer_new_registry = None
+            if ward_prefers_new is True:
+                prefer_new_registry = True
+            elif ward_prefers_new is False:
+                prefer_new_registry = False
+            elif resolved_is_new_format is True:
+                prefer_new_registry = True
+            elif resolved_is_new_format is False:
+                prefer_new_registry = False
+            if prefer_new_registry is True:
                 record = self.new_ward_records.get(ward_record_id) or self.old_ward_records.get(
                     ward_record_id
                 )
-            else:
+            elif prefer_new_registry is False:
                 record = self.old_ward_records.get(ward_record_id) or self.new_ward_records.get(
+                    ward_record_id
+                )
+            else:
+                record = self.new_ward_records.get(ward_record_id) or self.old_ward_records.get(
                     ward_record_id
                 )
             if isinstance(record, dict):
@@ -1650,6 +1724,22 @@ class AddressParser:
                     district = recovered
                     district_id = parent_code
                     district_info = district_entry if isinstance(district_entry, dict) else None
+                    if not province and isinstance(district_entry, dict):
+                        province_code_old = self._normalize_id_token(
+                            district_entry.get("parent_code")
+                        )
+                        province_entry = (
+                            self.old_province_records.get(province_code_old)
+                            if province_code_old
+                            else None
+                        )
+                        if isinstance(province_entry, dict):
+                            province = (
+                                province_entry.get("name")
+                                or province_entry.get("full_name")
+                            )
+                            province_id = province_code_old
+                            province_info = province_entry
                     resolved_is_new_format = False
                     candidate_is_new_format = False
 
@@ -3145,6 +3235,84 @@ class AddressParser:
         if not isinstance(entry, dict):
             return None
         return entry.get("full_name") or entry.get("name") or entry.get("slug")
+
+    def _ensure_old_ward_name_index(self) -> None:
+        if self._old_ward_name_index is not None:
+            return
+        index: Dict[str, List[str]] = {}
+        for code, entry in self.old_ward_records.items():
+            if not isinstance(entry, dict):
+                continue
+            code_str = str(code).strip()
+            if not code_str:
+                continue
+            for key in ("full_name", "name"):
+                value = entry.get(key)
+                if not isinstance(value, str) or not value.strip():
+                    continue
+                value_std = self.standardize_name(value, False)
+                if not value_std:
+                    continue
+                bucket = index.setdefault(value_std, [])
+                if code_str not in bucket:
+                    bucket.append(code_str)
+        self._old_ward_name_index = index
+
+    def _ensure_old_ward_raw_name_index(self) -> None:
+        if self._old_ward_raw_name_index is not None:
+            return
+
+        def _key(value: str) -> str:
+            return re.sub(r"\s+", " ", (value or "").strip().lower())
+
+        index: Dict[str, List[str]] = {}
+        for code, entry in self.old_ward_records.items():
+            if not isinstance(entry, dict):
+                continue
+            code_str = str(code).strip()
+            if not code_str:
+                continue
+            for field in ("full_name", "name"):
+                value = entry.get(field)
+                if not isinstance(value, str) or not value.strip():
+                    continue
+                k = _key(value)
+                if not k:
+                    continue
+                bucket = index.setdefault(k, [])
+                if code_str not in bucket:
+                    bucket.append(code_str)
+        self._old_ward_raw_name_index = index
+
+    def _lookup_old_ward_record_by_exact_name(
+        self, ward_name: Optional[str]
+    ) -> Optional[Dict[str, Any]]:
+        if not ward_name:
+            return None
+        name_key = re.sub(r"\s+", " ", ward_name.strip().lower())
+        if not name_key:
+            return None
+        self._ensure_old_ward_raw_name_index()
+        index = self._old_ward_raw_name_index or {}
+        codes = index.get(name_key) or []
+        if len(codes) != 1:
+            return None
+        entry = self.old_ward_records.get(codes[0])
+        return entry if isinstance(entry, dict) else None
+
+    def _lookup_old_ward_record_by_name(self, ward_name: Optional[str]) -> Optional[Dict[str, Any]]:
+        if not ward_name:
+            return None
+        ward_key = self.standardize_name(ward_name, False)
+        if not ward_key:
+            return None
+        self._ensure_old_ward_name_index()
+        index = self._old_ward_name_index or {}
+        codes = index.get(ward_key) or []
+        if len(codes) != 1:
+            return None
+        entry = self.old_ward_records.get(codes[0])
+        return entry if isinstance(entry, dict) else None
 
     def _project_component(
         self, entry: Optional[Dict[str, Any]], component_id: Optional[Any]
