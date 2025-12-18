@@ -24,12 +24,18 @@ elif __name__ == "fuzz.parser":
     sys.modules.setdefault("parser", sys.modules[__name__])
 
 try:
-    from .search_engine import AddressSearchEngine
+    from . import search_engine as _search_engine
 except ImportError:  # Running as a standalone script without package context
     current_dir = Path(__file__).resolve().parent
     if str(current_dir) not in sys.path:
         sys.path.append(str(current_dir))
-    from search_engine import AddressSearchEngine
+    import search_engine as _search_engine
+
+# Keep the search_engine import path stable too; otherwise the persisted cache
+# created under `fuzz.search_engine` vs `search_engine` will be incompatible.
+AddressSearchEngine = _search_engine.AddressSearchEngine
+sys.modules.setdefault("search_engine", _search_engine)
+sys.modules.setdefault("fuzz.search_engine", _search_engine)
 
 SPECIAL_PROVINCE_MAP = {
     ("br vt", "br-vt", "brvt", "ba ria vung tau"): "Bà Rịa - Vũng Tàu",
