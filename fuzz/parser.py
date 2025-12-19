@@ -15,13 +15,29 @@ from rapidfuzz import fuzz as rf_fuzz
 
 logger = logging.getLogger(__name__)
 
+def _alias_module(mod, names) -> None:
+    """Register the same module object under multiple import paths."""
+    for name in names:
+        if not name:
+            continue
+        sys.modules.setdefault(name, mod)
+
+
 # Make the module import path stable for pickled cache objects.
-# The cache may be created when importing as either `parser` (script usage)
-# or `fuzz.parser` (package usage); alias both to avoid cache invalidation.
-if __name__ == "parser":
-    sys.modules.setdefault("fuzz.parser", sys.modules[__name__])
-elif __name__ == "fuzz.parser":
-    sys.modules.setdefault("parser", sys.modules[__name__])
+_this_module = sys.modules[__name__]
+_parts = __name__.split(".")
+_tail_two = ".".join(_parts[-2:]) if len(_parts) >= 2 else __name__
+_alias_module(
+    _this_module,
+    {
+        __name__,
+        "parser",
+        "fuzz.parser",
+        "address_parser.parser",
+        "llmtk.pkg.address_parser.parser",
+        _tail_two,
+    },
+)
 
 try:
     from . import search_engine as _search_engine
@@ -31,11 +47,24 @@ except ImportError:  # Running as a standalone script without package context
         sys.path.append(str(current_dir))
     import search_engine as _search_engine
 
-# Keep the search_engine import path stable too; otherwise the persisted cache
-# created under `fuzz.search_engine` vs `search_engine` will be incompatible.
 AddressSearchEngine = _search_engine.AddressSearchEngine
-sys.modules.setdefault("search_engine", _search_engine)
-sys.modules.setdefault("fuzz.search_engine", _search_engine)
+_search_parts = _search_engine.__name__.split(".")
+_search_tail_two = (
+    ".".join(_search_parts[-2:]) if len(_search_parts) >= 2 else _search_engine.__name__
+)
+_search_parent = ".".join(_parts[:-1])
+_alias_module(
+    _search_engine,
+    {
+        _search_engine.__name__,
+        "search_engine",
+        "fuzz.search_engine",
+        "address_parser.search_engine",
+        "llmtk.pkg.address_parser.search_engine",
+        _search_tail_two,
+        f"{_search_parent}.search_engine" if _search_parent else "",
+    },
+)
 
 SPECIAL_PROVINCE_MAP = {
     ("br vt", "br-vt", "brvt", "ba ria vung tau"): "Bà Rịa - Vũng Tàu",
@@ -104,8 +133,8 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 11
-    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v11.pkl"
+    _CACHE_VERSION: ClassVar[int] = 12
+    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v12.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
         Optional[Tuple[Tuple[str, Optional[float], Optional[int]], ...]]
@@ -902,6 +931,13 @@ class AddressParser:
 
         district_for_lookup = district if district else None
 
+        def _has_strict_region_hint() -> bool:
+            province_hint = bool(
+                province_for_lookup and (detected_prov or _appears_in_input(province))
+            )
+            district_hint = bool(district_for_lookup and district_hint_in_input)
+            return province_hint or district_hint
+
         def _update_format(
             current_value: Optional[bool], info_value: Optional[Dict[str, Any]]
         ) -> Optional[bool]:
@@ -921,7 +957,7 @@ class AddressParser:
             if ward
             else None
         )
-        if ward and ward_info is None:
+        if ward and ward_info is None and not _has_strict_region_hint():
             ward_info = self._lookup_ward_info(
                 ward, preferred_format=candidate_is_new_format
             )
@@ -1000,7 +1036,7 @@ class AddressParser:
                     district_for_lookup,
                     preferred_format=candidate_is_new_format,
                 )
-                if ward_info is None:
+                if ward_info is None and not _has_strict_region_hint():
                     ward_info = self._lookup_ward_info(
                         ward, preferred_format=candidate_is_new_format
                     )
@@ -1103,7 +1139,7 @@ class AddressParser:
                     district_for_lookup,
                     preferred_format=candidate_is_new_format,
                 )
-                if ward_info is None:
+                if ward_info is None and not _has_strict_region_hint():
                     ward_info = self._lookup_ward_info(
                         ward, preferred_format=candidate_is_new_format
                     )
@@ -1484,7 +1520,7 @@ class AddressParser:
                 if ward
                 else None
             )
-            if ward and ward_info is None:
+            if ward and ward_info is None and not _has_strict_region_hint():
                 ward_info = self._lookup_ward_info(
                     ward, preferred_format=candidate_is_new_format
                 )
@@ -1494,7 +1530,7 @@ class AddressParser:
                 ward_id = ward_info["id"]
             resolved_is_new_format = _update_format(resolved_is_new_format, ward_info)
 
-        if ward and ward_info is None:
+        if ward and ward_info is None and not _has_strict_region_hint():
             ward_key = self.standardize_name(ward, False)
             if ward_key and self.ward_lookup_by_name.get(ward_key):
                 legacy_record = None
@@ -1591,7 +1627,7 @@ class AddressParser:
                 district if district else None,
                 preferred_format=preferred_lookup_format,
             )
-            if not refreshed:
+            if not refreshed and not _has_strict_region_hint():
                 refreshed = self._lookup_ward_info(
                     ward,
                     preferred_format=preferred_lookup_format,
@@ -2542,6 +2578,123 @@ class AddressParser:
             result[code_str] = entry
         return result
 
+    def _repair_old_ward_parents(
+        self,
+        wards: Dict[str, Dict[str, Any]],
+        districts: Dict[str, Dict[str, Any]],
+        raw_source: Optional[Any] = None,
+    ) -> Dict[str, Dict[str, Any]]:
+        """
+        Ensure legacy ward entries point to a known district; infer the parent from
+        district names when `district_code` is missing or invalid.
+        """
+        if not wards:
+            return {}
+
+        raw_by_code: Dict[str, Dict[str, Any]] = {}
+        if isinstance(raw_source, list):
+            for entry in raw_source:
+                if not isinstance(entry, dict):
+                    continue
+                code = entry.get("code")
+                if code is None:
+                    continue
+                code_str = str(code).strip()
+                if code_str:
+                    raw_by_code[code_str] = entry
+
+        def _province_hint(code: str) -> Optional[str]:
+            raw = raw_by_code.get(code)
+            if not isinstance(raw, dict):
+                return None
+            province = raw.get("province_code")
+            if province is None:
+                return None
+            province_str = str(province).strip()
+            return province_str or None
+
+        district_index: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+        for district in districts.values():
+            key = self.standardize_name(
+                district.get("name") or district.get("full_name"), False
+            )
+            if key:
+                district_index[key].append(district)
+
+        cleaned: Dict[str, Dict[str, Any]] = {}
+        repaired_count = 0
+        dropped_count = 0
+
+        for code, ward in wards.items():
+            parent_code = ward.get("parent_code")
+            if parent_code and parent_code in districts:
+                cleaned[code] = ward
+                continue
+
+            ward_key = self.standardize_name(
+                ward.get("name") or ward.get("full_name"), False
+            )
+            if not ward_key:
+                dropped_count += 1
+                continue
+
+            province_hint = _province_hint(code)
+            candidates = district_index.get(ward_key, [])
+            if province_hint and candidates:
+                filtered = [
+                    dist
+                    for dist in candidates
+                    if dist.get("province_code") is not None
+                    and str(dist["province_code"]).strip() == province_hint
+                ]
+                if filtered:
+                    candidates = filtered
+
+            if len(candidates) == 1:
+                inferred_parent = self._normalize_id_token(candidates[0].get("code"))
+                if inferred_parent and inferred_parent in districts:
+                    ward["parent_code"] = inferred_parent
+                    cleaned[code] = ward
+                    repaired_count += 1
+                    continue
+
+            dropped_count += 1
+
+        if repaired_count or dropped_count:
+            logger.debug(
+                "Normalized legacy wards: fixed %d missing/invalid parents, dropped %d orphan entries",
+                repaired_count,
+                dropped_count,
+            )
+
+        return cleaned
+
+    def _filter_new_wards_by_province(
+        self,
+        wards: Dict[str, Dict[str, Any]],
+        provinces: Dict[str, Dict[str, Any]],
+    ) -> Dict[str, Dict[str, Any]]:
+        """Drop new-format wards whose `province_code` is missing or unknown."""
+        if not wards:
+            return {}
+
+        cleaned: Dict[str, Dict[str, Any]] = {}
+        dropped = 0
+        for code, entry in wards.items():
+            parent_code = self._normalize_id_token(entry.get("parent_code"))
+            if parent_code and parent_code in provinces:
+                entry["parent_code"] = parent_code
+                cleaned[code] = entry
+            else:
+                dropped += 1
+
+        if dropped:
+            logger.debug(
+                "Dropped %d new-format wards referencing unknown provinces", dropped
+            )
+
+        return cleaned
+
     def _load_entities_by_code(
         self,
         path: str,
@@ -2609,6 +2762,10 @@ class AddressParser:
         old_wards = self._load_entities_by_code(
             self.old_wards_path, parent_key="district_code"
         )
+        raw_old_wards = self._read_json_file(self.old_wards_path)
+        old_wards = self._repair_old_ward_parents(
+            old_wards, old_districts, raw_old_wards
+        )
 
         self.old_province_records = old_provinces
         self.old_district_records = old_districts
@@ -2654,6 +2811,7 @@ class AddressParser:
                 "administrative_unit_id": entry.get("administrative_unit_id"),
                 "is_new_format": True,
             }
+        new_wards = self._filter_new_wards_by_province(new_wards, new_provinces)
 
         self.new_province_records = new_provinces
         self.new_ward_records = new_wards
@@ -4729,6 +4887,8 @@ class AddressParser:
             ]
             if province_matches:
                 candidates = province_matches
+            else:
+                return None
 
         if district_key:
             district_key_stripped = self._strip_generic_prefix(district_key)
@@ -4749,6 +4909,8 @@ class AddressParser:
             ]
             if district_matches:
                 candidates = district_matches
+            else:
+                return None
 
         if preferred_format is not None:
             format_matches = [

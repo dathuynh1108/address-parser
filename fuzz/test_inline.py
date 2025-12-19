@@ -12,67 +12,8 @@ from parser import AddressParser
 
 tests = [
     {
-        "mst_address": "Số 30, ngõ 123, đường Thụy Phương, Phường Thụy Phương, Quận Bắc Từ Liêm, Thành phố Hà Nội, Việt Nam",
+        "mst_address": "02, Cao Bá Quát, Phường An Lạc, Quận Ninh Kiều, Thành phố Cần Thơ, Việt Nam",
     },
-    {
-        "mst_address": "Tầng 8 - Số 9 Đào Duy Anh, Phường Phương Liên, Quận Đống đa, Hà Nội",
-    },
-    {
-        "mst_address": "90 Tôn Thất Thiệp, Phường Thuận Hòa, Thành phố Huế, Tỉnh Thừa Thiên Huế, Việt Nam",
-    },
-    {
-        "mst_address": "Phòng 12, tầng 6, toà nhà Thành Đạt, số 3 Lê Thánh Tông, Phường Máy Tơ, Quận Ngô Quyền, Thành phố Hải Phòng, Việt Nam",
-    },
-    {
-        "mst_address": "Khu công nghiệp Nam Cấm, Xã Nghi Xá, Huyện Nghi Lộc, Nghệ An",
-    },{
-    "mst_address": "197/15 Đường Võ Văn Ngân, Khu phố 9, Phường Linh Chiểu, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "Tầng 5 , Tòa nhà xổ số kiến thiết Thành phố Hồ Chí Minh, Số 77 Trần Nhân Tôn, Phường 09, Quận 5, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "Số 128A Kha Vạn Cân, Phường Trường Thọ, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "Số 31, đường sô 357, khu nhà ở Phước Long B, Phường Phước Long B, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "91/5/1 Đường số 8, Khu phố 3, Phường Linh Trung, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "Khu đô thị Quảng trường trung tâm thành phố, Phường Ninh Khánh, Thành phố Ninh Bình, Tỉnh Ninh Bình, Việt Nam"
-  },
-  {
-    "mst_address": "14A Đường số 20, Phường Phú Hữu, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "Số 74/5 Đường số 7, khu phố 3, Phường Linh Trung, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "76 Đường số 17, Khu Phố 5, Phường Bình Chiểu, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "Số 12/14/10 Đường 49, Phường Hiệp Bình Chánh, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "87-89 Xa Lộ Hà Nội, Phường Thảo Điền, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "852 Phạm Văn Đồng, Phường Hiệp Bình Chánh, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "35/27 Đường số 6, Phường Hiệp Bình Phước, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "66/1 Đường Số 4, Khu Phố 5, Phường Trường Thọ, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-    "mst_address": "149A Dương Đình Hội, Phường Phước Long B, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam"
-  },
-  {
-      "mst_address": "Tổ dân phố Tó, Phường Tây Mỗ, Quận Nam Từ Liêm, Thành phố Hà Nội, Việt Nam"
-  }
 ]
 
 if __name__ == "__main__":
