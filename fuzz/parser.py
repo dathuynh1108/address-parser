@@ -1413,6 +1413,27 @@ class AddressParser:
             key = re.sub(r"^(tinh|thanh pho|tp)\s+", "", key).strip()
             return key
 
+        def _is_legacy_only_ward(
+            ward_id_value: Optional[str],
+            ward_name_value: Optional[str],
+            province_name_value: Optional[str],
+        ) -> bool:
+            ward_key = self._normalize_id_token(ward_id_value)
+            if not ward_key:
+                return False
+            if ward_key not in self.old_ward_records or ward_key in self.new_ward_records:
+                return False
+            if ward_name_value:
+                candidate = self._lookup_ward_info(
+                    ward_name_value,
+                    province_name_value if province_name_value else None,
+                    None,
+                    preferred_format=True,
+                )
+                if candidate and candidate.get("is_new_format") is True:
+                    return False
+            return True
+
         # If the inferred district collapses to the same region key as the province and the
         # input does not explicitly contain a district-level prefix, treat it as a 2-level
         # (ward+province) "new" address. This prevents overfitting to old-format candidates
@@ -1452,13 +1473,12 @@ class AddressParser:
             resolved_is_new_format = True
             candidate_is_new_format = True
 
-        # If there is no district prefix/hint in the input, avoid "inventing" a district
+        # If there is no explicit district prefix in the input, avoid "inventing" a district
         # purely from the selected old-format candidate / ward metadata unless the district
         # is clearly present as its own comma-separated segment.
         if (
             province
             and district
-            and not district_hint_in_input
             and not district_prefix_in_input
         ):
             district_key = _canonical_region_key(district)
@@ -1559,12 +1579,7 @@ class AddressParser:
         # In that case, keep legacy ward IDs stable and let district inference (from old metadata)
         # decide whether to promote the result to old format.
         if ward and not district and not district_hint_in_input:
-            ward_record_key = self._normalize_id_token(ward_id)
-            is_legacy_only_ward = bool(
-                ward_record_key
-                and ward_record_key in self.old_ward_records
-                and ward_record_key not in self.new_ward_records
-            )
+            is_legacy_only_ward = _is_legacy_only_ward(ward_id, ward, province)
             if not is_legacy_only_ward:
                 resolved_is_new_format = True
                 candidate_is_new_format = True
@@ -1587,7 +1602,7 @@ class AddressParser:
                         if canonical:
                             ward = canonical
 
-        if district_hint_in_input and resolved_is_new_format is not False:
+        if district_prefix_in_input and resolved_is_new_format is not False:
             resolved_is_new_format = False
 
         if (
@@ -1683,18 +1698,35 @@ class AddressParser:
         # so ensure we still mark province-only / ward+province inputs as "new" when there
         # is no explicit district hint in the text.
         if (province or ward) and not district and not district_hint_in_input:
-            ward_record_key = self._normalize_id_token(ward_id)
-            is_legacy_only_ward = bool(
-                ward_record_key
-                and ward_record_key in self.old_ward_records
-                and ward_record_key not in self.new_ward_records
-            )
+            is_legacy_only_ward = _is_legacy_only_ward(ward_id, ward, province)
             if not is_legacy_only_ward:
                 resolved_is_new_format = True
                 candidate_is_new_format = True
 
         # Final guard: if we only saw a ward-prefixed token (no district prefix),
         # treat it as 2-level data and drop any inherited district.
+        if district and not district_prefix_in_input:
+            district_key = _canonical_region_key(district)
+            province_key = _canonical_region_key(province)
+            has_explicit_district_segment = False
+            if district_key and input_segments:
+                for segment_std, _ in input_segments:
+                    if _canonical_region_key(segment_std) == district_key:
+                        has_explicit_district_segment = True
+                        break
+            if (
+                district_key
+                and province_key
+                and district_key == province_key
+                and not explicit_city_district_in_input
+            ):
+                has_explicit_district_segment = False
+            if not has_explicit_district_segment:
+                district = ""
+                district_id = None
+                district_info = None
+                resolved_is_new_format = True
+                candidate_is_new_format = True
         # Refresh lookup metadata to reflect any late-stage overrides
         province_info = self._lookup_province_info(province) if province else None
         if not province:
@@ -1780,6 +1812,24 @@ class AddressParser:
                     recovered = district_entry.get("name") or district_entry.get(
                         "full_name"
                     )
+                if recovered and not (district_prefix_in_input or district_hint_in_input):
+                    district_key = _canonical_region_key(recovered)
+                    province_key = _canonical_region_key(province)
+                    has_explicit_district_segment = False
+                    if district_key and input_segments:
+                        for segment_std, _ in input_segments:
+                            if _canonical_region_key(segment_std) == district_key:
+                                has_explicit_district_segment = True
+                                break
+                    if (
+                        district_key
+                        and province_key
+                        and district_key == province_key
+                        and not explicit_city_district_in_input
+                    ):
+                        has_explicit_district_segment = False
+                    if not has_explicit_district_segment:
+                        recovered = None
                 if recovered:
                     district = recovered
                     district_id = parent_code
@@ -1815,7 +1865,7 @@ class AddressParser:
         # Hard rule: if the input explicitly includes a district-level prefix
         # (e.g. 'Huyện/Quận'), treat the address as old format regardless of any
         # ward mapping that may point to new-format records.
-        if district_hint_in_input:
+        if district_prefix_in_input:
             resolved_is_new_format = False
             candidate_is_new_format = False
 
@@ -3353,13 +3403,27 @@ class AddressParser:
         target_std = self.standardize_name(province_name, False)
         if not target_std:
             return None
+        target_stripped = self._strip_generic_prefix(target_std)
+        targets = {target_std}
+        if target_stripped:
+            targets.add(target_stripped)
         for code, entry in self.new_province_records.items():
             if not isinstance(entry, dict):
                 continue
-            for key in ("full_name", "name"):
+            for key in (
+                "full_name",
+                "name",
+                "full_name_en",
+                "name_en",
+                "slug",
+                "code_name",
+            ):
                 value = entry.get(key)
                 value_std = self.standardize_name(value, False) if value else None
-                if value_std and value_std == target_std:
+                if not value_std:
+                    continue
+                value_stripped = self._strip_generic_prefix(value_std)
+                if value_std in targets or (value_stripped and value_stripped in targets):
                     return str(code)
         return None
 
@@ -6273,10 +6337,12 @@ class AddressParser:
                 # "TP/Thành phố" segments frequently denote the province-level municipality
                 # ("TP Hà Nội", "TP Đà Nẵng", ...). When the fragment matches a known province,
                 # do not treat it as a district hint.
-                if prefix in {"thanh pho", "tp"} and self.province_names_std:
+                if prefix in {"thanh pho", "tp"}:
                     if fragment in self.province_names_std:
                         continue
                     if prov and partial_ratio(fragment, prov) >= 90:
+                        continue
+                    if self._lookup_new_province_id_by_name(fragment):
                         continue
                 # Avoid false positives from road names like "đường huyện 74":
                 # a numeric fragment after "huyện/tx/..." is not a valid district name.
