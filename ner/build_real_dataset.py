@@ -21,11 +21,13 @@ JsonValue = Union[Dict[str, Any], str]
 
 
 def detect_file_kind(path: Path) -> str:
-    with path.open("r", encoding="utf-8") as handle:
+    with path.open("r", encoding="utf-8-sig") as handle:
         while True:
             char = handle.read(1)
             if not char:
                 return "empty"
+            if char == "\ufeff":
+                continue
             if char.isspace():
                 continue
             if char == "[":
@@ -44,7 +46,7 @@ def iter_json_objects(path: Path, mode: str) -> Iterator[JsonValue]:
 
 
 def _iter_json_lines(path: Path) -> Iterator[JsonValue]:
-    with path.open("r", encoding="utf-8") as handle:
+    with path.open("r", encoding="utf-8-sig") as handle:
         for raw_line in handle:
             line = raw_line.strip()
             if not line or line in {"[", "]", ","}:
@@ -58,7 +60,7 @@ def _iter_json_lines(path: Path) -> Iterator[JsonValue]:
 
 
 def _iter_json_array(path: Path, mode: str) -> Iterator[JsonValue]:
-    with path.open("r", encoding="utf-8") as handle:
+    with path.open("r", encoding="utf-8-sig") as handle:
         if mode == "memory":
             # Read the entire file into memory
             content = handle.read()
@@ -71,36 +73,70 @@ def _iter_json_array(path: Path, mode: str) -> Iterator[JsonValue]:
             except json.JSONDecodeError:
                 return
             return
-        
-        # Stream parsing
-        buffer: list[str] = []
-        depth = 0
-        capturing = False
-        for raw_line in handle:
-            line = raw_line.strip()
-            if not line or line == ",":
-                continue
-            if line.startswith("]"):
+
+        decoder = json.JSONDecoder()
+        buffer = ""
+        in_array = False
+        while True:
+            chunk = handle.read(65536)
+            if not chunk:
                 break
-            if not capturing:
-                brace_idx = line.find("{")
-                if brace_idx == -1:
+            buffer += chunk
+            idx = 0
+            if not in_array:
+                while idx < len(buffer) and buffer[idx].isspace():
+                    idx += 1
+                if idx < len(buffer) and buffer[idx] == "\ufeff":
+                    idx += 1
+                if idx < len(buffer) and buffer[idx] == "[":
+                    idx += 1
+                    in_array = True
+                else:
+                    buffer = buffer[idx:]
                     continue
-                line = line[brace_idx:]
-                capturing = True
-            buffer.append(line)
-            depth += line.count("{")
-            depth -= line.count("}")
-            if depth == 0 and buffer:
-                text = " ".join(buffer).strip()
-                if text.endswith(","):
-                    text = text[:-1].rstrip()
+            while True:
+                while idx < len(buffer) and buffer[idx].isspace():
+                    idx += 1
+                if idx < len(buffer) and buffer[idx] == ",":
+                    idx += 1
+                    continue
+                if idx < len(buffer) and buffer[idx] == "]":
+                    return
+                if idx >= len(buffer):
+                    break
                 try:
-                    yield json.loads(text)
+                    item, end = decoder.raw_decode(buffer, idx)
                 except json.JSONDecodeError:
-                    pass
-                buffer = []
-                capturing = False
+                    break
+                yield item
+                idx = end
+            buffer = buffer[idx:]
+
+        idx = 0
+        if not in_array:
+            while idx < len(buffer) and buffer[idx].isspace():
+                idx += 1
+            if idx < len(buffer) and buffer[idx] == "\ufeff":
+                idx += 1
+            if idx < len(buffer) and buffer[idx] == "[":
+                idx += 1
+                in_array = True
+        while in_array:
+            while idx < len(buffer) and buffer[idx].isspace():
+                idx += 1
+            if idx < len(buffer) and buffer[idx] == ",":
+                idx += 1
+                continue
+            if idx < len(buffer) and buffer[idx] == "]":
+                return
+            if idx >= len(buffer):
+                return
+            try:
+                item, end = decoder.raw_decode(buffer, idx)
+            except json.JSONDecodeError:
+                return
+            yield item
+            idx = end
 
 
 def extract_address(entry: JsonValue, *, field: str) -> Optional[str]:
@@ -124,12 +160,13 @@ def load_addresses(
     def generator() -> Iterator[str]:
         count = 0
         for entry in iter_json_objects(path, mode):
+            address = extract_address(entry, field=field)
+            if not address:
+                continue
             if limit is not None and count >= limit:
                 break
             count += 1
-            address = extract_address(entry, field=field)
-            if address:
-                yield address
+            yield address
 
     if mode == "memory":
         return list(generator())
@@ -377,11 +414,30 @@ def build_dataset(
             if not district_candidates:
                 district_candidates = [None]
 
+            def _component_present(label: str, values: List[Optional[str]]) -> bool:
+                key_map = {
+                    "PROVINCE": "province",
+                    "DISTRICT": "district",
+                    "WARD": "ward",
+                    "STREET": "street",
+                }
+                key = key_map[label]
+                for value in values:
+                    if not value:
+                        continue
+                    candidate = label_tokens(address, **{key: value})
+                    if candidate.matches.get(label):
+                        return True
+                return False
+
+            district_present = bool(district and _component_present("DISTRICT", district_candidates))
+            street_present = bool(street and _component_present("STREET", [street]))
+
             labeling: Optional[Any] = None
             required_matches = ["PROVINCE", "WARD"]
-            if district:
+            if district_present:
                 required_matches.append("DISTRICT")
-            if street:
+            if street_present:
                 required_matches.append("STREET")
 
             for province_value in province_candidates:
