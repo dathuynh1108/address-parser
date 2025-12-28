@@ -395,6 +395,35 @@ class AddressParser:
         district_hint_in_input = bool(raw_detected_dist)
         district_present_in_input = district_hint_in_input
 
+        def _is_province_level_city(city_name: str) -> bool:
+            city_name = (city_name or "").strip()
+            if not city_name:
+                return False
+            normalized_city_name = (
+                self._detect_special_province_token(city_name) or city_name
+            )
+            province_id_new = self._lookup_new_province_id_by_name(normalized_city_name)
+            if not province_id_new:
+                return False
+            province_record = (
+                self.external_new_province_records.get(province_id_new)
+                or self.new_province_records.get(province_id_new)
+            )
+            return bool(
+                isinstance(province_record, dict)
+                and province_record.get("administrative_unit_id") == 1
+            )
+
+        def _is_known_district_alias(candidate: Optional[str]) -> bool:
+            candidate = (candidate or "").strip()
+            if not candidate:
+                return False
+            return bool(
+                self._validate_detected_value(
+                    candidate, self.invert_district_to_indices
+                )
+            )
+
         # If any comma-separated segment explicitly starts with a district-level
         # prefix (e.g. "Huyện ...", "Quận ...", "Thị xã ..."), treat the input as
         # old format even if prefix-based name resolution fails.
@@ -426,53 +455,193 @@ class AddressParser:
                     break
                 if first == "tp" and len(tokens) >= 2:
                     city_name = " ".join(tokens[1:]).strip()
-                    if city_name:
-                        normalized_city_name = (
-                            self._detect_special_province_token(city_name) or city_name
-                        )
-                        province_id_new = self._lookup_new_province_id_by_name(
-                            normalized_city_name
-                        )
-                        province_record = (
-                            self.external_new_province_records.get(province_id_new)
-                            or self.new_province_records.get(province_id_new)
-                            if province_id_new
-                            else None
-                        )
-                        is_central_municipality = bool(
-                            isinstance(province_record, dict)
-                            and province_record.get("administrative_unit_id") == 1
-                        )
-                        if not is_central_municipality:
+                    if city_name and not _is_province_level_city(city_name):
+                        if (
+                            _is_known_district_alias(f"tp {city_name}")
+                            or _is_known_district_alias(f"thanh pho {city_name}")
+                            or _is_known_district_alias(city_name)
+                        ):
                             district_prefix_in_input = True
                             district_hint_in_input = True
                             district_present_in_input = True
                             break
                 if len(tokens) >= 3 and f"{tokens[0]} {tokens[1]}" == "thanh pho":
                     city_name = " ".join(tokens[2:]).strip()
-                    if city_name:
-                        normalized_city_name = (
-                            self._detect_special_province_token(city_name) or city_name
-                        )
-                        province_id_new = self._lookup_new_province_id_by_name(
-                            normalized_city_name
-                        )
-                        province_record = (
-                            self.external_new_province_records.get(province_id_new)
-                            or self.new_province_records.get(province_id_new)
-                            if province_id_new
-                            else None
-                        )
-                        is_central_municipality = bool(
-                            isinstance(province_record, dict)
-                            and province_record.get("administrative_unit_id") == 1
-                        )
-                        if not is_central_municipality:
+                    if city_name and not _is_province_level_city(city_name):
+                        if (
+                            _is_known_district_alias(f"thanh pho {city_name}")
+                            or _is_known_district_alias(f"tp {city_name}")
+                            or _is_known_district_alias(city_name)
+                        ):
                             district_prefix_in_input = True
                             district_hint_in_input = True
                             district_present_in_input = True
                             break
 
+        if not district_prefix_in_input and input_segments:
+            for segment_std, segment_raw in input_segments:
+                if not segment_std:
+                    continue
+                tokens = [tok for tok in segment_std.split() if tok]
+                if not tokens:
+                    continue
+                raw_lower = (segment_raw or "").strip().lower()
+
+                def _matches_known_district(
+                    start_index: int,
+                    *,
+                    min_tokens: int,
+                    max_tokens: int,
+                ) -> bool:
+                    if start_index >= len(tokens):
+                        return False
+                    max_len = min(len(tokens) - start_index, max_tokens)
+                    for length in range(min_tokens, max_len + 1):
+                        candidate = " ".join(tokens[start_index : start_index + length])
+                        if self._validate_detected_value(
+                            candidate, self.invert_district_to_indices
+                        ):
+                            return True
+                    return False
+
+                def _matches_prefix_or_fragment(
+                    prefix_start: int,
+                    fragment_start: int,
+                    *,
+                    min_prefix_tokens: int,
+                    max_prefix_tokens: int,
+                ) -> bool:
+                    if _matches_known_district(
+                        prefix_start,
+                        min_tokens=min_prefix_tokens,
+                        max_tokens=max_prefix_tokens,
+                    ):
+                        return True
+                    return _matches_known_district(
+                        fragment_start,
+                        min_tokens=1,
+                        max_tokens=3,
+                    )
+
+                for idx, token in enumerate(tokens):
+                    if token in {"quan", "q"}:
+                        prev = tokens[idx - 1] if idx > 0 else ""
+                        if prev in {"lo", "lot"}:
+                            continue
+                        if idx + 1 < len(tokens) and tokens[idx + 1].isdigit():
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                        if _matches_prefix_or_fragment(
+                            idx,
+                            idx + 1,
+                            min_prefix_tokens=2,
+                            max_prefix_tokens=4,
+                        ):
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                        continue
+
+                    if token == "dac" and idx + 1 < len(tokens) and tokens[idx + 1] == "khu":
+                        if _matches_prefix_or_fragment(
+                            idx,
+                            idx + 2,
+                            min_prefix_tokens=3,
+                            max_prefix_tokens=5,
+                        ):
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                        continue
+
+                    if token in {"huyen", "h"}:
+                        prev = tokens[idx - 1] if idx > 0 else ""
+                        if prev == "duong":
+                            continue
+                        if token == "h":
+                            if not raw_lower.startswith(("h.", "huyen")):
+                                continue
+                        if token == "huyen" and not (
+                            "huyen" in raw_lower or re.search(r"\bhuyen\b", raw_lower)
+                        ):
+                            continue
+                        if _matches_prefix_or_fragment(
+                            idx,
+                            idx + 1,
+                            min_prefix_tokens=2,
+                            max_prefix_tokens=4,
+                        ):
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                        continue
+
+                    if token == "thi" and idx + 1 < len(tokens) and tokens[idx + 1] == "xa":
+                        if _matches_prefix_or_fragment(
+                            idx,
+                            idx + 2,
+                            min_prefix_tokens=3,
+                            max_prefix_tokens=5,
+                        ):
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                        continue
+
+                    if token == "tx":
+                        if _matches_prefix_or_fragment(
+                            idx,
+                            idx + 1,
+                            min_prefix_tokens=2,
+                            max_prefix_tokens=4,
+                        ):
+                            district_prefix_in_input = True
+                            district_hint_in_input = True
+                            district_present_in_input = True
+                            break
+                        continue
+
+                    if token == "tp" and idx + 1 < len(tokens):
+                        city_name = " ".join(tokens[idx + 1 :]).strip()
+                        if city_name and not _is_province_level_city(city_name):
+                            if _matches_prefix_or_fragment(
+                                idx,
+                                idx + 1,
+                                min_prefix_tokens=2,
+                                max_prefix_tokens=5,
+                            ):
+                                district_prefix_in_input = True
+                                district_hint_in_input = True
+                                district_present_in_input = True
+                                break
+                        continue
+
+                    if (
+                        token == "thanh"
+                        and idx + 2 < len(tokens)
+                        and tokens[idx + 1] == "pho"
+                    ):
+                        city_name = " ".join(tokens[idx + 2 :]).strip()
+                        if city_name and not _is_province_level_city(city_name):
+                            if _matches_prefix_or_fragment(
+                                idx,
+                                idx + 2,
+                                min_prefix_tokens=3,
+                                max_prefix_tokens=6,
+                            ):
+                                district_prefix_in_input = True
+                                district_hint_in_input = True
+                                district_present_in_input = True
+                                break
+                        continue
+                if district_prefix_in_input:
+                    break
         def _expected_district_for_resolution() -> Optional[str]:
             if not district_hint_in_input:
                 return None
@@ -5703,7 +5872,9 @@ class AddressParser:
             if not standardized or standardized in processed:
                 continue
             processed.add(standardized)
-            parts = [p for p in standardized.split() if p]
+            raw_parts = [p for p in standardized.split() if p]
+            parts = [self._normalize_token_basic(p) for p in raw_parts]
+            parts = [p for p in parts if p]
             if not parts:
                 continue
 
@@ -6009,6 +6180,12 @@ class AddressParser:
                                 segment_idx >= 0 and segment_idx >= len(segments) - 1
                             )
                             if is_tail_segment:
+                                coverage = _segment_match_ratio(
+                                    segment_idx, idx, seq_len
+                                )
+                                if coverage >= 0.6:
+                                    allow_removal = True
+                            elif segment_idx > 0:
                                 coverage = _segment_match_ratio(
                                     segment_idx, idx, seq_len
                                 )
