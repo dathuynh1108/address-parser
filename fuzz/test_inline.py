@@ -12,25 +12,7 @@ from parser import AddressParser
 
 tests = [
     {
-        "mst_address": "Đàm Quang Trung, Phường Hợp Giang, Thành phố Cao Bằng, Cao Bằng",
-    },
-    {
-        "mst_address": "123, Phường Nguyễn Thái Bình, Quận 1, TP Hồ Chí Minh, Việt Nam",
-    },
-    {
-        "mst_address": "Số nhà 039, đường Hoàng Liên, Phường Lào Cai, Tỉnh Lào Cai, Việt Nam",
-    },
-    {
-        "mst_address": "Thôn Lạc Xuân, Xã Kỳ Lạc, Tỉnh Hà Tĩnh, Việt Nam",
-    },
-    {
-        "mst_address": "207/41/14 Phạm Đăng Giảng, Phường Bình Hưng Hòa, TP Hồ Chí Minh, Việt Nam",
-    },
-    {
-        "mst_address": "89 Đường Kênh Nước Đen, Phường Bình Hưng Hòa, TP Hồ Chí Minh, Việt Nam",
-    },
-    {
-        "mst_address": "308/4 đường Đông Hưng Thuận 2, khu phố 69, Phường Đông Hưng Thuận, TP Hồ Chí Minh, Việt Nam",
+        "mst_address": "Lê Duẩn, Phường Phú Thuận, Thành phố Huế, Tỉnh Thừa Thiên Huế, Việt Nam",
     }
 ]
 

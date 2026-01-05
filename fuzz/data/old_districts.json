@@ -5644,12 +5644,7 @@
     "full_name_en": "Thu Duc City",
     "code_name": "thu_duc",
     "province_code": "79",
-    "administrative_unit_id": 3,
-    "legacy_names": [
-      "Quận 2",
-      "Quận 9",
-      "Quận Thủ Đức"
-    ]
+    "administrative_unit_id": 3
   },
   {
     "code": "770",

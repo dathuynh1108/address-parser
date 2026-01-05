@@ -427,6 +427,12 @@ class AddressParser:
         # If any comma-separated segment explicitly starts with a district-level
         # prefix (e.g. "Huyện ...", "Quận ...", "Thị xã ..."), treat the input as
         # old format even if prefix-based name resolution fails.
+        has_tinh_prefix = False
+        if input_segments:
+            for segment_std, _ in input_segments:
+                if segment_std and segment_std.startswith("tinh "):
+                    has_tinh_prefix = True
+                    break
         district_prefix_in_input = False
         if input_segments:
             for segment_std, segment_raw in input_segments:
@@ -440,6 +446,8 @@ class AddressParser:
                     district_prefix_in_input = True
                     district_hint_in_input = True
                     district_present_in_input = True
+                    if not raw_detected_dist and segment_raw:
+                        raw_detected_dist = str(segment_raw).strip(" ,;.-")
                     break
                 if first == "h":
                     raw = (segment_raw or "").strip().lower()
@@ -447,16 +455,20 @@ class AddressParser:
                         district_prefix_in_input = True
                         district_hint_in_input = True
                         district_present_in_input = True
+                        if not raw_detected_dist and segment_raw:
+                            raw_detected_dist = str(segment_raw).strip(" ,;.-")
                         break
                 if len(tokens) >= 2 and f"{tokens[0]} {tokens[1]}" == "thi xa":
                     district_prefix_in_input = True
                     district_hint_in_input = True
                     district_present_in_input = True
+                    if not raw_detected_dist and segment_raw:
+                        raw_detected_dist = str(segment_raw).strip(" ,;.-")
                     break
                 if first == "tp" and len(tokens) >= 2:
                     city_name = " ".join(tokens[1:]).strip()
-                    if city_name and not _is_province_level_city(city_name):
-                        if (
+                    if city_name and (has_tinh_prefix or not _is_province_level_city(city_name)):
+                        if has_tinh_prefix or (
                             _is_known_district_alias(f"tp {city_name}")
                             or _is_known_district_alias(f"thanh pho {city_name}")
                             or _is_known_district_alias(city_name)
@@ -464,11 +476,13 @@ class AddressParser:
                             district_prefix_in_input = True
                             district_hint_in_input = True
                             district_present_in_input = True
+                            if not raw_detected_dist and segment_raw:
+                                raw_detected_dist = str(segment_raw).strip(" ,;.-")
                             break
                 if len(tokens) >= 3 and f"{tokens[0]} {tokens[1]}" == "thanh pho":
                     city_name = " ".join(tokens[2:]).strip()
-                    if city_name and not _is_province_level_city(city_name):
-                        if (
+                    if city_name and (has_tinh_prefix or not _is_province_level_city(city_name)):
+                        if has_tinh_prefix or (
                             _is_known_district_alias(f"thanh pho {city_name}")
                             or _is_known_district_alias(f"tp {city_name}")
                             or _is_known_district_alias(city_name)
@@ -476,6 +490,8 @@ class AddressParser:
                             district_prefix_in_input = True
                             district_hint_in_input = True
                             district_present_in_input = True
+                            if not raw_detected_dist and segment_raw:
+                                raw_detected_dist = str(segment_raw).strip(" ,;.-")
                             break
 
         if not district_prefix_in_input and input_segments:
@@ -725,6 +741,9 @@ class AddressParser:
             elif raw_detected_dist:
                 district = raw_detected_dist
                 district_id = None
+        elif not district and raw_detected_dist and district_prefix_in_input:
+            district = raw_detected_dist
+            district_id = None
 
         if district and detected_dist and district != detected_dist:
             district_std = self.standardize_name(district, False)
@@ -1138,6 +1157,22 @@ class AddressParser:
         if enforced_new_ward_entry is not None:
             ward_info = enforced_new_ward_entry
 
+        def _ward_prefix_from_value(value: Optional[str]) -> Optional[str]:
+            if not value:
+                return None
+            std = self.standardize_name(value, False)
+            if not std:
+                return None
+            if std.startswith(("phuong ", "p ")):
+                return "phuong"
+            if std.startswith(("xa ", "x ")):
+                return "xa"
+            if std.startswith(("thi tran ", "tt ")):
+                return "thi tran"
+            if std.startswith("dac khu "):
+                return "dac khu"
+            return None
+
         raw_ward_segment = None
         if input_segments:
             for segment_std, segment_raw in input_segments:
@@ -1146,6 +1181,7 @@ class AddressParser:
                 if segment_std.startswith(("phuong ", "p ", "xa ", "thi tran ")):
                     raw_ward_segment = str(segment_raw).strip(" ,;.-")
                     break
+        ward_prefix_hint = _ward_prefix_from_value(raw_ward_segment)
 
         if raw_ward_segment:
             exact_old = self._lookup_old_ward_record_by_exact_name(raw_ward_segment)
@@ -1963,6 +1999,16 @@ class AddressParser:
                         "full_name"
                     )
                     ward_info["name"] = record.get("name") or ward_info.get("name")
+
+        if ward_info and ward_prefix_hint:
+            entry_prefix = _ward_prefix_from_value(
+                ward_info.get("full_name") or ward_info.get("name") or ward
+            )
+            if entry_prefix and entry_prefix != ward_prefix_hint:
+                ward_info = None
+                ward_id = None
+                if raw_ward_segment:
+                    ward = raw_ward_segment
 
         if not district and ward_id:
             ward_record_key = self._normalize_id_token(ward_id)
@@ -6409,9 +6455,13 @@ class AddressParser:
                     and record.get("administrative_unit_id") == 1
                 )
 
-            m = province_tinh_pref.search(s)
-            if m:
-                fragment = (m.group(1) or "").strip()
+            def _looks_like_road_prefix(tokens: List[str]) -> bool:
+                if not tokens:
+                    return False
+                return tokens[0] == "lo"
+
+            for match in province_tinh_pref.finditer(s):
+                fragment = (match.group(1) or "").strip()
                 fragment = _trim_province_fragment(fragment)
                 frag_tokens = [tok for tok in fragment.split() if tok]
                 if len(frag_tokens) == 1 and len(frag_tokens[0]) <= 2:
@@ -6419,6 +6469,8 @@ class AddressParser:
                     frag_tokens = []
                 while frag_tokens and frag_tokens[-1] in {"viet", "nam", "vietnam"}:
                     frag_tokens.pop()
+                if _looks_like_road_prefix(frag_tokens):
+                    continue
                 fragment = " ".join(frag_tokens)
                 if fragment in {"hcm", "hcmc", "sai gon", "saigon", "sg"} or (
                     frag_tokens and frag_tokens[0] in {"hcm", "hcmc", "sg"}
@@ -6426,7 +6478,10 @@ class AddressParser:
                     prov = "ho chi minh"
                 else:
                     prov = _pick_best(fragment, province_choices)
-            else:
+                if prov:
+                    break
+
+            if not prov:
                 m_city = re.search(
                     rf"{prefix_anchor}\b(?:thanh pho|tp)\b\s+([a-z0-9 ]+?)(?={admin_boundary})",
                     s,
