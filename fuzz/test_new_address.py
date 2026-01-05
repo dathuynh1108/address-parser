@@ -67,6 +67,15 @@ def _has_district_prefix(parser: AddressParser, address: str) -> bool:
     raw_lower = address.lower()
     full_std = parser.standardize_name(address, False)
     tokens_full = [tok for tok in full_std.split() if tok]
+    has_province_segment = False
+    for segment_std, _ in parser._split_address_segments(address):
+        if not segment_std:
+            continue
+        if segment_std in parser.province_names_std and not segment_std.startswith(
+            ("tp ", "thanh pho ")
+        ):
+            has_province_segment = True
+            break
     for idx, tok in enumerate(tokens_full):
         if tok in {"quan", "q", "tx"}:
             return True
@@ -93,7 +102,10 @@ def _has_district_prefix(parser: AddressParser, address: str) -> bool:
                 while city_tokens and city_tokens[-1] in {"viet", "nam", "vietnam"}:
                     city_tokens.pop()
                 city_key = " ".join(city_tokens)
-                if city_key and not _is_province_level_city(parser, city_key):
+                if city_key and (
+                    has_province_segment
+                    or not _is_province_level_city(parser, city_key)
+                ):
                     return True
             if (
                 prefix == "thanh"
@@ -104,7 +116,10 @@ def _has_district_prefix(parser: AddressParser, address: str) -> bool:
                 while city_tokens and city_tokens[-1] in {"viet", "nam", "vietnam"}:
                     city_tokens.pop()
                 city_key = " ".join(city_tokens)
-                if city_key and not _is_province_level_city(parser, city_key):
+                if city_key and (
+                    has_province_segment
+                    or not _is_province_level_city(parser, city_key)
+                ):
                     return True
     return False
 
