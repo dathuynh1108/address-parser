@@ -135,7 +135,7 @@ class AddressParser:
         "search_engine",
     )
     _CACHE_VERSION: ClassVar[int] = 12
-    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v12.pkl"
+    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v101.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
         Optional[Tuple[Tuple[str, Optional[float], Optional[int]], ...]]
