@@ -12,11 +12,8 @@ from parser import AddressParser
 
 tests = [
     {
-        "mst_address": "254 Nguyễn Thái Bình, Phường 12, Quận Tân Bình, Thành phố Hồ Chí Minh, Việt Nam",
+        "mst_address": "Khu vực 10, Thị Trấn Tứ Hạ, Thị xã Hương Trà, Tỉnh Thừa Thiên Huế, Việt Nam",
     },
-    {
-        "mst_address": "Nhà Q3, Villa Park, 97C Bưng Ông Thoàn, Phường Phú Hữu, Thành phố Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam",
-    }
 ]
 
 if __name__ == "__main__":

@@ -134,7 +134,7 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 13
+    _CACHE_VERSION: ClassVar[int] = 14
     _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v101.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
@@ -352,7 +352,47 @@ class AddressParser:
         detected_ward = self._validate_detected_value(
             detected_components_raw[2], self.invert_ward_to_indices
         )
+
+        def _segment_is_candidate(segment_std: Optional[str]) -> bool:
+            if not segment_std:
+                return False
+            if segment_std.isdigit():
+                return False
+            return len(segment_std) >= 3
+
+        # Fallback: infer ward/district from comma-separated segments when
+        # the input omits explicit prefixes (e.g. "Tứ Hạ, Hương Trà").
+        if (not detected_dist or not detected_ward) and len(input_segments) >= 2:
+            if not detected_dist:
+                for segment_std, _ in reversed(input_segments):
+                    if (
+                        _segment_is_candidate(segment_std)
+                        and segment_std in self.district_names_std
+                    ):
+                        detected_dist = self._validate_detected_value(
+                            segment_std, self.invert_district_to_indices
+                        )
+                        if detected_dist:
+                            break
+            if not detected_ward:
+                for segment_std, _ in input_segments:
+                    if (
+                        _segment_is_candidate(segment_std)
+                        and segment_std in self.ward_names_std
+                    ):
+                        if detected_dist and segment_std == detected_dist:
+                            continue
+                        detected_ward = self._validate_detected_value(
+                            segment_std, self.invert_ward_to_indices
+                        )
+                        if detected_ward:
+                            break
+
         raw_detected_ward = detected_components_raw[2]
+        if detected_ward and not raw_detected_ward:
+            raw_detected_ward = self._recover_component_from_input(
+                detected_ward, input_segments
+            )
         raw_detected_dist = None
         normalized_detected_ward_token = (
             self._normalize_detected_ward_token(raw_detected_ward)
@@ -2137,17 +2177,24 @@ class AddressParser:
                     ward_info["name"] = record.get("name") or ward_info.get("name")
 
         if ward_info and ward_prefix_hint:
-            entry_prefix = _ward_prefix_from_value(
-                ward_info.get("full_name") or ward_info.get("name") or ward
-            )
+            entry_label = ward_info.get("full_name") or ward_info.get("name") or ward
+            entry_prefix = _ward_prefix_from_value(entry_label)
             if entry_prefix and entry_prefix != ward_prefix_hint:
-                ward_info = None
-                ward_id = None
-                if raw_ward_segment:
-                    ward = raw_ward_segment
-                if not district_hint_in_input and not district_prefix_in_input:
-                    resolved_is_new_format = True
-                    candidate_is_new_format = True
+                entry_core = self._strip_generic_prefix(
+                    self.standardize_name(entry_label, False)
+                )
+                hint_source = raw_ward_segment or ward
+                hinted_core = self._strip_generic_prefix(
+                    self.standardize_name(hint_source, False)
+                )
+                if not (entry_core and hinted_core and entry_core == hinted_core):
+                    ward_info = None
+                    ward_id = None
+                    if raw_ward_segment:
+                        ward = raw_ward_segment
+                    if not district_hint_in_input and not district_prefix_in_input:
+                        resolved_is_new_format = True
+                        candidate_is_new_format = True
 
         if not district and ward_id:
             ward_record_key = self._normalize_id_token(ward_id)
@@ -2354,6 +2401,7 @@ class AddressParser:
             province_aliases_std = self._standardize_aliases(province_aliases)
             province_info = {
                 "id": province_id,
+                "code": province_code,
                 "name": province_output_name,
             }
             if isinstance(province_entry, dict):
@@ -2405,8 +2453,14 @@ class AddressParser:
                 district_id_value = district_id if district_output_name else None
                 district_legacy_aliases = legacy_aliases_from(district_entry)
 
+                district_code = (
+                    district_entry.get("code")
+                    if isinstance(district_entry, dict)
+                    else None
+                )
                 district_info = {
                     "id": district_id_value,
+                    "code": district_code,
                     "name": district_output_name,
                     "province_key": province_output_std,
                     "province_name": province_output_name,
@@ -2470,6 +2524,7 @@ class AddressParser:
 
                         ward_info = {
                             "id": ward_id_value,
+                            "code": ward_code,
                             "name": ward_output_name,
                             "province_key": province_output_std,
                             "province_name": province_output_name,
@@ -2649,6 +2704,7 @@ class AddressParser:
 
                     ward_info = {
                         "id": ward_id_value,
+                        "code": ward_code,
                         "name": ward_output_name,
                         "province_key": province_output_std,
                         "province_name": province_output_name,
@@ -5587,7 +5643,7 @@ class AddressParser:
     ) -> bool:
         if not expected_province or not isinstance(entry, dict):
             return True
-        expected_std = self.standardize_name(expected_province, False)
+        expected_std = self._canonicalize_province_key(expected_province)
         if not expected_std:
             return True
         entry_std = entry.get("province_key")
@@ -5598,8 +5654,42 @@ class AddressParser:
                 else None
             )
         if entry_std:
+            entry_std = self._canonicalize_province_key(entry_std)
             return entry_std == expected_std
         return False
+
+    def _canonicalize_province_key(self, value: Optional[str]) -> str:
+        if not value:
+            return ""
+        key = self.standardize_name(value, False)
+        if not key:
+            return ""
+        key = re.sub(r"^(tinh|thanh pho|tp)\s+", "", key).strip()
+        # Map known synonyms to canonical province keys.
+        for synonyms, canonical in SPECIAL_PROVINCE_MAP.items():
+            canonical_std = self.standardize_name(canonical, False)
+            if canonical_std:
+                canonical_std = re.sub(
+                    r"^(tinh|thanh pho|tp)\s+", "", canonical_std
+                ).strip()
+            if not canonical_std:
+                continue
+            if key == canonical_std:
+                return canonical_std
+            alias_iter = (
+                synonyms
+                if isinstance(synonyms, (list, tuple, set))
+                else (synonyms,)
+            )
+            for alias in alias_iter:
+                alias_std = self.standardize_name(alias, False)
+                if alias_std:
+                    alias_std = re.sub(
+                        r"^(tinh|thanh pho|tp)\s+", "", alias_std
+                    ).strip()
+                if alias_std and key == alias_std:
+                    return canonical_std
+        return key
 
     def _prefer_hierarchical_ward_entry(
         self,
