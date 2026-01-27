@@ -134,7 +134,7 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 12
+    _CACHE_VERSION: ClassVar[int] = 13
     _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v101.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
@@ -4355,14 +4355,38 @@ class AddressParser:
             return []
         normalized = self.standardize_name(text, False)
         tokens: List[str] = []
+
+        def _canonicalize_token(token: str) -> str:
+            if not token:
+                return ""
+            normalized_token = unicodedata.normalize("NFD", token.casefold())
+            normalized_token = "".join(
+                ch for ch in normalized_token if unicodedata.category(ch) != "Mn"
+            )
+            normalized_token = normalized_token.replace("đ", "d")
+            normalized_token = re.sub(r"[^a-z0-9]+", "", normalized_token)
+            if not normalized_token:
+                return ""
+            if (
+                len(normalized_token) <= 3
+                and "y" in normalized_token
+                and not any(vowel in normalized_token for vowel in ("a", "e", "o"))
+            ):
+                normalized_token = normalized_token.replace("y", "i")
+            return normalized_token
+
         if normalized:
-            tokens.extend(token for token in normalized.split() if token)
+            for token in normalized.split():
+                canonical = _canonicalize_token(token)
+                if canonical:
+                    tokens.append(canonical)
 
         # Add diacritic-preserving tokens so accented queries/documents can match directly
         accented_tokens = self._tokenize_with_diacritics(text)
         for tok in accented_tokens:
-            if tok not in tokens:
-                tokens.append(tok)
+            canonical = _canonicalize_token(tok)
+            if canonical and canonical not in tokens:
+                tokens.append(canonical)
 
         unit_token = self._detect_unit_token_from_query(text)
         if unit_token and unit_token not in tokens:
