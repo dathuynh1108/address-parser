@@ -12,7 +12,7 @@ from parser import AddressParser
 
 tests = [
     {
-        "mst_address": "Khu vực 10, Thị Trấn Tứ Hạ, Thị xã Hương Trà, Tỉnh Thừa Thiên Huế, Việt Nam",
+        "mst_address": "Huyện Phú Quốc",
     },
 ]
 

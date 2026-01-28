@@ -134,7 +134,7 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 14
+    _CACHE_VERSION: ClassVar[int] = 15
     _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v101.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
@@ -1491,7 +1491,47 @@ class AddressParser:
             elif district_std and district_std == detected_ward:
                 detected_ward = None
 
-        ward_present_in_input = _appears_in_input(ward)
+        ward_present_override = False
+        # If the input only provides a district name without any district prefix,
+        # but that name corresponds to a special new-format ward (e.g. "Đặc khu"),
+        # treat it as a new-format ward to avoid misclassifying as old format.
+        if (
+            district
+            and not ward
+            and not district_prefix_in_input
+            and not district_hint_in_input
+        ):
+            district_key = self.standardize_name(district, False)
+            if district_key:
+                new_entry = self._lookup_new_format_ward_alias(
+                    district_key,
+                    expected_province=province,
+                )
+                if new_entry and new_entry.get("is_new_format") is True:
+                    entry_name = new_entry.get("full_name") or new_entry.get("name")
+                    entry_name_std = (
+                        self.standardize_name(entry_name, False)
+                        if entry_name
+                        else ""
+                    )
+                    if not entry_name_std.startswith("dac khu"):
+                        new_entry = None
+                if new_entry and new_entry.get("is_new_format") is True:
+                    ward_info = new_entry
+                    ward = new_entry.get("name") or district
+                    ward_id = new_entry.get("id") or ward_id
+                    province_from_entry = new_entry.get("province_name")
+                    if province_from_entry:
+                        province = province_from_entry
+                        province_id = None
+                    district = ""
+                    district_id = None
+                    district_info = None
+                    resolved_is_new_format = True
+                    candidate_is_new_format = True
+                    ward_present_override = True
+
+        ward_present_in_input = ward_present_override or _appears_in_input(ward)
         if (not ward or not ward_present_in_input) and raw_detected_ward:
             normalized_raw_token = self._normalize_detected_ward_token(
                 raw_detected_ward
@@ -3441,7 +3481,8 @@ class AddressParser:
             return aliases
 
         legacy_view: Dict[str, Dict[str, Any]] = {}
-        province_entries_by_code: Dict[str, Dict[str, Any]] = {}
+        province_entries_by_code_old: Dict[str, Dict[str, Any]] = {}
+        province_entries_by_code_new: Dict[str, Dict[str, Any]] = {}
         district_entries_by_code: Dict[str, Dict[str, Any]] = {}
 
         def _preferred_name(entity: Dict[str, Any], fallback: str) -> str:
@@ -3463,6 +3504,7 @@ class AddressParser:
             code: Optional[str],
             payload: Optional[Dict[str, Any]],
             *,
+            source: str,
             prefer_name: bool = False,
         ) -> Dict[str, Any]:
             payload = payload or {}
@@ -3471,11 +3513,18 @@ class AddressParser:
             name = _preferred_name(payload, normalized_code or "Unknown Province")
 
             entry_by_name = legacy_view.get(name)
-            entry_by_code = (
-                province_entries_by_code.get(normalized_code)
-                if normalized_code
-                else None
-            )
+            if source == "new":
+                entry_by_code = (
+                    province_entries_by_code_new.get(normalized_code)
+                    if normalized_code
+                    else None
+                )
+            else:
+                entry_by_code = (
+                    province_entries_by_code_old.get(normalized_code)
+                    if normalized_code
+                    else None
+                )
 
             entry = None
             if prefer_name and entry_by_name is not None:
@@ -3513,16 +3562,22 @@ class AddressParser:
                         legacy_bucket.append(alias)
 
             if normalized_code:
-                if prefer_name and entry_by_name is not None:
-                    province_entries_by_code[normalized_code] = entry
-                elif normalized_code not in province_entries_by_code:
-                    province_entries_by_code[normalized_code] = entry
+                if source == "new":
+                    if prefer_name and entry_by_name is not None:
+                        province_entries_by_code_new[normalized_code] = entry
+                    elif normalized_code not in province_entries_by_code_new:
+                        province_entries_by_code_new[normalized_code] = entry
+                else:
+                    if prefer_name and entry_by_name is not None:
+                        province_entries_by_code_old[normalized_code] = entry
+                    elif normalized_code not in province_entries_by_code_old:
+                        province_entries_by_code_old[normalized_code] = entry
             return entry
 
         for code, info in provinces_old.items():
-            ensure_province(code, info)
+            ensure_province(code, info, source="old")
         for code, info in provinces_new.items():
-            ensure_province(code, info, prefer_name=True)
+            ensure_province(code, info, source="new", prefer_name=True)
 
         def merge_ward_entry(
             existing: Dict[str, Any], incoming: Dict[str, Any]
@@ -3597,10 +3652,12 @@ class AddressParser:
 
         for code, info in districts_old.items():
             province_code = info.get("parent_code")
-            province_entry = province_entries_by_code.get(str(province_code))
+            province_entry = province_entries_by_code_old.get(str(province_code))
             if province_entry is None:
                 province_entry = ensure_province(
-                    province_code, provinces_old.get(str(province_code))
+                    province_code,
+                    provinces_old.get(str(province_code)),
+                    source="old",
                 )
             attach_district(province_entry, code, info)
 
@@ -3626,10 +3683,12 @@ class AddressParser:
                 district_payload = districts_old.get(str(parent_district)) or {}
                 if district_payload:
                     province_code = district_payload.get("parent_code")
-                province_entry = province_entries_by_code.get(str(province_code))
+                province_entry = province_entries_by_code_old.get(str(province_code))
                 if province_entry is None:
                     province_entry = ensure_province(
-                        province_code, provinces_old.get(str(province_code))
+                        province_code,
+                        provinces_old.get(str(province_code)),
+                        source="old",
                     )
                 district_entry = attach_district(
                     province_entry, parent_district or code, district_payload
@@ -3656,7 +3715,10 @@ class AddressParser:
         for code, info in wards_new.items():
             province_code = info.get("parent_code")
             province_entry = ensure_province(
-                province_code, provinces_new.get(str(province_code)), prefer_name=True
+                province_code,
+                provinces_new.get(str(province_code)),
+                source="new",
+                prefer_name=True,
             )
             bucket = new_format_bucket(province_entry)
             ward_name = _preferred_name(info, code)
