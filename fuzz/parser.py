@@ -16,30 +16,6 @@ from rapidfuzz import fuzz as rf_fuzz
 logger = logging.getLogger(__name__)
 
 
-def _alias_module(mod, names) -> None:
-    """Register the same module object under multiple import paths."""
-    for name in names:
-        if not name:
-            continue
-        sys.modules.setdefault(name, mod)
-
-
-# Make the module import path stable for pickled cache objects.
-_this_module = sys.modules[__name__]
-_parts = __name__.split(".")
-_tail_two = ".".join(_parts[-2:]) if len(_parts) >= 2 else __name__
-_alias_module(
-    _this_module,
-    {
-        __name__,
-        "parser",
-        "fuzz.parser",
-        "address_parser.parser",
-        "llmtk.pkg.address_parser.parser",
-        _tail_two,
-    },
-)
-
 try:
     from . import search_engine as _search_engine
 except ImportError:  # Running as a standalone script without package context
@@ -49,23 +25,6 @@ except ImportError:  # Running as a standalone script without package context
     import search_engine as _search_engine
 
 AddressSearchEngine = _search_engine.AddressSearchEngine
-_search_parts = _search_engine.__name__.split(".")
-_search_tail_two = (
-    ".".join(_search_parts[-2:]) if len(_search_parts) >= 2 else _search_engine.__name__
-)
-_search_parent = ".".join(_parts[:-1])
-_alias_module(
-    _search_engine,
-    {
-        _search_engine.__name__,
-        "search_engine",
-        "fuzz.search_engine",
-        "address_parser.search_engine",
-        "llmtk.pkg.address_parser.search_engine",
-        _search_tail_two,
-        f"{_search_parent}.search_engine" if _search_parent else "",
-    },
-)
 
 SPECIAL_PROVINCE_MAP = {
     ("br vt", "br-vt", "brvt", "ba ria vung tau"): "Bà Rịa - Vũng Tàu",
@@ -134,7 +93,7 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 15
+    _CACHE_VERSION: ClassVar[int] = 16
     _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v101.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
@@ -2984,11 +2943,79 @@ class AddressParser:
         cls._PREPROCESSED_SIGNATURE = signature
 
     def _capture_preprocessed_state(self) -> Dict[str, Any]:
-        return {attr: getattr(self, attr) for attr in self._STATEFUL_ATTRS}
+        state: Dict[str, Any] = {}
+        for attr in self._STATEFUL_ATTRS:
+            if attr == "address_node_list":
+                state[attr] = self._serialize_address_nodes(self.address_node_list)
+            elif attr == "search_engine":
+                state[attr] = None
+            else:
+                state[attr] = getattr(self, attr)
+        return state
 
     def _apply_preprocessed_state(self, state: Dict[str, Any]) -> None:
         for attr, value in state.items():
+            if attr == "address_node_list":
+                if isinstance(value, list):
+                    setattr(self, attr, self._deserialize_address_nodes(value))
+                else:
+                    setattr(self, attr, value)
+                continue
+            if attr == "search_engine":
+                setattr(self, attr, None)
+                continue
             setattr(self, attr, value)
+        self._rebuild_search_engine()
+
+    def _serialize_address_nodes(
+        self, nodes: List["AddressParser.AddressNode"]
+    ) -> List[Dict[str, Any]]:
+        payload: List[Dict[str, Any]] = []
+        for node in nodes:
+            if not isinstance(node, AddressParser.AddressNode):
+                continue
+            payload.append(
+                {
+                    "province_name": node.province_name,
+                    "district_name": node.district_name,
+                    "ward_name": node.ward_name,
+                    "province_id": node.province_id,
+                    "district_id": node.district_id,
+                    "ward_id": node.ward_id,
+                    "is_new_format": node.is_new_format,
+                    "standardized_full_name": node.standardized_full_name,
+                    "ngram_list": list(node.ngram_list),
+                }
+            )
+        return payload
+
+    def _deserialize_address_nodes(
+        self, payload: List[Any]
+    ) -> List["AddressParser.AddressNode"]:
+        nodes: List[AddressParser.AddressNode] = []
+        for item in payload:
+            if isinstance(item, AddressParser.AddressNode):
+                nodes.append(item)
+                continue
+            if not isinstance(item, dict):
+                continue
+            node = self.AddressNode(
+                item.get("province_name") or "",
+                item.get("district_name") or "",
+                item.get("ward_name") or "",
+                province_id=item.get("province_id"),
+                district_id=item.get("district_id"),
+                ward_id=item.get("ward_id"),
+                is_new_format=item.get("is_new_format"),
+            )
+            node.standardized_full_name = item.get("standardized_full_name") or ""
+            ngrams = item.get("ngram_list")
+            if isinstance(ngrams, (list, set, tuple)):
+                node.ngram_list = set(ngrams)
+            else:
+                node.ngram_list = set()
+            nodes.append(node)
+        return nodes
 
     def _normalize_code_str(self, value: Any) -> Optional[str]:
         if value is None:
