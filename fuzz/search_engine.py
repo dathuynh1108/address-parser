@@ -223,3 +223,22 @@ class AddressSearchEngine:
         if district_filter and meta.get("district_code") != district_filter:
             return False
         return True
+
+    def get_state(self) -> Dict[str, Any]:
+        """Return serializable state for caching (excludes callables)."""
+        return {
+            "token_corpus": self._token_corpus,
+            "field_tokens": self._field_tokens,
+            "metadata": self._metadata,
+            "token_sets": [list(s) for s in self._token_sets],  # sets -> lists
+        }
+
+    def restore_state(self, state: Dict[str, Any]) -> None:
+        """Restore state from cache and rebuild BM25 index."""
+        self._token_corpus = state.get("token_corpus") or []
+        self._field_tokens = state.get("field_tokens") or []
+        self._metadata = state.get("metadata") or []
+        token_sets_raw = state.get("token_sets") or []
+        self._token_sets = [set(s) if isinstance(s, list) else s for s in token_sets_raw]
+        # Rebuild BM25 index (fast - just matrix computation)
+        self.finalize()

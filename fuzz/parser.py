@@ -93,8 +93,8 @@ class AddressParser:
         "external_new_ward_records",
         "search_engine",
     )
-    _CACHE_VERSION: ClassVar[int] = 16
-    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v101.pkl"
+    _CACHE_VERSION: ClassVar[int] = 18
+    _CACHE_FILENAME: ClassVar[str] = "address_parser.preprocessed.v103.pkl"
     _PREPROCESSED_CACHE: ClassVar[Optional[Dict[str, Any]]] = None
     _PREPROCESSED_SIGNATURE: ClassVar[
         Optional[Tuple[Tuple[str, Optional[float], Optional[int]], ...]]
@@ -404,10 +404,9 @@ class AddressParser:
             province_id_new = self._lookup_new_province_id_by_name(normalized_city_name)
             if not province_id_new:
                 return False
-            province_record = (
-                self.external_new_province_records.get(province_id_new)
-                or self.new_province_records.get(province_id_new)
-            )
+            province_record = self.external_new_province_records.get(
+                province_id_new
+            ) or self.new_province_records.get(province_id_new)
             return bool(
                 isinstance(province_record, dict)
                 and province_record.get("administrative_unit_id") == 1
@@ -497,10 +496,14 @@ class AddressParser:
                         or has_province_segment
                         or not _is_province_level_city(city_name)
                     ):
-                        if has_tinh_prefix or has_province_segment or (
-                            _is_known_district_alias(f"tp {city_name}")
-                            or _is_known_district_alias(f"thanh pho {city_name}")
-                            or _is_known_district_alias(city_name)
+                        if (
+                            has_tinh_prefix
+                            or has_province_segment
+                            or (
+                                _is_known_district_alias(f"tp {city_name}")
+                                or _is_known_district_alias(f"thanh pho {city_name}")
+                                or _is_known_district_alias(city_name)
+                            )
                         ):
                             district_prefix_in_input = True
                             district_hint_in_input = True
@@ -515,10 +518,14 @@ class AddressParser:
                         or has_province_segment
                         or not _is_province_level_city(city_name)
                     ):
-                        if has_tinh_prefix or has_province_segment or (
-                            _is_known_district_alias(f"thanh pho {city_name}")
-                            or _is_known_district_alias(f"tp {city_name}")
-                            or _is_known_district_alias(city_name)
+                        if (
+                            has_tinh_prefix
+                            or has_province_segment
+                            or (
+                                _is_known_district_alias(f"thanh pho {city_name}")
+                                or _is_known_district_alias(f"tp {city_name}")
+                                or _is_known_district_alias(city_name)
+                            )
                         ):
                             district_prefix_in_input = True
                             district_hint_in_input = True
@@ -594,7 +601,11 @@ class AddressParser:
                             break
                         continue
 
-                    if token == "dac" and idx + 1 < len(tokens) and tokens[idx + 1] == "khu":
+                    if (
+                        token == "dac"
+                        and idx + 1 < len(tokens)
+                        and tokens[idx + 1] == "khu"
+                    ):
                         if _matches_prefix_or_fragment(
                             idx,
                             idx + 2,
@@ -630,7 +641,11 @@ class AddressParser:
                             break
                         continue
 
-                    if token == "thi" and idx + 1 < len(tokens) and tokens[idx + 1] == "xa":
+                    if (
+                        token == "thi"
+                        and idx + 1 < len(tokens)
+                        and tokens[idx + 1] == "xa"
+                    ):
                         if _matches_prefix_or_fragment(
                             idx,
                             idx + 2,
@@ -691,6 +706,7 @@ class AddressParser:
                         continue
                 if district_prefix_in_input:
                     break
+
         def _expected_district_for_resolution() -> Optional[str]:
             if not district_hint_in_input:
                 return None
@@ -1223,6 +1239,7 @@ class AddressParser:
                 if isinstance(exact_old, dict)
                 else None
             )
+
             def _old_ward_matches_province(
                 entry: Dict[str, Any],
                 expected_province_name: Optional[str],
@@ -1469,9 +1486,7 @@ class AddressParser:
                 if new_entry and new_entry.get("is_new_format") is True:
                     entry_name = new_entry.get("full_name") or new_entry.get("name")
                     entry_name_std = (
-                        self.standardize_name(entry_name, False)
-                        if entry_name
-                        else ""
+                        self.standardize_name(entry_name, False) if entry_name else ""
                     )
                     if not entry_name_std.startswith("dac khu"):
                         new_entry = None
@@ -1728,7 +1743,6 @@ class AddressParser:
                 resolved_is_new_format = True
                 candidate_is_new_format = True
 
-
         def _std_name(value: Optional[str]) -> str:
             return self.standardize_name(value, False) if value else ""
 
@@ -1768,11 +1782,11 @@ class AddressParser:
             province_entry = self.old_province_records.get(province_code)
             if not isinstance(province_entry, dict):
                 return True
-            province_name = province_entry.get("name") or province_entry.get("full_name")
+            province_name = province_entry.get("name") or province_entry.get(
+                "full_name"
+            )
             province_std = (
-                self.standardize_name(province_name, False)
-                if province_name
-                else None
+                self.standardize_name(province_name, False) if province_name else None
             )
             if not province_std:
                 return True
@@ -1790,7 +1804,10 @@ class AddressParser:
             ward_key = self._normalize_id_token(ward_id_value)
             if not ward_key:
                 return False
-            if ward_key not in self.old_ward_records or ward_key in self.new_ward_records:
+            if (
+                ward_key not in self.old_ward_records
+                or ward_key in self.new_ward_records
+            ):
                 return False
             if not _old_ward_id_matches_province(ward_key, province_name_value):
                 return False
@@ -1856,11 +1873,7 @@ class AddressParser:
         # If there is no explicit district prefix in the input, avoid "inventing" a district
         # purely from the selected old-format candidate / ward metadata unless the district
         # is clearly present as its own comma-separated segment.
-        if (
-            province
-            and district
-            and not district_prefix_in_input
-        ):
+        if province and district and not district_prefix_in_input:
             district_key = _canonical_region_key(district)
             has_explicit_district_segment = False
             if district_key and input_segments:
@@ -2212,7 +2225,9 @@ class AddressParser:
                     recovered = district_entry.get("name") or district_entry.get(
                         "full_name"
                     )
-                if recovered and not (district_prefix_in_input or district_hint_in_input):
+                if recovered and not (
+                    district_prefix_in_input or district_hint_in_input
+                ):
                     district_key = _canonical_region_key(recovered)
                     province_key = _canonical_region_key(province)
                     has_explicit_district_segment = False
@@ -2838,11 +2853,14 @@ class AddressParser:
             )
         )
         for path in tracked_paths:
+            # Use filename only (not full path) for cross-platform compatibility
+            # This allows pickle cache to be shared between Windows/Mac/Linux
+            filename = os.path.basename(path)
             try:
                 stat_result = os.stat(path)
-                signature.append((path, stat_result.st_mtime, stat_result.st_size))
+                signature.append((filename, stat_result.st_mtime, stat_result.st_size))
             except OSError:
-                signature.append((path, None, None))
+                signature.append((filename, None, None))
         return tuple(signature)
 
     def _hydrate_preprocessed_state(
@@ -2948,7 +2966,11 @@ class AddressParser:
             if attr == "address_node_list":
                 state[attr] = self._serialize_address_nodes(self.address_node_list)
             elif attr == "search_engine":
-                state[attr] = None
+                # Serialize search engine data (excludes callables)
+                if self.search_engine is not None:
+                    state[attr] = self.search_engine.get_state()
+                else:
+                    state[attr] = None
             else:
                 state[attr] = getattr(self, attr)
         return state
@@ -2962,10 +2984,21 @@ class AddressParser:
                     setattr(self, attr, value)
                 continue
             if attr == "search_engine":
-                setattr(self, attr, None)
+                # Restore search engine from cached data if available
+                if isinstance(value, dict) and value:
+                    engine = AddressSearchEngine(
+                        analyzer=self._analyze_search_text,
+                        normalize_id=self._normalize_id_token,
+                    )
+                    engine.restore_state(value)
+                    self.search_engine = engine
+                else:
+                    self.search_engine = None
                 continue
             setattr(self, attr, value)
-        self._rebuild_search_engine()
+        # Only rebuild if search engine wasn't restored from cache
+        if self.search_engine is None:
+            self._rebuild_search_engine()
 
     def _serialize_address_nodes(
         self, nodes: List["AddressParser.AddressNode"]
@@ -3922,7 +3955,9 @@ class AddressParser:
                 if not value_std:
                     continue
                 value_stripped = self._strip_generic_prefix(value_std)
-                if value_std in targets or (value_stripped and value_stripped in targets):
+                if value_std in targets or (
+                    value_stripped and value_stripped in targets
+                ):
                     return str(code)
         return None
 
@@ -5766,9 +5801,7 @@ class AddressParser:
             if key == canonical_std:
                 return canonical_std
             alias_iter = (
-                synonyms
-                if isinstance(synonyms, (list, tuple, set))
-                else (synonyms,)
+                synonyms if isinstance(synonyms, (list, tuple, set)) else (synonyms,)
             )
             for alias in alias_iter:
                 alias_std = self.standardize_name(alias, False)
