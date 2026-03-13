@@ -1227,7 +1227,9 @@ class AddressParser:
             for segment_std, segment_raw in input_segments:
                 if not segment_std or not segment_raw:
                     continue
-                if segment_std.startswith(("phuong ", "p ", "xa ", "thi tran ")):
+                if segment_std.startswith(
+                    ("phuong ", "p ", "xa ", "tt ", "thi tran ")
+                ):
                     raw_ward_segment = str(segment_raw).strip(" ,;.-")
                     break
         ward_prefix_hint = _ward_prefix_from_value(raw_ward_segment)
@@ -1282,13 +1284,21 @@ class AddressParser:
                     or expected_std.endswith(province_std)
                 )
 
+            # Use exact_old when it matches province; allow it even if the code exists in
+            # new format when the input has a district (old-format address) so ward_code is set.
             if (
                 exact_old
                 and exact_old_id
-                and exact_old_id not in self.new_ward_records
                 and _old_ward_matches_province(exact_old, province)
+                and (
+                    exact_old_id not in self.new_ward_records
+                    or district_present_in_input
+                    or bool(district)
+                )
             ):
-                ward_info = {**exact_old, "is_new_format": False}
+                ward_info = self._enrich_old_ward_with_province(
+                    {**exact_old, "is_new_format": False}
+                )
                 ward_id = exact_old_id
                 ward = exact_old.get("full_name") or exact_old.get("name") or ward
                 candidate_is_new_format = False
@@ -1960,7 +1970,9 @@ class AddressParser:
             else:
                 legacy_record = self._lookup_old_ward_record_by_name(ward)
             if legacy_record:
-                ward_info = {**legacy_record, "is_new_format": False}
+                ward_info = self._enrich_old_ward_with_province(
+                    {**legacy_record, "is_new_format": False}
+                )
                 if ward_info.get("id") is not None:
                     ward_id = ward_info["id"]
                 if resolved_is_new_format is not False:
@@ -2422,6 +2434,9 @@ class AddressParser:
                 legacy_names = legacy_aliases_from(province_entry)
                 if legacy_names:
                     province_info["legacy_names"] = legacy_names
+                full_name = province_entry.get("full_name")
+                if full_name:
+                    province_info["full_name"] = full_name
             for alias_std in province_aliases_std:
                 if not alias_std:
                     continue
@@ -2481,6 +2496,10 @@ class AddressParser:
                 }
                 if district_legacy_aliases:
                     district_info["legacy_names"] = district_legacy_aliases
+                if isinstance(district_entry, dict):
+                    full_name = district_entry.get("full_name")
+                    if full_name:
+                        district_info["full_name"] = full_name
                 if province_output_std:
                     self.district_lookup[(province_output_std, district_key)] = (
                         district_info
@@ -2538,7 +2557,7 @@ class AddressParser:
 
                         ward_info = {
                             "id": ward_id_value,
-                            "code": ward_code,
+                            "code": ward_code if ward_code is not None else ward_id_value,
                             "name": ward_output_name,
                             "province_key": province_output_std,
                             "province_name": province_output_name,
@@ -2718,7 +2737,7 @@ class AddressParser:
 
                     ward_info = {
                         "id": ward_id_value,
-                        "code": ward_code,
+                        "code": ward_code if ward_code is not None else ward_id_value,
                         "name": ward_output_name,
                         "province_key": province_output_std,
                         "province_name": province_output_name,
@@ -4069,6 +4088,38 @@ class AddressParser:
                     bucket.append(code_str)
         self._old_ward_raw_name_index = index
 
+    def _enrich_old_ward_with_province(
+        self, entry: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Add province_key and province_name to an old-ward record so alignment checks pass."""
+        if not isinstance(entry, dict):
+            return entry
+        if entry.get("province_key") or entry.get("province_name"):
+            return entry
+        parent_code = self._normalize_id_token(
+            entry.get("parent_code") or entry.get("district_code")
+        )
+        if not parent_code:
+            return entry
+        district_entry = self.old_district_records.get(parent_code)
+        if not isinstance(district_entry, dict):
+            return entry
+        province_code = self._normalize_id_token(
+            district_entry.get("parent_code") or district_entry.get("province_code")
+        )
+        if not province_code:
+            return entry
+        province_entry = self.old_province_records.get(province_code)
+        if not isinstance(province_entry, dict):
+            return entry
+        province_name = province_entry.get("name") or province_entry.get("full_name")
+        if not province_name:
+            return entry
+        result = dict(entry)
+        result["province_name"] = province_name
+        result["province_key"] = self.standardize_name(province_name, False)
+        return result
+
     def _lookup_old_ward_record_by_exact_name(
         self, ward_name: Optional[str]
     ) -> Optional[Dict[str, Any]]:
@@ -4516,17 +4567,33 @@ class AddressParser:
         self, entry: Dict[str, Any], *, level: str
     ) -> List[str]:
         fields: List[str] = []
+        seen: Set[str] = set()
+
+        def _add(value: Optional[str]) -> None:
+            if not isinstance(value, str):
+                return
+            trimmed = value.strip()
+            if not trimmed or trimmed in seen:
+                return
+            seen.add(trimmed)
+            fields.append(trimmed)
+
         # Use one primary label (prefer full_name, fall back to name) to avoid duplicate tokens
         primary = entry.get("full_name") or entry.get("name")
-        if isinstance(primary, str):
-            trimmed = primary.strip()
-            if trimmed:
-                fields.append(trimmed)
+        _add(primary)
+
+        # Include legacy aliases for provinces/districts only (wards are too noisy)
+        if level in ("province", "district"):
+            legacy_names = entry.get("legacy_names")
+            if isinstance(legacy_names, (list, tuple)):
+                for legacy in legacy_names:
+                    _add(legacy)
 
         if level == "province":
             canonical_name = entry.get("full_name") or entry.get("name")
             aliases = self._get_special_province_aliases(canonical_name)
-            fields.extend(aliases)
+            for alias in aliases:
+                _add(alias)
 
         return fields
 
@@ -5077,6 +5144,7 @@ class AddressParser:
                 "p",
                 "xa",
                 "x",
+                "tt",
                 "quan",
                 "q",
                 "huyen",
@@ -5881,8 +5949,8 @@ class AddressParser:
             extended_name = info.get("full_name")
             if extended_name:
                 payload["full_name"] = extended_name
-            code_value = info.get("code")
-            if code_value:
+            code_value = info.get("code") or info.get("id")
+            if code_value is not None and code_value != "":
                 payload["code"] = code_value
             legacy_aliases = info.get("legacy_names")
             if isinstance(legacy_aliases, str):
@@ -6479,6 +6547,12 @@ class AddressParser:
             "thon",
         }
 
+        def _sequence_has_street_descriptor(seq_tokens: List[str]) -> bool:
+            for token in seq_tokens:
+                if token in street_descriptor_tokens:
+                    return True
+            return False
+
         def _has_street_descriptor_before(idx: int) -> bool:
             prev_idx = idx - 1
             if prev_idx < 0 or prev_idx >= token_count:
@@ -6521,6 +6595,126 @@ class AddressParser:
                 1 for token_idx in segment_tokens if start_idx <= token_idx < end_idx
             )
             return covered / max(1, len(segment_tokens))
+
+        def _segment_matches_profile(
+            segment_idx: int, profile_sequences: List[List[str]]
+        ) -> bool:
+            if segment_idx < 0 or segment_idx >= len(segment_token_indices):
+                return False
+            seg_token_indices = segment_token_indices[segment_idx]
+            if not seg_token_indices:
+                return False
+            seg_tokens = [tokens[token_idx]["norm"] for token_idx in seg_token_indices]
+            seg_tokens = [token for token in seg_tokens if token]
+            if not seg_tokens:
+                return False
+
+            seg_len = len(seg_tokens)
+            for sequence in profile_sequences:
+                seq = [item for item in sequence if item]
+                seq_len = len(seq)
+                if seq_len == 0 or seq_len > seg_len:
+                    continue
+                for start in range(seg_len - seq_len + 1):
+                    if all(seg_tokens[start + pos] == seq[pos] for pos in range(seq_len)):
+                        coverage = seq_len / max(1, seg_len)
+                        if coverage >= 0.6:
+                            return True
+            return False
+
+        def _has_downstream_admin_signal(segment_idx: int) -> bool:
+            for next_segment_idx in range(segment_idx + 1, len(segment_token_indices)):
+                segment_indices = segment_token_indices[next_segment_idx]
+                if not segment_indices:
+                    continue
+                if any(_is_admin_generic(token_idx) for token_idx in segment_indices):
+                    return True
+
+                for profile in profiles.values():
+                    profile_sequences: List[List[str]] = profile.get("sequences", [])
+                    if _segment_matches_profile(next_segment_idx, profile_sequences):
+                        return True
+            return False
+
+        def _segment_has_level_prefix(segment_idx: int, level: str) -> bool:
+            if segment_idx < 0 or segment_idx >= len(segment_token_indices):
+                return False
+            seg_indices = segment_token_indices[segment_idx]
+            if not seg_indices:
+                return False
+            seg_tokens = [tokens[token_idx]["norm"] for token_idx in seg_indices]
+            seg_tokens = [token for token in seg_tokens if token]
+            if not seg_tokens:
+                return False
+            first = seg_tokens[0]
+            second = seg_tokens[1] if len(seg_tokens) >= 2 else ""
+            pair = f"{first} {second}".strip() if second else ""
+
+            if level == "province":
+                return first in {"tinh", "tp"} or pair == "thanh pho"
+            if level == "district":
+                return first in {"quan", "q", "huyen", "h", "tx"} or pair == "thi xa"
+            if level == "ward":
+                return first in {"phuong", "p", "xa", "x", "tt"} or pair in {
+                    "thi tran",
+                    "dac khu",
+                }
+            return False
+
+        def _segment_has_street_descriptor(segment_idx: int) -> bool:
+            if segment_idx < 0 or segment_idx >= len(segment_token_indices):
+                return False
+            seg_indices = segment_token_indices[segment_idx]
+            for token_idx in seg_indices:
+                token_norm = tokens[token_idx]["norm"]
+                if token_norm in street_descriptor_tokens:
+                    return True
+            return False
+
+        def _profile_segment_score(
+            segment_idx: int,
+            profile_name: str,
+            profile_sequences: List[List[str]],
+        ) -> float:
+            if segment_idx < 0 or segment_idx >= len(segment_token_indices):
+                return 0.0
+            seg_indices = segment_token_indices[segment_idx]
+            if not seg_indices:
+                return 0.0
+
+            segment_len = len(seg_indices)
+            best_coverage = 0.0
+            for sequence in profile_sequences:
+                seq = [item for item in sequence if item]
+                seq_len = len(seq)
+                if seq_len == 0 or seq_len > segment_len:
+                    continue
+                for start in range(segment_len - seq_len + 1):
+                    matches = True
+                    for offset in range(seq_len):
+                        token_idx = seg_indices[start + offset]
+                        if tokens[token_idx]["norm"] != seq[offset]:
+                            matches = False
+                            break
+                    if matches:
+                        coverage = seq_len / max(1, segment_len)
+                        if coverage > best_coverage:
+                            best_coverage = coverage
+            if best_coverage == 0.0:
+                return 0.0
+
+            score = best_coverage
+            if _segment_has_level_prefix(segment_idx, profile_name):
+                score += 0.35
+            if any(_is_admin_generic(token_idx) for token_idx in seg_indices):
+                score += 0.1
+            if (
+                profile_name == "ward"
+                and _segment_has_street_descriptor(segment_idx)
+                and not _segment_has_level_prefix(segment_idx, profile_name)
+            ):
+                score -= 0.25
+            return score
 
         def mark_indices(start_idx: int, length: int) -> bool:
             if length <= 0:
@@ -6573,7 +6767,23 @@ class AddressParser:
                 next_idx += 1
             return True
 
-        for profile in profiles.values():
+        best_segment_by_profile: Dict[str, Tuple[int, float]] = {}
+        for profile_name, profile in profiles.items():
+            sequences = profile.get("sequences", [])
+            best_segment = -1
+            best_score = 0.0
+            for seg_idx in range(len(segment_token_indices)):
+                score = _profile_segment_score(seg_idx, profile_name, sequences)
+                if score <= 0.0:
+                    continue
+                if score > best_score or (
+                    score == best_score and seg_idx > best_segment
+                ):
+                    best_segment = seg_idx
+                    best_score = score
+            best_segment_by_profile[profile_name] = (best_segment, best_score)
+
+        for profile_name, profile in profiles.items():
             sequences: List[List[str]] = profile["sequences"]
             abbreviation_sequences: Set[Tuple[str, ...]] = profile.get(
                 "abbreviation_sequences", set()
@@ -6605,6 +6815,18 @@ class AddressParser:
                                     segment_idx, idx, seq_len
                                 )
                                 if coverage >= 0.6:
+                                    allow_removal = True
+                            elif segment_idx == 0:
+                                coverage = _segment_match_ratio(
+                                    segment_idx, idx, seq_len
+                                )
+                                if (
+                                    coverage >= 0.95
+                                    and not _sequence_has_street_descriptor(seq)
+                                    and _has_downstream_admin_signal(segment_idx)
+                                    and best_segment_by_profile.get(profile_name, (-1, 0.0))[0]
+                                    == segment_idx
+                                ):
                                     allow_removal = True
                             elif segment_idx > 0:
                                 coverage = _segment_match_ratio(
@@ -6731,10 +6953,10 @@ class AddressParser:
             rf"{prefix_anchor}\b(?:thanh pho|tp|tinh)\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
         )
         district_pref = re.compile(
-            rf"{prefix_anchor}\b(?P<prefix>quan|q|huyen|thi xa|thi tran|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
+            rf"{prefix_anchor}\b(?P<prefix>quan|q|huyen|h|thi xa|tx|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
         )
         ward_pref = re.compile(
-            rf"{prefix_anchor}\b(?P<prefix>phuong|p|xa|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
+            rf"{prefix_anchor}\b(?P<prefix>phuong|p|xa|tt|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
         )
 
         def _digit_key(value: str) -> str:
@@ -6916,8 +7138,9 @@ class AddressParser:
                     "quan": 5,
                     "q": 5,
                     "huyen": 4,
+                    "h": 4,
                     "thi xa": 4,
-                    "thi tran": 3,
+                    "tx": 4,
                     "thanh pho": 2,
                     "tp": 2,
                 }
@@ -6997,6 +7220,7 @@ class AddressParser:
                     "dac khu": 4,
                     "p": 3,
                     "phuong": 3,
+                    "tt": 2,
                     "thi tran": 2,
                     "thi xa": 2,
                     "xa": 1,
@@ -7028,6 +7252,7 @@ class AddressParser:
                 "p": "phuong",
                 "phuong": "phuong",
                 "ward": "ward",
+                "tt": "thi tran",
                 "thi tran": "thi tran",
                 "town": "thi tran",
                 "thi xa": "thi xa",
