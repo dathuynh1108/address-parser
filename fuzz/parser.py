@@ -1228,11 +1228,76 @@ class AddressParser:
                 if not segment_std or not segment_raw:
                     continue
                 if segment_std.startswith(
-                    ("phuong ", "p ", "xa ", "tt ", "thi tran ")
+                    ("phuong ", "p ", "xa ", "x ", "tt ", "thi tran ")
                 ):
                     raw_ward_segment = str(segment_raw).strip(" ,;.-")
                     break
+        if (
+            raw_ward_segment is None
+            and len(input_segments) == 1
+            and raw_detected_ward
+            and _ward_prefix_from_value(raw_detected_ward)
+        ):
+            raw_ward_segment = raw_detected_ward
         ward_prefix_hint = _ward_prefix_from_value(raw_ward_segment)
+
+        def _component_keys_match(left: Optional[str], right: Optional[str]) -> bool:
+            if not left or not right:
+                return False
+            left_std = self.standardize_name(left, False)
+            right_std = self.standardize_name(right, False)
+            if not left_std or not right_std:
+                return False
+            if left_std == right_std:
+                return True
+            left_stripped = self._strip_generic_prefix(left_std) or left_std
+            right_stripped = self._strip_generic_prefix(right_std) or right_std
+            return left_stripped == right_stripped
+
+        explicit_flat_admin_signal = len(input_segments) == 1 and bool(
+            detected_prov or detected_dist or raw_detected_ward
+        )
+        explicit_ward_signal = bool(ward_prefix_hint) or (
+            explicit_flat_admin_signal
+            and raw_detected_ward
+            and self._segment_has_location_prefix(
+                self.standardize_name(raw_detected_ward, False)
+            )
+        )
+
+        if detected_dist and (district_prefix_in_input or explicit_flat_admin_signal):
+            resolved_prefixed_district = self._resolve_detected_component(
+                "district",
+                detected_dist,
+                expected_province=province_for_lookup,
+                source_string=input_string_basic,
+            )
+            if (
+                resolved_prefixed_district
+                and not _component_keys_match(district, resolved_prefixed_district)
+            ):
+                district = resolved_prefixed_district
+                district_id = None
+                district_info = None
+                district_for_lookup = district
+
+        if detected_ward and explicit_ward_signal:
+            resolved_prefixed_ward = self._resolve_detected_component(
+                "ward",
+                detected_ward,
+                expected_province=province if province else None,
+                expected_district=(district if district else raw_detected_dist),
+                source_string=input_string_basic,
+            )
+            if (
+                resolved_prefixed_ward
+                and not _component_keys_match(ward, resolved_prefixed_ward)
+            ):
+                ward = resolved_prefixed_ward
+                ward_id = None
+                ward_info = None
+
+        ward_lookup_hint = normalized_detected_ward_token or raw_detected_ward or raw_ward_segment
 
         if raw_ward_segment:
             exact_old = self._lookup_old_ward_record_by_exact_name(raw_ward_segment)
@@ -1832,6 +1897,273 @@ class AddressParser:
                     return False
             return True
 
+        def _resolve_two_level_ward_candidate(
+            ward_name_value: Optional[str],
+            province_name_value: Optional[str],
+        ) -> Tuple[Optional[Dict[str, Any]], Optional[bool]]:
+            if not ward_name_value:
+                return None, None
+            province_hint = province_name_value if province_name_value else None
+
+            new_candidate = self._lookup_ward_info(
+                ward_name_value,
+                province_hint,
+                None,
+                preferred_format=True,
+            )
+            if new_candidate and new_candidate.get("is_new_format") is True:
+                return new_candidate, True
+
+            old_candidate = self._lookup_ward_info(
+                ward_name_value,
+                province_hint,
+                None,
+                preferred_format=False,
+            )
+            if old_candidate and old_candidate.get("is_new_format") is False:
+                return old_candidate, False
+
+            fallback = self._lookup_ward_info(
+                ward_name_value,
+                province_hint,
+                None,
+                preferred_format=None,
+            )
+            fallback_format = (
+                fallback.get("is_new_format") if isinstance(fallback, dict) else None
+            )
+            return fallback, fallback_format
+
+        def _apply_two_level_ward_resolution(
+            *,
+            drop_inferred_district_for_new: bool,
+        ) -> Optional[bool]:
+            nonlocal ward, ward_id, ward_info
+            nonlocal district, district_id, district_info
+            nonlocal resolved_is_new_format, candidate_is_new_format
+
+            candidate, candidate_format = _resolve_two_level_ward_candidate(ward, province)
+            if candidate:
+                ward_info = candidate
+                candidate_id = candidate.get("id")
+                if candidate_id is not None:
+                    ward_id = candidate_id
+                canonical = candidate.get("full_name") or candidate.get("name")
+                if canonical:
+                    ward = canonical
+
+            if candidate_format is True:
+                if drop_inferred_district_for_new:
+                    district = ""
+                    district_id = None
+                    district_info = None
+                resolved_is_new_format = True
+                candidate_is_new_format = True
+                return True
+
+            if candidate_format is False:
+                resolved_is_new_format = False
+                candidate_is_new_format = False
+                if not district:
+                    recovered_district_name, recovered_district_id = (
+                        self._recover_district_from_ward_info(
+                            candidate,
+                            ward,
+                            province,
+                            province_info,
+                        )
+                    )
+                    if recovered_district_name:
+                        district = recovered_district_name
+                        district_id = recovered_district_id
+                        district_info = (
+                            self._lookup_district_info(
+                                district,
+                                province if province else None,
+                            )
+                            if district
+                            else None
+                        )
+                        if (
+                            not district_id
+                            and district_info
+                            and district_info.get("id") is not None
+                        ):
+                            district_id = district_info["id"]
+                return False
+
+            return None
+
+        def _entry_matches_exact_fragment(
+            entry: Optional[Dict[str, Any]], fragment: Optional[str]
+        ) -> bool:
+            if not isinstance(entry, dict) or not fragment:
+                return False
+            fragment_std = self.standardize_name(fragment, False)
+            if not fragment_std:
+                return False
+            fragment_keys = {fragment_std}
+            stripped_fragment = self._strip_generic_prefix(fragment_std)
+            if stripped_fragment:
+                fragment_keys.add(stripped_fragment)
+
+            entry_keys = set()
+            for value in (entry.get("name"), entry.get("full_name")):
+                value_std = self.standardize_name(value, False) if value else ""
+                if not value_std:
+                    continue
+                entry_keys.add(value_std)
+                stripped_value = self._strip_generic_prefix(value_std)
+                if stripped_value:
+                    entry_keys.add(stripped_value)
+            return bool(fragment_keys & entry_keys)
+
+        def _rescue_flat_suffix_ward_without_district() -> bool:
+            nonlocal ward, ward_id, ward_info
+            nonlocal district, district_id, district_info
+            nonlocal resolved_is_new_format, candidate_is_new_format
+
+            if len(input_segments) != 1 or district_prefix_in_input:
+                return False
+            if raw_detected_dist or raw_detected_ward or raw_ward_segment:
+                return False
+            province_hint = province if province else None
+            province_key = self.standardize_name(province_hint, False) if province_hint else ""
+            if not province_key:
+                return False
+            tokens = [tok for tok in input_string_basic.split() if tok]
+            province_tokens = [tok for tok in province_key.split() if tok]
+            if not province_tokens or len(tokens) <= len(province_tokens):
+                return False
+            if tokens[-len(province_tokens) :] != province_tokens:
+                return False
+
+            remaining = tokens[: -len(province_tokens)]
+            if len(remaining) < 2:
+                return False
+
+            max_ward_len = min(4, len(remaining))
+            for ward_len in range(max_ward_len, 0, -1):
+                ward_fragment_tokens = remaining[-ward_len:]
+                leading_tokens = remaining[:-ward_len]
+                if leading_tokens and len(leading_tokens) < 2:
+                    if all(token.isdigit() for token in leading_tokens):
+                        continue
+                ward_fragment = " ".join(ward_fragment_tokens)
+                ward_entry, candidate_format = _resolve_two_level_ward_candidate(
+                    ward_fragment, province_hint
+                )
+                if not ward_entry or not _entry_matches_exact_fragment(ward_entry, ward_fragment):
+                    continue
+
+                ward_info = ward_entry
+                ward_id = ward_entry.get("id") or ward_entry.get("code")
+                ward = ward_entry.get("full_name") or ward_entry.get("name") or ward
+
+                if candidate_format is True:
+                    district = ""
+                    district_id = None
+                    district_info = None
+                    resolved_is_new_format = True
+                    candidate_is_new_format = True
+                    return True
+
+                if candidate_format is False:
+                    recovered_district_name, recovered_district_id = (
+                        self._recover_district_from_ward_info(
+                            ward_entry,
+                            ward,
+                            province,
+                            province_info,
+                        )
+                    )
+                    if recovered_district_name:
+                        district = recovered_district_name
+                        district_id = recovered_district_id
+                        district_info = (
+                            self._lookup_district_info(
+                                district,
+                                province if province else None,
+                            )
+                            if district
+                            else None
+                        )
+                    else:
+                        district = ""
+                        district_id = None
+                        district_info = None
+                    resolved_is_new_format = False
+                    candidate_is_new_format = False
+                    return True
+            return False
+
+        def _rescue_flat_old_suffix_components() -> bool:
+            nonlocal ward, ward_id, ward_info
+            nonlocal district, district_id, district_info
+            nonlocal resolved_is_new_format, candidate_is_new_format
+
+            if len(input_segments) != 1 or district_prefix_in_input:
+                return False
+            if raw_detected_dist or raw_detected_ward or raw_ward_segment:
+                return False
+            province_hint = province if province else None
+            province_key = self.standardize_name(province_hint, False) if province_hint else ""
+            if not province_key:
+                return False
+            tokens = [tok for tok in input_string_basic.split() if tok]
+            province_tokens = [tok for tok in province_key.split() if tok]
+            if not province_tokens or len(tokens) <= len(province_tokens) + 1:
+                return False
+            if tokens[-len(province_tokens) :] != province_tokens:
+                return False
+
+            remaining = tokens[: -len(province_tokens)]
+            if len(remaining) < 2:
+                return False
+
+            max_dist_len = min(4, len(remaining) - 1)
+            for dist_len in range(max_dist_len, 0, -1):
+                district_fragment = " ".join(remaining[-dist_len:])
+                district_entry = self._lookup_district_info(district_fragment, province_hint)
+                if not district_entry:
+                    continue
+                ward_tokens = remaining[:-dist_len]
+                if not ward_tokens:
+                    continue
+                district_name_value = (
+                    district_entry.get("name")
+                    or district_entry.get("full_name")
+                    or district_fragment
+                )
+                max_ward_len = min(4, len(ward_tokens))
+                for ward_len in range(max_ward_len, 0, -1):
+                    ward_fragment = " ".join(ward_tokens[-ward_len:])
+                    _, two_level_format = _resolve_two_level_ward_candidate(
+                        ward_fragment, province_hint
+                    )
+                    if two_level_format is True:
+                        continue
+                    ward_entry = self._lookup_ward_info(
+                        ward_fragment,
+                        province_hint,
+                        district_name_value,
+                        preferred_format=False,
+                    )
+                    if not ward_entry or ward_entry.get("is_new_format") is not False:
+                        continue
+                    if not _entry_matches_exact_fragment(ward_entry, ward_fragment):
+                        continue
+                    district = district_name_value
+                    district_info = district_entry
+                    district_id = district_entry.get("id") or district_entry.get("code")
+                    ward_info = ward_entry
+                    ward_id = ward_entry.get("id") or ward_entry.get("code")
+                    ward = ward_entry.get("full_name") or ward_entry.get("name") or ward
+                    resolved_is_new_format = False
+                    candidate_is_new_format = False
+                    return True
+            return False
+
         # If the inferred district collapses to the same region key as the province and the
         # input does not explicitly contain a district-level prefix, treat it as a 2-level
         # (ward+province) "new" address. This prevents overfitting to old-format candidates
@@ -1864,12 +2196,18 @@ class AddressParser:
             and _canonical_region_key(district)
             and _canonical_region_key(district) == _canonical_region_key(province)
         ):
-            district = ""
-            district_id = None
-            district_info = None
-            district_hint_in_input = False
-            resolved_is_new_format = True
-            candidate_is_new_format = True
+            two_level_decision = _apply_two_level_ward_resolution(
+                drop_inferred_district_for_new=True
+            )
+            if two_level_decision is True:
+                district_hint_in_input = False
+            elif two_level_decision is None:
+                district = ""
+                district_id = None
+                district_info = None
+                district_hint_in_input = False
+                resolved_is_new_format = True
+                candidate_is_new_format = True
 
         if (
             ward_id
@@ -1892,11 +2230,17 @@ class AddressParser:
                         has_explicit_district_segment = True
                         break
             if not has_explicit_district_segment:
-                district = ""
-                district_id = None
-                district_info = None
-                resolved_is_new_format = True
-                candidate_is_new_format = True
+                two_level_decision = _apply_two_level_ward_resolution(
+                    drop_inferred_district_for_new=True
+                )
+                if two_level_decision is True:
+                    district_hint_in_input = False
+                elif two_level_decision is None:
+                    district = ""
+                    district_id = None
+                    district_info = None
+                    resolved_is_new_format = True
+                    candidate_is_new_format = True
 
         canonical_changed = False
         if ward_info:
@@ -1980,32 +2324,38 @@ class AddressParser:
                     candidate_is_new_format = False
 
         # 2-level guard: when the input contains only ward+province (no district hint/prefix),
-        # treat it as new-format unless the ward can only be resolved via the legacy registry.
-        # In that case, keep legacy ward IDs stable and let district inference (from old metadata)
-        # decide whether to promote the result to old format.
+        # prefer the new 2-level registry first; if that exact ward cannot be resolved in the
+        # new registry, fall back to the legacy ward + inferred district instead of forcing
+        # format="new".
         if ward and not district and not district_hint_in_input:
-            is_legacy_only_ward = _is_legacy_only_ward(ward_id, ward, province)
-            if not is_legacy_only_ward:
-                resolved_is_new_format = True
-                candidate_is_new_format = True
+            two_level_decision = _apply_two_level_ward_resolution(
+                drop_inferred_district_for_new=True
+            )
+            if two_level_decision is True:
+                district_hint_in_input = False
+            elif two_level_decision is None:
+                is_legacy_only_ward = _is_legacy_only_ward(ward_id, ward, province)
+                if not is_legacy_only_ward:
+                    resolved_is_new_format = True
+                    candidate_is_new_format = True
 
-                # If we ended up mapping the ward to an old-record entry (e.g. same name exists
-                # in both registries with different codes), attempt to upgrade to the new-format
-                # ward so IDs line up with `wards.json`.
-                if ward_info and ward_info.get("is_new_format") is False:
-                    upgraded = self._lookup_ward_info(
-                        ward,
-                        province if province else None,
-                        None,
-                        preferred_format=True,
-                    )
-                    if upgraded and upgraded.get("is_new_format") is True:
-                        ward_info = upgraded
-                        if upgraded.get("id") is not None:
-                            ward_id = upgraded["id"]
-                        canonical = upgraded.get("full_name") or upgraded.get("name")
-                        if canonical:
-                            ward = canonical
+                    # If we ended up mapping the ward to an old-record entry (e.g. same name exists
+                    # in both registries with different codes), attempt to upgrade to the new-format
+                    # ward so IDs line up with `wards.json`.
+                    if ward_info and ward_info.get("is_new_format") is False:
+                        upgraded = self._lookup_ward_info(
+                            ward,
+                            province if province else None,
+                            None,
+                            preferred_format=True,
+                        )
+                        if upgraded and upgraded.get("is_new_format") is True:
+                            ward_info = upgraded
+                            if upgraded.get("id") is not None:
+                                ward_id = upgraded["id"]
+                            canonical = upgraded.get("full_name") or upgraded.get("name")
+                            if canonical:
+                                ward = canonical
 
         if district_prefix_in_input and resolved_is_new_format is not False:
             resolved_is_new_format = False
@@ -2100,16 +2450,26 @@ class AddressParser:
                 ward_id = ward_info.get("id") or ward_id
 
         # Late new-format guard: classification may be decided before ward resolution,
-        # so ensure we still mark province-only / ward+province inputs as "new" when there
-        # is no explicit district hint in the text.
+        # so ensure we still prefer the new 2-level registry first; if the ward only resolves
+        # via legacy metadata, keep the old-format fallback instead of forcing format="new".
         if (province or ward) and not district and not district_hint_in_input:
-            is_legacy_only_ward = _is_legacy_only_ward(ward_id, ward, province)
-            if not is_legacy_only_ward:
-                resolved_is_new_format = True
-                candidate_is_new_format = True
+            two_level_decision = _apply_two_level_ward_resolution(
+                drop_inferred_district_for_new=False
+            )
+            if two_level_decision is True:
+                district_hint_in_input = False
+            elif two_level_decision is None:
+                is_legacy_only_ward = _is_legacy_only_ward(ward_id, ward, province)
+                if not is_legacy_only_ward:
+                    resolved_is_new_format = True
+                    candidate_is_new_format = True
+
+        _rescue_flat_suffix_ward_without_district()
+        _rescue_flat_old_suffix_components()
 
         # Final guard: if we only saw a ward-prefixed token (no district prefix),
-        # treat it as 2-level data and drop any inherited district.
+        # prefer collapsing to 2-level only when the ward truly resolves in the new registry.
+        # Otherwise keep the old-format fallback and its recovered district.
         if district and not district_prefix_in_input:
             district_key = _canonical_region_key(district)
             province_key = _canonical_region_key(province)
@@ -2127,11 +2487,17 @@ class AddressParser:
             ):
                 has_explicit_district_segment = False
             if not has_explicit_district_segment:
-                district = ""
-                district_id = None
-                district_info = None
-                resolved_is_new_format = True
-                candidate_is_new_format = True
+                two_level_decision = _apply_two_level_ward_resolution(
+                    drop_inferred_district_for_new=True
+                )
+                if two_level_decision is True:
+                    district_hint_in_input = False
+                elif two_level_decision is None:
+                    district = ""
+                    district_id = None
+                    district_info = None
+                    resolved_is_new_format = True
+                    candidate_is_new_format = True
         # Refresh lookup metadata to reflect any late-stage overrides
         province_info = self._lookup_province_info(province) if province else None
         if not province:
@@ -2157,6 +2523,29 @@ class AddressParser:
             district_id = None
         elif district_info and district_info.get("id") is not None:
             district_id = district_info["id"]
+
+        if (
+            province
+            and district
+            and not district_prefix_in_input
+            and ward_info
+            and ward_info.get("is_new_format") is True
+        ):
+            district_core = self._strip_generic_prefix(
+                self.standardize_name(district, False)
+            )
+            ward_core = self._strip_generic_prefix(
+                self.standardize_name(ward_info.get("full_name") or ward, False)
+            )
+            if district_info is None or (
+                district_core and ward_core and district_core == ward_core
+            ):
+                district = ""
+                district_id = None
+                district_info = None
+                district_hint_in_input = False
+                resolved_is_new_format = True
+                candidate_is_new_format = True
 
         # Final canonicalization: if we have structured ward info, trust its canonical name/id.
         if ward_info:
@@ -2220,6 +2609,73 @@ class AddressParser:
                         resolved_is_new_format = True
                         candidate_is_new_format = True
 
+        if (
+            ward
+            and raw_ward_segment
+            and ward_prefix_hint
+            and province
+            and (ward_info is None or ward_info.get("id") is None)
+            and (district or district_prefix_in_input or district_hint_in_input)
+        ):
+            rescued_ward_info = self._lookup_ward_info(
+                ward_lookup_hint or raw_ward_segment,
+                province if province else None,
+                district if district else None,
+                preferred_format=candidate_is_new_format,
+            )
+            if (
+                rescued_ward_info is None
+                and district
+                and candidate_is_new_format is not False
+            ):
+                rescued_ward_info = self._lookup_ward_info(
+                    ward_lookup_hint or raw_ward_segment,
+                    province if province else None,
+                    district if district else None,
+                    preferred_format=False,
+                )
+            if rescued_ward_info is None:
+                rescued_ward_info = self._lookup_ward_info(
+                    ward_lookup_hint or raw_ward_segment,
+                    province if province else None,
+                    None,
+                    preferred_format=candidate_is_new_format,
+                )
+            if (
+                rescued_ward_info is None
+                and candidate_is_new_format is not False
+            ):
+                rescued_ward_info = self._lookup_ward_info(
+                    ward_lookup_hint or raw_ward_segment,
+                    province if province else None,
+                    None,
+                    preferred_format=False,
+                )
+            if rescued_ward_info:
+                ward_info = rescued_ward_info
+                if rescued_ward_info.get("id") is not None:
+                    ward_id = rescued_ward_info["id"]
+                canonical = rescued_ward_info.get("full_name") or rescued_ward_info.get(
+                    "name"
+                )
+                if canonical:
+                    ward = canonical
+                rescued_district_name, rescued_district_id = self._recover_district_from_ward_info(
+                    rescued_ward_info,
+                    ward,
+                    province,
+                    province_info,
+                )
+                if rescued_district_name and not district_prefix_in_input:
+                    district = rescued_district_name
+                    district_id = rescued_district_id
+                resolved_is_new_format = _update_format(
+                    resolved_is_new_format, ward_info
+                )
+                candidate_is_new_format = _update_format(
+                    candidate_is_new_format, ward_info
+                )
+
         if not district and ward_id:
             ward_record_key = self._normalize_id_token(ward_id)
             if (
@@ -2280,6 +2736,75 @@ class AddressParser:
                             province_info = province_entry
                     resolved_is_new_format = False
                     candidate_is_new_format = False
+
+        if (
+            ward
+            and province
+            and (ward_info is None or ward_id is None)
+            and (raw_ward_segment or raw_detected_ward)
+        ):
+            final_ward_hint = ward_lookup_hint or raw_ward_segment or raw_detected_ward
+            final_ward_info = self._lookup_ward_info(
+                final_ward_hint,
+                province if province else None,
+                None,
+                preferred_format=candidate_is_new_format,
+            )
+            if final_ward_info is None and candidate_is_new_format is not False:
+                final_ward_info = self._lookup_ward_info(
+                    final_ward_hint,
+                    province if province else None,
+                    None,
+                    preferred_format=False,
+                )
+            if final_ward_info:
+                ward_info = final_ward_info
+                ward_id = final_ward_info.get("id") or final_ward_info.get("code")
+                canonical = final_ward_info.get("full_name") or final_ward_info.get("name")
+                if canonical:
+                    ward = canonical
+                rescued_district_name, rescued_district_id = self._recover_district_from_ward_info(
+                    final_ward_info,
+                    ward,
+                    province,
+                    province_info,
+                )
+                if rescued_district_name and not district_prefix_in_input:
+                    district = rescued_district_name
+                    district_id = rescued_district_id
+                    district_info = self._lookup_district_info(
+                        district,
+                        province if province else None,
+                    )
+                resolved_is_new_format = _update_format(
+                    resolved_is_new_format, ward_info
+                )
+                candidate_is_new_format = _update_format(
+                    candidate_is_new_format, ward_info
+                )
+
+        ward_record_key = self._normalize_id_token(
+            ward_id
+            or (ward_info.get("id") if isinstance(ward_info, dict) else None)
+            or (ward_info.get("code") if isinstance(ward_info, dict) else None)
+        )
+        ward_is_definitely_new = bool(
+            ward_record_key and ward_record_key in self.new_ward_records
+        )
+        if district and ward and not district_prefix_in_input and ward_is_definitely_new:
+            district_core = self._strip_generic_prefix(
+                self.standardize_name(district, False)
+            )
+            ward_core = self._strip_generic_prefix(
+                self.standardize_name(ward, False)
+            )
+            if district_core and ward_core and district_core == ward_core:
+                district = ""
+                district_id = None
+                district_info = None
+                district_hint_in_input = False
+                resolved_is_new_format = True
+                candidate_is_new_format = True
 
         district_component = self._format_component(
             district, district_id, district_info
@@ -5516,6 +6041,9 @@ class AddressParser:
             info = self.district_lookup.get((province_key, district_key))
             if info:
                 return info
+            # Do not fall back to a globally-unique district from a different province.
+            # OCR noise at the head of the string can otherwise invent a wrong district.
+            return None
         candidates = self.district_lookup_by_name.get(district_key, [])
         if len(candidates) == 1:
             return candidates[0]
@@ -6546,6 +7074,16 @@ class AddressParser:
             "ap",
             "thon",
         }
+        locality_descriptor_tokens = {
+            "thon",
+            "xom",
+            "ap",
+            "to",
+            "kp",
+            "khu",
+            "kdc",
+            "kdt",
+        }
 
         def _sequence_has_street_descriptor(seq_tokens: List[str]) -> bool:
             for token in seq_tokens:
@@ -6668,6 +7206,37 @@ class AddressParser:
             for token_idx in seg_indices:
                 token_norm = tokens[token_idx]["norm"]
                 if token_norm in street_descriptor_tokens:
+                    return True
+            return False
+
+        def _sequence_is_segment_suffix(
+            segment_idx: int,
+            start_idx: int,
+            length: int,
+        ) -> bool:
+            if (
+                segment_idx < 0
+                or segment_idx >= len(segment_token_indices)
+                or length <= 0
+            ):
+                return False
+            seg_indices = segment_token_indices[segment_idx]
+            if length > len(seg_indices):
+                return False
+            return seg_indices[-length:] == list(range(start_idx, start_idx + length))
+
+        def _segment_prefix_has_locality_descriptor(
+            segment_idx: int,
+            start_idx: int,
+        ) -> bool:
+            if segment_idx < 0 or segment_idx >= len(segment_token_indices):
+                return False
+            seg_indices = segment_token_indices[segment_idx]
+            for token_idx in seg_indices:
+                if token_idx >= start_idx:
+                    break
+                token_norm = tokens[token_idx]["norm"]
+                if token_norm in locality_descriptor_tokens:
                     return True
             return False
 
@@ -6820,13 +7389,36 @@ class AddressParser:
                                 coverage = _segment_match_ratio(
                                     segment_idx, idx, seq_len
                                 )
+                                best_segment_idx = best_segment_by_profile.get(
+                                    profile_name, (-1, 0.0)
+                                )[0]
                                 if (
                                     coverage >= 0.95
                                     and not _sequence_has_street_descriptor(seq)
                                     and _has_downstream_admin_signal(segment_idx)
-                                    and best_segment_by_profile.get(profile_name, (-1, 0.0))[0]
-                                    == segment_idx
+                                    and best_segment_idx == segment_idx
                                 ):
+                                    allow_removal = True
+                                elif (
+                                    profile_name == "ward"
+                                    and best_segment_idx == segment_idx
+                                    and _has_downstream_admin_signal(segment_idx)
+                                    and _sequence_is_segment_suffix(
+                                        segment_idx, idx, seq_len
+                                    )
+                                    and _segment_prefix_has_locality_descriptor(
+                                        segment_idx, idx
+                                    )
+                                    and not _sequence_has_street_descriptor(seq)
+                                ):
+                                    # OCR often drops the comma before the ward in
+                                    # patterns like "Thôn 1B Hòa Tiến, Krông Pắc,
+                                    # Đắk Lắk". When a locality/sub-address
+                                    # descriptor (thôn/ấp/tổ/...) appears earlier in
+                                    # the first segment and the matched ward alias is
+                                    # the trailing suffix of that segment, prefer
+                                    # stripping the trailing ward even without an
+                                    # explicit separator.
                                     allow_removal = True
                             elif segment_idx > 0:
                                 coverage = _segment_match_ratio(
@@ -6873,8 +7465,47 @@ class AddressParser:
                 if should_remove:
                     indices_to_remove.update(idx_list)
 
+        def _strip_exact_admin_suffix(value: str) -> str:
+            if not value or re.search(r"[,;\n]|\s+[-–—]\s+", original):
+                return value
+            suffix_profiles = []
+            for profile_name in ("province", "district", "ward"):
+                profile = profiles.get(profile_name) or {}
+                for sequence in profile.get("sequences", []):
+                    seq = [token for token in sequence if token]
+                    if seq:
+                        suffix_profiles.append(seq)
+            suffix_profiles.sort(key=len, reverse=True)
+            if not suffix_profiles:
+                return value
+            current = value
+            while current:
+                token_matches_local = list(
+                    re.finditer(r"\b\w+\b", current, flags=re.UNICODE)
+                )
+                if not token_matches_local:
+                    break
+                token_norms_local = [
+                    self._normalize_token_basic(match.group(0))
+                    for match in token_matches_local
+                ]
+                removed = False
+                for sequence in suffix_profiles:
+                    seq_len = len(sequence)
+                    if seq_len > len(token_norms_local):
+                        continue
+                    if token_norms_local[-seq_len:] != sequence:
+                        continue
+                    cut_pos = token_matches_local[-seq_len].start()
+                    current = current[:cut_pos].rstrip(" ,;.-")
+                    removed = True
+                    break
+                if not removed:
+                    break
+            return current
+
         if not indices_to_remove:
-            return original.strip()
+            return _strip_exact_admin_suffix(original.strip()).strip()
 
         mask = [False] * len(original)
         for token_idx in indices_to_remove:
@@ -6894,6 +7525,12 @@ class AddressParser:
                 "",
                 street,
             ).strip(" ,;.-")
+            street = re.sub(
+                r"(?i)(?:^|\s)(?:t|tp|q|h|x|p|tt|tx)\.?$",
+                "",
+                street,
+            ).strip(" ,;.-")
+            street = _strip_exact_admin_suffix(street)
         return street.strip()
 
     def generate_ngrams(self, s: str, n: int = 4) -> list:
@@ -6956,7 +7593,7 @@ class AddressParser:
             rf"{prefix_anchor}\b(?P<prefix>quan|q|huyen|h|thi xa|tx|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
         )
         ward_pref = re.compile(
-            rf"{prefix_anchor}\b(?P<prefix>phuong|p|xa|tt|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
+            rf"{prefix_anchor}\b(?P<prefix>phuong|p|xa|x|tt|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
         )
 
         def _digit_key(value: str) -> str:
@@ -7224,6 +7861,7 @@ class AddressParser:
                     "thi tran": 2,
                     "thi xa": 2,
                     "xa": 1,
+                    "x": 1,
                 }
                 return priority_map.get(prefix, 0)
 
@@ -7257,6 +7895,7 @@ class AddressParser:
                 "town": "thi tran",
                 "thi xa": "thi xa",
                 "xa": "xa",
+                "x": "xa",
                 "commune": "xa",
                 "dac khu": "dac khu",
                 "special administrative region": "dac khu",
