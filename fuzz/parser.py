@@ -7,7 +7,7 @@ import sys
 import unicodedata
 from pathlib import Path
 from threading import Lock
-from typing import Any, ClassVar, Dict, List, Optional, Set, Tuple
+from typing import Any, ClassVar, Dict, List, Optional, Set, Tuple, Union
 from collections import Counter, defaultdict
 from rapidfuzz.fuzz import partial_ratio, ratio
 from rapidfuzz import process as rf_process
@@ -271,8 +271,8 @@ class AddressParser:
 
     def process(self, input_string: str):
         # Chuẩn hóa và tạo n-gram cho input
-        input_string_standard = self.standardize_name(input_string, True)
-        input_string_basic = self.standardize_name(input_string, False)
+        input_string_standard = self.standardize_name(input_string, "search")
+        input_string_basic = self.standardize_name(input_string, "basic")
         input_string_ngram_list = self.generate_ngrams(input_string_standard)
         input_segments = self._split_address_segments(input_string)
         # Keep segment boundaries to avoid prefix detectors swallowing tokens across commas
@@ -286,7 +286,33 @@ class AddressParser:
             if not component:
                 return False
             component_std = self.standardize_name(component, False)
-            return bool(component_std and component_std in input_string_basic)
+            if not component_std:
+                return False
+            if component_std in input_string_basic:
+                return True
+
+            component_core = self._strip_generic_prefix(component_std) or component_std
+            if component_core and component_core in input_string_basic:
+                return True
+            if len(component_core) < 4:
+                return False
+
+            fuzzy_cutoff = 88 if len(component_core) >= 6 else 90
+            for segment_std, _ in input_segments:
+                if not segment_std:
+                    continue
+                if component_std in segment_std:
+                    return True
+                segment_core = self._strip_generic_prefix(segment_std) or segment_std
+                if component_core and component_core in segment_core:
+                    return True
+                if self._fuzzy_match_component_key(
+                    component_core,
+                    [segment_std, segment_core],
+                    cutoff=fuzzy_cutoff,
+                ):
+                    return True
+            return False
 
         # Đếm tần suất xuất hiện của từng ngram
         ngram_counts = Counter(input_string_ngram_list)
@@ -311,6 +337,7 @@ class AddressParser:
         detected_ward = self._validate_detected_value(
             detected_components_raw[2], self.invert_ward_to_indices
         )
+        segment_suffix_detected_ward_raw = None
 
         def _segment_is_candidate(segment_std: Optional[str]) -> bool:
             if not segment_std:
@@ -323,31 +350,89 @@ class AddressParser:
         # the input omits explicit prefixes (e.g. "Tứ Hạ, Hương Trà").
         if (not detected_dist or not detected_ward) and len(input_segments) >= 2:
             if not detected_dist:
-                for segment_std, _ in reversed(input_segments):
+                for offset_from_tail, (segment_std, _) in enumerate(
+                    reversed(input_segments)
+                ):
                     if (
-                        _segment_is_candidate(segment_std)
-                        and segment_std in self.district_names_std
+                        not _segment_is_candidate(segment_std)
+                        or segment_std == detected_prov
                     ):
-                        detected_dist = self._validate_detected_value(
-                            segment_std, self.invert_district_to_indices
+                        continue
+                    matched_district = None
+                    if segment_std in self.district_names_std:
+                        matched_district = segment_std
+                    elif offset_from_tail <= 2:
+                        matched_district = self._fuzzy_match_component_key(
+                            segment_std,
+                            self.district_names_std,
+                            cutoff=89,
                         )
-                        if detected_dist:
-                            break
+                    if not matched_district:
+                        continue
+                    detected_dist = self._validate_detected_value(
+                        matched_district, self.invert_district_to_indices
+                    )
+                    if detected_dist:
+                        break
             if not detected_ward:
-                for segment_std, _ in input_segments:
-                    if (
-                        _segment_is_candidate(segment_std)
-                        and segment_std in self.ward_names_std
-                    ):
-                        if detected_dist and segment_std == detected_dist:
-                            continue
-                        detected_ward = self._validate_detected_value(
-                            segment_std, self.invert_ward_to_indices
+                # Prefer the ward candidate closest to the district/province tail.
+                # In comma-separated VN addresses, street/sub-address often appears
+                # earlier while ward is usually the last admin segment before district.
+                for offset_from_tail, (segment_std, _) in enumerate(
+                    reversed(input_segments)
+                ):
+                    if not _segment_is_candidate(segment_std):
+                        continue
+                    if detected_prov and offset_from_tail == 0:
+                        continue
+                    if detected_dist and offset_from_tail <= 1:
+                        district_like = self._fuzzy_match_component_key(
+                            segment_std,
+                            self.district_names_std,
+                            cutoff=89,
                         )
-                        if detected_ward:
-                            break
+                        if district_like and district_like == detected_dist:
+                            continue
+                    matched_ward = None
+                    if segment_std in self.ward_names_std:
+                        matched_ward = segment_std
+                    elif offset_from_tail <= 2:
+                        matched_ward = self._fuzzy_match_component_key(
+                            segment_std,
+                            self.ward_names_std,
+                            cutoff=88 if detected_dist or detected_prov else 90,
+                        )
+                    if not matched_ward:
+                        continue
+                    if detected_dist and matched_ward == detected_dist:
+                        continue
+                    detected_ward = self._validate_detected_value(
+                        matched_ward, self.invert_ward_to_indices
+                    )
+                    if detected_ward:
+                        break
+            if not detected_ward:
+                for segment_std, segment_raw in input_segments:
+                    if not _segment_is_candidate(segment_std):
+                        continue
+                    suffix_match = self._infer_ward_from_segment_suffix(
+                        segment_std,
+                        segment_raw,
+                        expected_province=detected_prov,
+                        expected_district=detected_dist,
+                    )
+                    if not suffix_match:
+                        continue
+                    raw_fragment, detected_fragment = suffix_match
+                    if detected_dist and detected_fragment == detected_dist:
+                        continue
+                    detected_ward = detected_fragment
+                    segment_suffix_detected_ward_raw = raw_fragment
+                    break
 
         raw_detected_ward = detected_components_raw[2]
+        if segment_suffix_detected_ward_raw and not raw_detected_ward:
+            raw_detected_ward = segment_suffix_detected_ward_raw
         if detected_ward and not raw_detected_ward:
             raw_detected_ward = self._recover_component_from_input(
                 detected_ward, input_segments
@@ -1997,26 +2082,9 @@ class AddressParser:
         def _entry_matches_exact_fragment(
             entry: Optional[Dict[str, Any]], fragment: Optional[str]
         ) -> bool:
-            if not isinstance(entry, dict) or not fragment:
-                return False
-            fragment_std = self.standardize_name(fragment, False)
-            if not fragment_std:
-                return False
-            fragment_keys = {fragment_std}
-            stripped_fragment = self._strip_generic_prefix(fragment_std)
-            if stripped_fragment:
-                fragment_keys.add(stripped_fragment)
-
-            entry_keys = set()
-            for value in (entry.get("name"), entry.get("full_name")):
-                value_std = self.standardize_name(value, False) if value else ""
-                if not value_std:
-                    continue
-                entry_keys.add(value_std)
-                stripped_value = self._strip_generic_prefix(value_std)
-                if stripped_value:
-                    entry_keys.add(stripped_value)
-            return bool(fragment_keys & entry_keys)
+            return self._entry_matches_component_fragment(
+                entry, fragment, level="ward"
+            )
 
         def _rescue_flat_suffix_ward_without_district() -> bool:
             nonlocal ward, ward_id, ward_info
@@ -2806,6 +2874,104 @@ class AddressParser:
                 resolved_is_new_format = True
                 candidate_is_new_format = True
 
+        if not district and detected_dist:
+            rescued_district = self._resolve_detected_component(
+                "district",
+                detected_dist,
+                expected_province=province if province else None,
+                source_string=input_string_basic,
+            )
+            if rescued_district and _appears_in_input(rescued_district):
+                district = rescued_district
+                district_info = (
+                    self._lookup_district_info(
+                        district, province if province else None
+                    )
+                    if district
+                    else None
+                )
+                district_id = district_info.get("id") if district_info else None
+
+        if not ward and detected_ward:
+            rescued_ward = self._resolve_detected_component(
+                "ward",
+                detected_ward,
+                expected_province=province if province else None,
+                expected_district=district if district else None,
+                source_string=input_string_basic,
+            )
+            if rescued_ward and _appears_in_input(rescued_ward):
+                ward = rescued_ward
+                ward_info = (
+                    self._lookup_ward_info(
+                        ward,
+                        province if province else None,
+                        district if district else None,
+                        preferred_format=candidate_is_new_format,
+                    )
+                    if ward
+                    else None
+                )
+                ward_id = ward_info.get("id") if ward_info else None
+                resolved_is_new_format = _update_format(
+                    resolved_is_new_format, ward_info
+                )
+                candidate_is_new_format = _update_format(
+                    candidate_is_new_format, ward_info
+                )
+
+        if not ward and len(input_segments) >= 2:
+            for offset_from_tail, (segment_std, _) in enumerate(reversed(input_segments)):
+                if not _segment_is_candidate(segment_std):
+                    continue
+                if province and offset_from_tail == 0:
+                    continue
+                if district and offset_from_tail <= 1:
+                    district_like = self._fuzzy_match_component_key(
+                        segment_std,
+                        self.district_names_std,
+                        cutoff=89,
+                    )
+                    if district_like and district_like == self.standardize_name(
+                        district, False
+                    ):
+                        continue
+                ward_token = None
+                if segment_std in self.ward_names_std:
+                    ward_token = segment_std
+                elif offset_from_tail <= 2:
+                    ward_token = self._fuzzy_match_component_key(
+                        segment_std,
+                        self.ward_names_std,
+                        cutoff=88 if province or district else 90,
+                    )
+                if not ward_token:
+                    continue
+                rescued_ward = self._resolve_detected_component(
+                    "ward",
+                    ward_token,
+                    expected_province=province if province else None,
+                    expected_district=district if district else None,
+                    source_string=input_string_basic,
+                )
+                if not rescued_ward or not _appears_in_input(rescued_ward):
+                    continue
+                ward = rescued_ward
+                ward_info = self._lookup_ward_info(
+                    ward,
+                    province if province else None,
+                    district if district else None,
+                    preferred_format=candidate_is_new_format,
+                )
+                ward_id = ward_info.get("id") if ward_info else None
+                resolved_is_new_format = _update_format(
+                    resolved_is_new_format, ward_info
+                )
+                candidate_is_new_format = _update_format(
+                    candidate_is_new_format, ward_info
+                )
+                break
+
         district_component = self._format_component(
             district, district_id, district_info
         )
@@ -2832,12 +2998,50 @@ class AddressParser:
             ward or "",
             is_new_format=resolved_is_new_format,
         )
+
+        def _recover_tail_segment_surface(
+            component: Optional[str], *, max_offset: int, cutoff: int = 88
+        ) -> Optional[str]:
+            if not component or not input_segments:
+                return None
+            component_std = self.standardize_name(component, False)
+            if not component_std:
+                return None
+            best_raw = None
+            best_score = float("-inf")
+            component_core = self._strip_generic_prefix(component_std) or component_std
+            for offset_from_tail, (segment_std, segment_raw) in enumerate(
+                reversed(input_segments)
+            ):
+                if offset_from_tail > max_offset:
+                    break
+                if not segment_std or not segment_raw:
+                    continue
+                segment_core = self._strip_generic_prefix(segment_std) or segment_std
+                matched = self._fuzzy_match_component_key(
+                    component_std,
+                    [segment_std, segment_core],
+                    cutoff=cutoff,
+                )
+                if not matched:
+                    continue
+                score = ratio(component_core, segment_core)
+                if score > best_score:
+                    best_raw = str(segment_raw).strip(" ,;.-")
+                    best_score = score
+            return best_raw
+
+        province_surface = _recover_tail_segment_surface(province, max_offset=1)
+        district_surface = _recover_tail_segment_surface(district, max_offset=2)
+        ward_surface = _recover_tail_segment_surface(ward, max_offset=3)
+
         component_aliases = {
             "province": self._gather_alias_values(
                 province,
                 province_info,
                 level="province",
                 extra_values=[
+                    province_surface,
                     detected_components_raw[0] if detected_components_raw else None,
                     detected_prov,
                 ],
@@ -2846,13 +3050,14 @@ class AddressParser:
                 district,
                 district_info,
                 level="district",
-                extra_values=[raw_detected_dist, detected_dist],
+                extra_values=[district_surface, raw_detected_dist, detected_dist],
             ),
             "ward": self._gather_alias_values(
                 ward,
                 ward_info,
                 level="ward",
                 extra_values=[
+                    ward_surface,
                     raw_detected_ward,
                     normalized_detected_ward_token,
                     detected_ward,
@@ -2864,6 +3069,13 @@ class AddressParser:
             normalized_node,
             component_aliases,
         )
+        if segment_suffix_detected_ward_raw and street_address:
+            trimmed_street = self._strip_trailing_component_fragment(
+                street_address,
+                segment_suffix_detected_ward_raw,
+            )
+            if trimmed_street:
+                street_address = trimmed_street
         if province_component and component_aliases.get("province"):
             province_component["aliases"] = component_aliases["province"]
         if district_component and component_aliases.get("district"):
@@ -5453,6 +5665,211 @@ class AddressParser:
             return False
         return entry_digits.lstrip("0") == detected_digits.lstrip("0")
 
+    def _entry_matches_component_fragment(
+        self,
+        entry: Optional[Dict[str, Any]],
+        fragment: Optional[str],
+        *,
+        level: str = "ward",
+    ) -> bool:
+        if not isinstance(entry, dict) or not fragment:
+            return False
+        fragment_std = self.standardize_name(fragment, False)
+        if not fragment_std:
+            return False
+
+        fragment_keys = {fragment_std}
+        stripped_fragment = self._strip_generic_prefix(fragment_std)
+        if stripped_fragment:
+            fragment_keys.add(stripped_fragment)
+
+        entry_keys: Set[str] = set()
+
+        def _add(value: Optional[str]) -> None:
+            value_std = self.standardize_name(value, False) if value else ""
+            if not value_std:
+                return
+            entry_keys.add(value_std)
+            stripped_value = self._strip_generic_prefix(value_std)
+            if stripped_value:
+                entry_keys.add(stripped_value)
+
+        for value in (entry.get("name"), entry.get("full_name")):
+            _add(value)
+
+        legacy_names = entry.get("legacy_names")
+        if isinstance(legacy_names, str):
+            _add(legacy_names)
+        elif isinstance(legacy_names, list):
+            for alias in legacy_names:
+                if isinstance(alias, str):
+                    _add(alias)
+
+        if level == "ward":
+            code = entry.get("id") or entry.get("code")
+            if code is not None:
+                for alias in CUSTOM_WARD_ALIASES_BY_CODE.get(str(code), []):
+                    _add(alias)
+
+        return bool(fragment_keys & entry_keys)
+
+    def _recover_raw_suffix_fragment(
+        self,
+        raw_segment: Optional[str],
+        suffix_token_count: int,
+    ) -> str:
+        if not raw_segment or suffix_token_count <= 0:
+            return ""
+        token_matches = list(re.finditer(r"\b\w+\b", raw_segment, flags=re.UNICODE))
+        if len(token_matches) < suffix_token_count:
+            return raw_segment.strip(" ,;.-")
+        start = token_matches[-suffix_token_count].start()
+        return raw_segment[start:].strip(" ,;.-")
+
+    def _strip_trailing_component_fragment(
+        self,
+        raw_value: Optional[str],
+        fragment: Optional[str],
+    ) -> str:
+        if not raw_value or not fragment:
+            return (raw_value or "").strip()
+
+        fragment_std = self.standardize_name(fragment, False)
+        fragment_tokens = [token for token in fragment_std.split() if token]
+        if not fragment_tokens:
+            return raw_value.strip()
+
+        token_matches = list(re.finditer(r"\b\w+\b", raw_value, flags=re.UNICODE))
+        if len(token_matches) <= len(fragment_tokens):
+            return raw_value.strip()
+
+        raw_tokens_std = [
+            self._normalize_token_basic(match.group(0)) for match in token_matches
+        ]
+        if raw_tokens_std[-len(fragment_tokens) :] != fragment_tokens:
+            return raw_value.strip()
+
+        descriptor_tokens = {
+            "thon",
+            "xom",
+            "ap",
+            "to",
+            "kp",
+            "khu",
+            "kdc",
+            "kdt",
+            "cum",
+            "doi",
+            "duong",
+            "d",
+            "dg",
+            "ngo",
+            "ngach",
+            "hem",
+            "hxh",
+            "tuyen",
+            "ql",
+            "quoclo",
+            "tl",
+            "tinhlo",
+            "dailo",
+            "truc",
+        }
+        prefix_tokens = raw_tokens_std[: -len(fragment_tokens)]
+        if not any(token in descriptor_tokens for token in prefix_tokens):
+            return raw_value.strip()
+
+        meaningful_prefix = [
+            token
+            for token in prefix_tokens
+            if token not in descriptor_tokens
+            and token not in self._GENERIC_LOCATION_TOKENS
+        ]
+        if not meaningful_prefix:
+            return raw_value.strip()
+
+        cut_pos = token_matches[-len(fragment_tokens)].start()
+        return raw_value[:cut_pos].strip(" ,;.-")
+
+    def _infer_ward_from_segment_suffix(
+        self,
+        segment_std: Optional[str],
+        segment_raw: Optional[str],
+        *,
+        expected_province: Optional[str] = None,
+        expected_district: Optional[str] = None,
+    ) -> Optional[Tuple[str, str]]:
+        if (
+            not segment_std
+            or not segment_raw
+            or self._segment_has_location_prefix(segment_std)
+        ):
+            return None
+
+        tokens = [token for token in segment_std.split() if token]
+        if len(tokens) < 3:
+            return None
+
+        descriptor_tokens = {
+            "thon",
+            "xom",
+            "ap",
+            "to",
+            "kp",
+            "khu",
+            "kdc",
+            "kdt",
+            "cum",
+            "doi",
+            "duong",
+            "d",
+            "dg",
+            "ngo",
+            "ngach",
+            "hem",
+            "hxh",
+            "tuyen",
+            "ql",
+            "quoclo",
+            "tl",
+            "tinhlo",
+            "dailo",
+            "truc",
+        }
+
+        max_ward_len = min(4, len(tokens) - 1)
+        for ward_len in range(max_ward_len, 0, -1):
+            prefix_tokens = tokens[:-ward_len]
+            if len(prefix_tokens) < 2:
+                continue
+            if not any(token in descriptor_tokens for token in prefix_tokens):
+                continue
+
+            meaningful_prefix = [
+                token
+                for token in prefix_tokens
+                if token not in descriptor_tokens
+                and token not in self._GENERIC_LOCATION_TOKENS
+            ]
+            if not meaningful_prefix:
+                continue
+
+            fragment = " ".join(tokens[-ward_len:])
+            ward_entry = self._lookup_ward_info(
+                fragment,
+                expected_province,
+                expected_district,
+            )
+            if not ward_entry or not self._entry_matches_component_fragment(
+                ward_entry, fragment, level="ward"
+            ):
+                continue
+
+            raw_fragment = self._recover_raw_suffix_fragment(segment_raw, ward_len)
+            return raw_fragment or self._titleize_token(fragment), fragment
+
+        return None
+
     def _split_address_segments(self, original: str) -> List[Tuple[str, str]]:
         if not original:
             return []
@@ -5751,6 +6168,134 @@ class AddressParser:
                 if alias:
                     self.invert_ward_to_indices[alias].add(node_index)
 
+    def _fuzzy_match_component_key(
+        self,
+        value: Optional[str],
+        choices: Union[Set[str], List[str], Tuple[str, ...]],
+        *,
+        cutoff: int = 88,
+    ) -> Optional[str]:
+        if not value:
+            return None
+
+        normalized = self.standardize_name(value, False)
+        if not normalized:
+            return None
+
+        choice_list = [choice for choice in choices if choice]
+        if not choice_list:
+            return None
+        if normalized in choice_list:
+            return normalized
+
+        normalized_core = self._strip_generic_prefix(normalized) or normalized
+        if len(normalized_core) < 4:
+            return None
+
+        def _digit_key(text: str) -> str:
+            return "".join(ch for ch in text if ch.isdigit())
+
+        fragment_digits = _digit_key(normalized)
+        token_count = len(normalized_core.split())
+
+        narrowed_choices: List[str] = []
+        for choice in choice_list:
+            choice_core = self._strip_generic_prefix(choice) or choice
+            if not choice_core:
+                continue
+            if fragment_digits:
+                choice_digits = _digit_key(choice)
+                if choice_digits and choice_digits != fragment_digits:
+                    continue
+            token_delta = abs(len(choice_core.split()) - token_count)
+            if token_delta > 1:
+                continue
+            len_delta = abs(len(choice_core) - len(normalized_core))
+            if len_delta > max(5, len(normalized_core) // 2):
+                continue
+            narrowed_choices.append(choice)
+
+        if not narrowed_choices:
+            if fragment_digits:
+                digit_matches = [
+                    choice
+                    for choice in choice_list
+                    if _digit_key(choice) == fragment_digits
+                ]
+                if digit_matches:
+                    narrowed_choices = digit_matches
+            if not narrowed_choices:
+                narrowed_choices = choice_list
+
+        effective_cutoff = cutoff
+        if len(normalized_core) <= 5:
+            effective_cutoff = max(effective_cutoff, 92)
+        elif len(normalized_core) <= 7:
+            effective_cutoff = max(effective_cutoff, 89)
+        elif len(normalized_core) <= 10:
+            effective_cutoff = max(effective_cutoff, 87)
+
+        candidates = rf_process.extract(
+            normalized_core,
+            narrowed_choices,
+            scorer=rf_fuzz.WRatio,
+            processor=lambda item: self._strip_generic_prefix(item) or item,
+            score_cutoff=max(72, effective_cutoff - 8),
+            limit=8,
+        )
+        if not candidates:
+            return None
+
+        normalized_tokens = normalized_core.split()
+        first_token = normalized_tokens[0] if normalized_tokens else ""
+        last_token = normalized_tokens[-1] if normalized_tokens else ""
+
+        best_choice: Optional[str] = None
+        best_score = float("-inf")
+        second_score = float("-inf")
+
+        for candidate, wratio_score, _ in candidates:
+            candidate_core = self._strip_generic_prefix(candidate) or candidate
+            if not candidate_core:
+                continue
+
+            direct_ratio = ratio(normalized_core, candidate_core)
+            token_ratio = rf_fuzz.token_sort_ratio(normalized_core, candidate_core)
+            partial = partial_ratio(normalized_core, candidate_core)
+            len_delta = abs(len(candidate_core) - len(normalized_core))
+            token_delta = abs(len(candidate_core.split()) - token_count)
+
+            effective_score = max(
+                wratio_score,
+                direct_ratio,
+                token_ratio,
+                min(partial, direct_ratio + 5),
+            )
+            effective_score -= len_delta * 1.5
+            if token_delta > 1:
+                effective_score -= (token_delta - 1) * 10
+
+            candidate_tokens = candidate_core.split()
+            if first_token and candidate_tokens and candidate_tokens[0] == first_token:
+                effective_score += 1.5
+            if last_token and candidate_tokens and candidate_tokens[-1] == last_token:
+                effective_score += 2.5
+            if fragment_digits and _digit_key(candidate) == fragment_digits:
+                effective_score += 1.5
+
+            if effective_score > best_score:
+                second_score = best_score
+                best_choice = candidate
+                best_score = effective_score
+            elif effective_score > second_score:
+                second_score = effective_score
+
+        if best_choice is None or best_score < effective_cutoff:
+            return None
+        if second_score >= best_score - 1.5 and best_score < effective_cutoff + 3:
+            return None
+        return best_choice
+
     def _derive_ward_names(
         self,
         ward_name: Optional[str],
@@ -6008,8 +6553,29 @@ class AddressParser:
                     continue
                 if norm in source_norm and len(norm) > best_len:
                     best_name = name
-                    best_len = len(norm)
+                best_len = len(norm)
             if best_name:
+                return best_name
+
+        detected_std = self.standardize_name(detected_value, False)
+        detected_core = self._strip_generic_prefix(detected_std) or detected_std
+        if detected_core:
+            best_name = None
+            best_score = float("-inf")
+            for name, norm in candidates:
+                if not norm:
+                    continue
+                norm_core = self._strip_generic_prefix(norm) or norm
+                if not norm_core:
+                    continue
+                score = max(
+                    ratio(detected_core, norm_core),
+                    min(partial_ratio(detected_core, norm_core), ratio(detected_core, norm_core) + 5),
+                )
+                if score > best_score:
+                    best_name = name
+                    best_score = score
+            if best_name and best_score >= 86:
                 return best_name
 
         return fallback or candidates[0][0]
@@ -6326,6 +6892,66 @@ class AddressParser:
             entry = _filter(province_bucket, enforce_province=True)
             if entry:
                 return entry
+
+        fuzzy_token = None
+        if province_std:
+            province_choices = [
+                key
+                for (prov_key, key), entries in self.ward_lookup_by_province_name.items()
+                if prov_key == province_std
+                and any(entry.get("is_new_format") for entry in entries)
+            ]
+            fuzzy_token = self._fuzzy_match_component_key(
+                token, province_choices, cutoff=88
+            )
+        else:
+            global_choices = [
+                key
+                for key, entries in self.ward_lookup_by_name.items()
+                if any(entry.get("is_new_format") for entry in entries)
+            ]
+            fuzzy_token = self._fuzzy_match_component_key(
+                token, global_choices, cutoff=90
+            )
+        if fuzzy_token and fuzzy_token != token:
+            token = fuzzy_token
+        if province_std:
+            province_bucket = self.ward_lookup_by_province_name.get(
+                (province_std, token), []
+            )
+            entry = _filter(province_bucket, enforce_province=True)
+            if entry:
+                return entry
+
+        fuzzy_token = None
+        if province_std:
+            province_choices = [
+                key
+                for (prov_key, key), entries in self.ward_lookup_by_province_name.items()
+                if prov_key == province_std
+                and any(entry.get("is_new_format") for entry in entries)
+            ]
+            fuzzy_token = self._fuzzy_match_component_key(
+                token, province_choices, cutoff=88
+            )
+        else:
+            global_choices = [
+                key
+                for key, entries in self.ward_lookup_by_name.items()
+                if any(entry.get("is_new_format") for entry in entries)
+            ]
+            fuzzy_token = self._fuzzy_match_component_key(
+                token, global_choices, cutoff=90
+            )
+        if fuzzy_token and fuzzy_token != token:
+            token = fuzzy_token
+            if province_std:
+                province_bucket = self.ward_lookup_by_province_name.get(
+                    (province_std, token), []
+                )
+                entry = _filter(province_bucket, enforce_province=True)
+                if entry:
+                    return entry
 
         candidates = self.ward_lookup_by_name.get(token, [])
         filtered = [
@@ -6656,9 +7282,19 @@ class AddressParser:
 
         return primary_standardized, ngram_set
 
-    def standardize_name(self, name: str, advanced_process: bool = False) -> str:
+    def standardize_name(
+        self, name: str, advanced_process: Union[bool, str] = False
+    ) -> str:
         if not name:
             return ""
+
+        if isinstance(advanced_process, str):
+            mode = advanced_process.strip().lower() or "basic"
+        else:
+            mode = "aggressive" if advanced_process else "basic"
+
+        if mode not in {"basic", "search", "aggressive"}:
+            mode = "aggressive" if bool(advanced_process) else "basic"
 
         # --- Bước 1: Đưa về chữ thường ---
         s = name.lower()
@@ -6671,7 +7307,7 @@ class AddressParser:
         # # --- Bước 1.3: Thay các dấu "." và "-" bằng space ---
         # s = s.replace(".", " ").replace("-", " ")
 
-        if advanced_process:
+        if mode in {"search", "aggressive"}:
 
             s = re.sub(r"\b(t.t.h)\b", " thua thien hue ", s, flags=re.IGNORECASE)
 
@@ -6746,34 +7382,35 @@ class AddressParser:
             for phrase in redundant_phrases:
                 s = s.replace(phrase, " ")
 
-            s = re.sub(
-                r"\b("
-                r"|tiểu\s*khu(\s*\d+\w*)?"  # tiểu khu 3, tiểu khu12a
-                r"|khu\s*pho(\s*\d+\w*)?"  # khu phố, khu phố 3
-                r"|khu\s*phố(\s*\d+\w*)?"  # khu phố, khu phố 3
-                r"|khu\s*vuc(\s*\d+\w*)?"  # khu vực, khu vực 2
-                r"|khu\s*vực(\s*\d+\w*)?"  # khu vực, khu vực 2
-                r"|khu(\s*\d+\w*)?"  # khu, khu 3, khu12a
-                r"|kp(\s*\d+\w*)?"  # kp2, kp 3
-                r"|tổ\s*dân\s*phố(\s*\d+\w*)?"  # tổ dân phố 5, tổ dân phố12a
-                r"|tổ(\s*\d+\w*)?"  # tổ 1
-                r"|thôn(\s*\d+\w*)?"  # thôn 3
-                r"|xóm(\s*\d+\w*)?"  # xóm 2
-                r"|cụm(\s*\d+\w*)?"  # cụm 3
-                r"|phố(\s*\d+\w*)?"  # phố 5
-                r"|khóm(\s*\d+\w*)?"  # khóm 2
-                r"|số\s*nhà(\s*\d+\w*)?"  # số nhà 12
-                r"|số(\s*\d+\w*)?"  # số 12
-                r"|nhà(\s*\d+\w*)?"  # nhà 12
-                r"|ấp(\s*\d+\w*)?"  # ấp 1, ấp2
-                r"|ngách\s*\d+\w*"  # ngách 12, ngách12a
-                r"|ngõ\s*\d+\w*"  # ngõ 12, ngõ12a
-                r"|hẻm\s*\d+\w*"
-                r")\b",
-                "",
-                s,
-                flags=re.IGNORECASE,
-            )
+            if mode == "aggressive":
+                s = re.sub(
+                    r"\b("
+                    r"|tiểu\s*khu(\s*\d+\w*)?"  # tiểu khu 3, tiểu khu12a
+                    r"|khu\s*pho(\s*\d+\w*)?"  # khu phố, khu phố 3
+                    r"|khu\s*phố(\s*\d+\w*)?"  # khu phố, khu phố 3
+                    r"|khu\s*vuc(\s*\d+\w*)?"  # khu vực, khu vực 2
+                    r"|khu\s*vực(\s*\d+\w*)?"  # khu vực, khu vực 2
+                    r"|khu(\s*\d+\w*)?"  # khu, khu 3, khu12a
+                    r"|kp(\s*\d+\w*)?"  # kp2, kp 3
+                    r"|tổ\s*dân\s*phố(\s*\d+\w*)?"  # tổ dân phố 5, tổ dân phố12a
+                    r"|tổ(\s*\d+\w*)?"  # tổ 1
+                    r"|thôn(\s*\d+\w*)?"  # thôn 3
+                    r"|xóm(\s*\d+\w*)?"  # xóm 2
+                    r"|cụm(\s*\d+\w*)?"  # cụm 3
+                    r"|phố(\s*\d+\w*)?"  # phố 5
+                    r"|khóm(\s*\d+\w*)?"  # khóm 2
+                    r"|số\s*nhà(\s*\d+\w*)?"  # số nhà 12
+                    r"|số(\s*\d+\w*)?"  # số 12
+                    r"|nhà(\s*\d+\w*)?"  # nhà 12
+                    r"|ấp(\s*\d+\w*)?"  # ấp 1, ấp2
+                    r"|ngách\s*\d+\w*"  # ngách 12, ngách12a
+                    r"|ngõ\s*\d+\w*"  # ngõ 12, ngõ12a
+                    r"|hẻm\s*\d+\w*"
+                    r")\b",
+                    "",
+                    s,
+                    flags=re.IGNORECASE,
+                )
 
             # --- Bước 3: Loại các cụm "tp" dính liền chữ, ví dụ "tpbao loc" → "bao loc" ---
             s = re.sub(r"\btp([a-z0-9]+)", r"\1", s)
@@ -6786,7 +7423,7 @@ class AddressParser:
         # --- Bước 5: Giữ lại a-z, 0-9, space ---
         s = re.sub(r"[^a-z0-9\s]+", " ", s)
 
-        if advanced_process:
+        if mode in {"search", "aggressive"}:
             s = re.sub(
                 r"\b(hochiminh|hochi\s*minh|ho\s*chiminh|hcm|hcminh)\b",
                 "ho chi minh",
@@ -6809,15 +7446,15 @@ class AddressParser:
                 for abbr, full in mapping.items():
                     s = re.sub(rf"\b{abbr}\b", full, s, flags=re.IGNORECASE)
 
-            # --- Bước 7: Loại bỏ các chuỗi chứa từ 3 chữ số trở lên ---
+            if mode == "aggressive":
+                # --- Bước 7: Loại bỏ các chuỗi chứa từ 3 chữ số trở lên ---
+                # Bỏ số 0 ở đầu của mọi cụm số
+                s = re.sub(r"\b0+(\d+)\b", r"\1", s)
+                # Tức là "abc123xyz" hoặc "123" đều bị loại bỏ phần chứa "123"
+                s = re.sub(r"\d{3,}", "", s)
 
-            # Bỏ số 0 ở đầu của mọi cụm số
-            s = re.sub(r"\b0+(\d+)\b", r"\1", s)
-            # Tức là "abc123xyz" hoặc "123" đều bị loại bỏ phần chứa "123"
-            s = re.sub(r"\d{3,}", "", s)
-
-            # --- Bước 8: Bỏ 'p' hoặc 'q' trước số (vd: p1 → 1, q10 → 10) ---
-            s = re.sub(r"\b[pq](\d+)\b", r"\1", s)
+                # --- Bước 8: Bỏ 'p' hoặc 'q' trước số (vd: p1 → 1, q10 → 10) ---
+                s = re.sub(r"\b[pq](\d+)\b", r"\1", s)
 
             # --- Bước X: Loại bỏ các cụm địa chỉ thừa ---
 
@@ -7599,7 +8236,9 @@ class AddressParser:
         def _digit_key(value: str) -> str:
             return "".join(ch for ch in value if ch.isdigit())
 
-        def _pick_best(fragment: str, choices: List[str]) -> Optional[str]:
+        def _pick_best(
+            fragment: str, choices: List[str], *, cutoff: int = 84
+        ) -> Optional[str]:
             fragment = fragment.strip()
             if not fragment:
                 return None
@@ -7611,52 +8250,7 @@ class AddressParser:
                 fragment = " ".join(tokens[:4])
             else:
                 fragment = " ".join(tokens[:3])
-            exact_fragment = fragment
-            if exact_fragment in choices:
-                return exact_fragment
-
-            fragment_digits = _digit_key(fragment)
-            narrowed_choices = choices
-            if fragment_digits:
-                digit_matches = [
-                    candidate
-                    for candidate in choices
-                    if _digit_key(candidate) == fragment_digits
-                ]
-                if digit_matches:
-                    narrowed_choices = digit_matches
-
-            candidates = rf_process.extract(
-                fragment,
-                narrowed_choices,
-                scorer=partial_ratio,
-                score_cutoff=70,
-                limit=10,
-            )
-            if not candidates:
-                return None
-
-            best_choice = None
-            best_score = -1.0
-            best_len_delta = None
-
-            for candidate, score, _ in candidates:
-                if candidate == exact_fragment:
-                    return candidate
-                len_delta = abs(len(candidate) - len(fragment))
-                if score > best_score:
-                    best_choice = candidate
-                    best_score = score
-                    best_len_delta = len_delta
-                    continue
-                if score == best_score:
-                    if len_delta < (
-                        best_len_delta if best_len_delta is not None else float("inf")
-                    ):
-                        best_choice = candidate
-                        best_len_delta = len_delta
-                        continue
-            return best_choice
+            return self._fuzzy_match_component_key(fragment, choices, cutoff=cutoff)
 
         def _trim_province_fragment(fragment: str) -> str:
             if not fragment:
@@ -7711,7 +8305,7 @@ class AddressParser:
                 ):
                     prov = "ho chi minh"
                 else:
-                    prov = _pick_best(fragment, province_choices)
+                    prov = _pick_best(fragment, province_choices, cutoff=84)
                 if prov:
                     break
 
@@ -7732,7 +8326,7 @@ class AddressParser:
                     ):
                         prov = "ho chi minh"
                     else:
-                        candidate = _pick_best(fragment, province_choices)
+                        candidate = _pick_best(fragment, province_choices, cutoff=84)
                         if candidate and _is_central_municipality(candidate):
                             prov = candidate
 
@@ -7823,7 +8417,7 @@ class AddressParser:
                     continue
                 if frag_first_token == "thi" and frag_second_token == "tran":
                     continue
-                candidate = _pick_best(fragment, district_choices)
+                candidate = _pick_best(fragment, district_choices, cutoff=84)
                 if not candidate:
                     continue
                 if _is_province_like(candidate, prefix):
@@ -7956,7 +8550,11 @@ class AddressParser:
                     fragment = f"{prefix} {limited}".strip() if limited else prefix
                 candidate = _try_prefixed_candidate(prefix, fragment)
                 if not candidate:
-                    candidate = _pick_best(fragment, sorted(self.ward_names_std))
+                    candidate = _pick_best(
+                        fragment,
+                        sorted(self.ward_names_std),
+                        cutoff=84,
+                    )
                 if not candidate:
                     continue
                 priority = _ward_prefix_priority(prefix)
@@ -8016,6 +8614,11 @@ class AddressParser:
             fragment = " ".join(trimmed[-window:])
             if fragment in self.province_names_std:
                 return fragment
+            fuzzy_match = self._fuzzy_match_component_key(
+                fragment, self.province_names_std, cutoff=88
+            )
+            if fuzzy_match:
+                return fuzzy_match
 
         last_token = trimmed[-1]
         if len(last_token) >= 4 and last_token in self.province_names_std:
