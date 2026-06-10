@@ -17,6 +17,9 @@ tests = [
     {
         "mst_address": "Trương Quang Trọng, Phường Trương Quang Trọng, Thành phố Quảng Ngãi, Quảng Ngãi",
     },
+    {
+        "mst_address": "341/1 Ấp 1, Xã Hiệp Thạnh, Huyện Châu Thành, Tỉnh Long An, Việt Nam",
+    },
 ]
 
 if __name__ == "__main__":

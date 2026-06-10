@@ -407,9 +407,9 @@
   },
   {
     "code": "00112",
-    "name": "Thụy Khuê",
+    "name": "Thuỵ Khuê",
     "name_en": "Thuy Khue",
-    "full_name": "Phường Thụy Khuê",
+    "full_name": "Phường Thuỵ Khuê",
     "full_name_en": "Thuy Khue Ward",
     "code_name": "thuy_khue",
     "district_code": "003",
@@ -427,9 +427,9 @@
   },
   {
     "code": "00118",
-    "name": "Ngọc Thụy",
+    "name": "Ngọc Thuỵ",
     "name_en": "Ngoc Thuy",
-    "full_name": "Phường Ngọc Thụy",
+    "full_name": "Phường Ngọc Thuỵ",
     "full_name_en": "Ngoc Thuy Ward",
     "code_name": "ngoc_thuy",
     "district_code": "004",
@@ -467,9 +467,9 @@
   },
   {
     "code": "00130",
-    "name": "Gia Thụy",
+    "name": "Gia Thuỵ",
     "name_en": "Gia Thuy",
-    "full_name": "Phường Gia Thụy",
+    "full_name": "Phường Gia Thuỵ",
     "full_name_en": "Gia Thuy Ward",
     "code_name": "gia_thuy",
     "district_code": "004",
@@ -2108,9 +2108,9 @@
   },
   {
     "code": "00604",
-    "name": "Thụy Phương",
+    "name": "Thuỵ Phương",
     "name_en": "Thuy Phuong",
-    "full_name": "Phường Thụy Phương",
+    "full_name": "Phường Thuỵ Phương",
     "full_name_en": "Thuy Phuong Ward",
     "code_name": "thuy_phuong",
     "district_code": "021",
@@ -3298,8 +3298,8 @@
     "district_code": "030",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Thuận Hòa",
-      "Thuận Hòa"
+      "Xã Thuận Hoà",
+      "Thuận Hoà"
     ]
   },
   {
@@ -3314,9 +3314,9 @@
   },
   {
     "code": "00928",
-    "name": "Thanh Thủy",
+    "name": "Thanh Thuỷ",
     "name_en": "Thanh Thuy",
-    "full_name": "Xã Thanh Thủy",
+    "full_name": "Xã Thanh Thuỷ",
     "full_name_en": "Thanh Thuy Commune",
     "code_name": "thanh_thuy",
     "district_code": "030",
@@ -3862,9 +3862,9 @@
   },
   {
     "code": "01093",
-    "name": "Nậm Khòa",
+    "name": "Nậm Khoà",
     "name_en": "Nam Khoa",
-    "full_name": "Xã Nậm Khòa",
+    "full_name": "Xã Nậm Khoà",
     "full_name_en": "Nam Khoa Commune",
     "code_name": "nam_khoa",
     "district_code": "032",
@@ -4931,9 +4931,9 @@
   },
   {
     "code": "01392",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Thị trấn Xuân Hòa",
+    "full_name": "Thị trấn Xuân Hoà",
     "full_name_en": "Xuan Hoa Township",
     "code_name": "xuan_hoa",
     "district_code": "045",
@@ -5586,8 +5586,8 @@
     "district_code": "049",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Phục Hòa",
-      "Phục Hòa"
+      "Xã Phục Hoà",
+      "Phục Hoà"
     ]
   },
   {
@@ -5610,8 +5610,8 @@
     "district_code": "051",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hòa An",
-      "Hòa An"
+      "Xã Hoà An",
+      "Hoà An"
     ]
   },
   {
@@ -6039,9 +6039,9 @@
   },
   {
     "code": "01810",
-    "name": "Thụy Hùng",
+    "name": "Thuỵ Hùng",
     "name_en": "Thuy Hung",
-    "full_name": "Xã Thụy Hùng",
+    "full_name": "Xã Thuỵ Hùng",
     "full_name_en": "Thuy Hung Commune",
     "code_name": "thuy_hung",
     "district_code": "053",
@@ -6187,9 +6187,9 @@
   },
   {
     "code": "01855",
-    "name": "Xuất Hóa",
+    "name": "Xuất Hoá",
     "name_en": "Xuat Hoa",
-    "full_name": "Phường Xuất Hóa",
+    "full_name": "Phường Xuất Hoá",
     "full_name_en": "Xuat Hoa Ward",
     "code_name": "xuat_hoa",
     "district_code": "058",
@@ -7517,8 +7517,8 @@
     "district_code": "073",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Chiêm Hóa",
-      "Chiêm Hóa"
+      "Xã Chiêm Hoá",
+      "Chiêm Hoá"
     ]
   },
   {
@@ -7673,9 +7673,9 @@
   },
   {
     "code": "02335",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "073",
@@ -7713,9 +7713,9 @@
   },
   {
     "code": "02347",
-    "name": "Trung Hòa",
+    "name": "Trung Hoà",
     "name_en": "Trung Hoa",
-    "full_name": "Xã Trung Hòa",
+    "full_name": "Xã Trung Hoà",
     "full_name_en": "Trung Hoa Commune",
     "code_name": "trung_hoa",
     "district_code": "073",
@@ -7733,9 +7733,9 @@
   },
   {
     "code": "02353",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "073",
@@ -7957,9 +7957,9 @@
   },
   {
     "code": "02419",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Xã Thái Hòa",
+    "full_name": "Xã Thái Hoà",
     "full_name_en": "Thai Hoa Commune",
     "code_name": "thai_hoa",
     "district_code": "074",
@@ -8491,9 +8491,9 @@
   },
   {
     "code": "02578",
-    "name": "Hợp Hòa",
+    "name": "Hợp Hoà",
     "name_en": "Hop Hoa",
-    "full_name": "Xã Hợp Hòa",
+    "full_name": "Xã Hợp Hoà",
     "full_name_en": "Hop Hoa Commune",
     "code_name": "hop_hoa",
     "district_code": "076",
@@ -8633,8 +8633,8 @@
     "district_code": "076",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Sơn Thủy",
-      "Sơn Thủy"
+      "Xã Sơn Thuỷ",
+      "Sơn Thuỷ"
     ]
   },
   {
@@ -9727,8 +9727,8 @@
     "district_code": "087",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Xuân Hòa",
-      "Xuân Hòa"
+      "Xã Xuân Hoà",
+      "Xuân Hoà"
     ]
   },
   {
@@ -11037,9 +11037,9 @@
   },
   {
     "code": "03280",
-    "name": "Tỏa Tình",
+    "name": "Toả Tình",
     "name_en": "Toa Tinh",
-    "full_name": "Xã Tỏa Tình",
+    "full_name": "Xã Toả Tình",
     "full_name_en": "Toa Tinh Commune",
     "code_name": "toa_tinh",
     "district_code": "099",
@@ -15105,8 +15105,8 @@
     "district_code": "135",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Khánh Hòa",
-      "Khánh Hòa"
+      "Xã Khánh Hoà",
+      "Khánh Hoà"
     ]
   },
   {
@@ -15670,9 +15670,9 @@
   },
   {
     "code": "04513",
-    "name": "Hòa Cuông",
+    "name": "Hoà Cuông",
     "name_en": "Hoa Cuong",
-    "full_name": "Xã Hòa Cuông",
+    "full_name": "Xã Hoà Cuông",
     "full_name_en": "Hoa Cuong Commune",
     "code_name": "hoa_cuong",
     "district_code": "138",
@@ -16553,9 +16553,9 @@
   },
   {
     "code": "04792",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Phường Tân Hòa",
+    "full_name": "Phường Tân Hoà",
     "full_name_en": "Tan Hoa Ward",
     "code_name": "tan_hoa",
     "district_code": "148",
@@ -16571,7 +16571,7 @@
     "district_code": "148",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Bình"
+      "Phường Hoà Bình"
     ]
   },
   {
@@ -16646,9 +16646,9 @@
   },
   {
     "code": "04825",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "148",
@@ -16783,9 +16783,9 @@
   },
   {
     "code": "04873",
-    "name": "Yên Hòa",
+    "name": "Yên Hoà",
     "name_en": "Yen Hoa",
-    "full_name": "Xã Yên Hòa",
+    "full_name": "Xã Yên Hoà",
     "full_name_en": "Yen Hoa Commune",
     "code_name": "yen_hoa",
     "district_code": "150",
@@ -16897,9 +16897,9 @@
   },
   {
     "code": "04912",
-    "name": "Mông Hóa",
+    "name": "Mông Hoá",
     "name_en": "Mong Hoa",
-    "full_name": "Xã Mông Hóa",
+    "full_name": "Xã Mông Hoá",
     "full_name_en": "Mong Hoa Commune",
     "code_name": "mong_hoa",
     "district_code": "148",
@@ -16994,9 +16994,9 @@
   },
   {
     "code": "04945",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "152",
@@ -17152,9 +17152,9 @@
   },
   {
     "code": "05017",
-    "name": "Xuân Thủy",
+    "name": "Xuân Thuỷ",
     "name_en": "Xuan Thuy",
-    "full_name": "Xã Xuân Thủy",
+    "full_name": "Xã Xuân Thuỷ",
     "full_name_en": "Xuan Thuy Commune",
     "code_name": "xuan_thuy",
     "district_code": "153",
@@ -17256,9 +17256,9 @@
   },
   {
     "code": "05083",
-    "name": "Mi Hòa",
+    "name": "Mi Hoà",
     "name_en": "Mi Hoa",
-    "full_name": "Xã Mi Hòa",
+    "full_name": "Xã Mi Hoà",
     "full_name_en": "Mi Hoa Commune",
     "code_name": "mi_hoa",
     "district_code": "153",
@@ -17435,9 +17435,9 @@
   },
   {
     "code": "05143",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Xã Mỹ Hòa",
+    "full_name": "Xã Mỹ Hoà",
     "full_name_en": "My Hoa Commune",
     "code_name": "my_hoa",
     "district_code": "155",
@@ -17576,9 +17576,9 @@
   },
   {
     "code": "05206",
-    "name": "Sơn Thủy",
+    "name": "Sơn Thuỷ",
     "name_en": "Son Thuy",
-    "full_name": "Xã Sơn Thủy",
+    "full_name": "Xã Sơn Thuỷ",
     "full_name_en": "Son Thuy Commune",
     "code_name": "son_thuy",
     "district_code": "156",
@@ -17660,9 +17660,9 @@
   },
   {
     "code": "05245",
-    "name": "Săm Khóe",
+    "name": "Săm Khoé",
     "name_en": "Sam Khoe",
-    "full_name": "Xã Săm Khóe",
+    "full_name": "Xã Săm Khoé",
     "full_name_en": "Sam Khoe Commune",
     "code_name": "sam_khoe",
     "district_code": "156",
@@ -17734,9 +17734,9 @@
   },
   {
     "code": "05269",
-    "name": "Quý Hòa",
+    "name": "Quý Hoà",
     "name_en": "Quy Hoa",
-    "full_name": "Xã Quý Hòa",
+    "full_name": "Xã Quý Hoà",
     "full_name_en": "Quy Hoa Commune",
     "code_name": "quy_hoa",
     "district_code": "157",
@@ -17838,9 +17838,9 @@
   },
   {
     "code": "05302",
-    "name": "Xuất Hóa",
+    "name": "Xuất Hoá",
     "name_en": "Xuat Hoa",
-    "full_name": "Xã Xuất Hóa",
+    "full_name": "Xã Xuất Hoá",
     "full_name_en": "Xuat Hoa Commune",
     "code_name": "xuat_hoa",
     "district_code": "157",
@@ -17980,8 +17980,8 @@
     "district_code": "158",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Yên Thủy",
-      "Yên Thủy"
+      "Xã Yên Thuỷ",
+      "Yên Thuỷ"
     ]
   },
   {
@@ -18094,8 +18094,8 @@
     "district_code": "159",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Lạc Thủy",
-      "Lạc Thủy"
+      "Xã Lạc Thuỷ",
+      "Lạc Thuỷ"
     ]
   },
   {
@@ -18648,8 +18648,8 @@
     "legacy_names": [
       "Xã Bảo Cường",
       "Bảo Cường",
-      "Xã Định Hóa",
-      "Định Hóa"
+      "Xã Định Hoá",
+      "Định Hoá"
     ]
   },
   {
@@ -18985,9 +18985,9 @@
   },
   {
     "code": "05671",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "169",
@@ -19025,9 +19025,9 @@
   },
   {
     "code": "05683",
-    "name": "Hóa Trung",
+    "name": "Hoá Trung",
     "name_en": "Hoa Trung",
-    "full_name": "Xã Hóa Trung",
+    "full_name": "Xã Hoá Trung",
     "full_name_en": "Hoa Trung Commune",
     "code_name": "hoa_trung",
     "district_code": "169",
@@ -19055,15 +19055,15 @@
   },
   {
     "code": "05692",
-    "name": "Hóa Thượng",
+    "name": "Hoá Thượng",
     "name_en": "Hoa Thuong",
-    "full_name": "Thị trấn Hóa Thượng",
+    "full_name": "Thị trấn Hoá Thượng",
     "full_name_en": "Hoa Thuong Township",
     "code_name": "hoa_thuong",
     "district_code": "169",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hóa Thượng",
+      "Xã Hoá Thượng",
       "Xã Đồng Hỷ",
       "Đồng Hỷ"
     ]
@@ -19110,9 +19110,9 @@
   },
   {
     "code": "05707",
-    "name": "Nam Hòa",
+    "name": "Nam Hoà",
     "name_en": "Nam Hoa",
-    "full_name": "Xã Nam Hòa",
+    "full_name": "Xã Nam Hoà",
     "full_name_en": "Nam Hoa Commune",
     "code_name": "nam_hoa",
     "district_code": "169",
@@ -19912,9 +19912,9 @@
   },
   {
     "code": "05935",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "173",
@@ -19932,9 +19932,9 @@
   },
   {
     "code": "05941",
-    "name": "Điềm Thụy",
+    "name": "Điềm Thuỵ",
     "name_en": "Diem Thuy",
-    "full_name": "Xã Điềm Thụy",
+    "full_name": "Xã Điềm Thuỵ",
     "full_name_en": "Diem Thuy Commune",
     "code_name": "diem_thuy",
     "district_code": "173",
@@ -20365,9 +20365,9 @@
   },
   {
     "code": "06076",
-    "name": "Quý Hòa",
+    "name": "Quý Hoà",
     "name_en": "Quy Hoa",
-    "full_name": "Xã Quý Hòa",
+    "full_name": "Xã Quý Hoà",
     "full_name_en": "Quy Hoa Commune",
     "code_name": "quy_hoa",
     "district_code": "181",
@@ -20395,9 +20395,9 @@
   },
   {
     "code": "06085",
-    "name": "Thiện Hòa",
+    "name": "Thiện Hoà",
     "name_en": "Thien Hoa",
-    "full_name": "Xã Thiện Hòa",
+    "full_name": "Xã Thiện Hoà",
     "full_name_en": "Thien Hoa Commune",
     "code_name": "thien_hoa",
     "district_code": "181",
@@ -20455,9 +20455,9 @@
   },
   {
     "code": "06103",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "181",
@@ -20475,9 +20475,9 @@
   },
   {
     "code": "06109",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "181",
@@ -20561,9 +20561,9 @@
   },
   {
     "code": "06136",
-    "name": "Thụy Hùng",
+    "name": "Thuỵ Hùng",
     "name_en": "Thuy Hung",
-    "full_name": "Xã Thụy Hùng",
+    "full_name": "Xã Thuỵ Hùng",
     "full_name_en": "Thuy Hung Commune",
     "code_name": "thuy_hung",
     "district_code": "182",
@@ -20645,9 +20645,9 @@
   },
   {
     "code": "06163",
-    "name": "Thành Hòa",
+    "name": "Thành Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thành Hòa",
+    "full_name": "Xã Thành Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "182",
@@ -20745,9 +20745,9 @@
   },
   {
     "code": "06193",
-    "name": "Thanh Lòa",
+    "name": "Thanh Loà",
     "name_en": "Thanh Loa",
-    "full_name": "Xã Thanh Lòa",
+    "full_name": "Xã Thanh Loà",
     "full_name_en": "Thanh Loa Commune",
     "code_name": "thanh_loa",
     "district_code": "183",
@@ -20799,9 +20799,9 @@
   },
   {
     "code": "06208",
-    "name": "Thụy Hùng",
+    "name": "Thuỵ Hùng",
     "name_en": "Thuy Hung",
-    "full_name": "Xã Thụy Hùng",
+    "full_name": "Xã Thuỵ Hùng",
     "full_name_en": "Thuy Hung Commune",
     "code_name": "thuy_hung",
     "district_code": "183",
@@ -20852,9 +20852,9 @@
   },
   {
     "code": "06223",
-    "name": "Hòa Cư",
+    "name": "Hoà Cư",
     "name_en": "Hoa Cu",
-    "full_name": "Xã Hòa Cư",
+    "full_name": "Xã Hoà Cư",
     "full_name_en": "Hoa Cu Commune",
     "code_name": "hoa_cu",
     "district_code": "183",
@@ -20975,9 +20975,9 @@
   },
   {
     "code": "06274",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "184",
@@ -21138,9 +21138,9 @@
   },
   {
     "code": "06331",
-    "name": "Vạn Thủy",
+    "name": "Vạn Thuỷ",
     "name_en": "Van Thuy",
-    "full_name": "Xã Vạn Thủy",
+    "full_name": "Xã Vạn Thuỷ",
     "full_name_en": "Van Thuy Commune",
     "code_name": "van_thuy",
     "district_code": "185",
@@ -21272,9 +21272,9 @@
   },
   {
     "code": "06376",
-    "name": "Nhất Hòa",
+    "name": "Nhất Hoà",
     "name_en": "Nhat Hoa",
-    "full_name": "Xã Nhất Hòa",
+    "full_name": "Xã Nhất Hoà",
     "full_name_en": "Nhat Hoa Commune",
     "code_name": "nhat_hoa",
     "district_code": "185",
@@ -21345,9 +21345,9 @@
   },
   {
     "code": "06397",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "186",
@@ -21445,9 +21445,9 @@
   },
   {
     "code": "06430",
-    "name": "Hòa Lạc",
+    "name": "Hoà Lạc",
     "name_en": "Hoa Lac",
-    "full_name": "Xã Hòa Lạc",
+    "full_name": "Xã Hoà Lạc",
     "full_name_en": "Hoa Lac Commune",
     "code_name": "hoa_lac",
     "district_code": "186",
@@ -21485,9 +21485,9 @@
   },
   {
     "code": "06445",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "186",
@@ -21525,9 +21525,9 @@
   },
   {
     "code": "06457",
-    "name": "Minh Hòa",
+    "name": "Minh Hoà",
     "name_en": "Minh Hoa",
-    "full_name": "Xã Minh Hòa",
+    "full_name": "Xã Minh Hoà",
     "full_name_en": "Minh Hoa Commune",
     "code_name": "minh_hoa",
     "district_code": "186",
@@ -21539,9 +21539,9 @@
   },
   {
     "code": "06460",
-    "name": "Hòa Thắng",
+    "name": "Hoà Thắng",
     "name_en": "Hoa Thang",
-    "full_name": "Xã Hòa Thắng",
+    "full_name": "Xã Hoà Thắng",
     "full_name_en": "Hoa Thang Commune",
     "code_name": "hoa_thang",
     "district_code": "186",
@@ -21585,9 +21585,9 @@
   },
   {
     "code": "06472",
-    "name": "Vân Thủy",
+    "name": "Vân Thuỷ",
     "name_en": "Van Thuy",
-    "full_name": "Xã Vân Thủy",
+    "full_name": "Xã Vân Thuỷ",
     "full_name_en": "Van Thuy Commune",
     "code_name": "van_thuy",
     "district_code": "187",
@@ -21605,9 +21605,9 @@
   },
   {
     "code": "06478",
-    "name": "Bắc Thủy",
+    "name": "Bắc Thuỷ",
     "name_en": "Bac Thuy",
-    "full_name": "Xã Bắc Thủy",
+    "full_name": "Xã Bắc Thuỷ",
     "full_name_en": "Bac Thuy Commune",
     "code_name": "bac_thuy",
     "district_code": "187",
@@ -21705,9 +21705,9 @@
   },
   {
     "code": "06508",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "187",
@@ -22544,9 +22544,9 @@
   },
   {
     "code": "06784",
-    "name": "Cẩm Thủy",
+    "name": "Cẩm Thuỷ",
     "name_en": "Cam Thuy",
-    "full_name": "Phường Cẩm Thủy",
+    "full_name": "Phường Cẩm Thuỷ",
     "full_name_en": "Cam Thuy Ward",
     "code_name": "cam_thuy",
     "district_code": "195",
@@ -22598,16 +22598,16 @@
   },
   {
     "code": "06799",
-    "name": "Hải Hòa",
+    "name": "Hải Hoà",
     "name_en": "Hai Hoa",
-    "full_name": "Xã Hải Hòa",
+    "full_name": "Xã Hải Hoà",
     "full_name_en": "Hai Hoa Commune",
     "code_name": "hai_hoa",
     "district_code": "195",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Cộng Hòa",
-      "Cộng Hòa"
+      "Xã Cộng Hoà",
+      "Cộng Hoà"
     ]
   },
   {
@@ -23394,9 +23394,9 @@
   },
   {
     "code": "07045",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "193",
@@ -23591,15 +23591,15 @@
   },
   {
     "code": "07102",
-    "name": "Thủy An",
+    "name": "Thuỷ An",
     "name_en": "Thuy An",
-    "full_name": "Phường Thủy An",
+    "full_name": "Phường Thuỷ An",
     "full_name_en": "Thuy An Ward",
     "code_name": "thuy_an",
     "district_code": "205",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Thủy An"
+      "Xã Thuỷ An"
     ]
   },
   {
@@ -23737,22 +23737,22 @@
   },
   {
     "code": "07147",
-    "name": "Hiệp Hòa",
+    "name": "Hiệp Hoà",
     "name_en": "Hiep Hoa",
-    "full_name": "Xã Hiệp Hòa",
+    "full_name": "Xã Hiệp Hoà",
     "full_name_en": "Hiep Hoa Commune",
     "code_name": "hiep_hoa",
     "district_code": "206",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Phường Hiệp Hòa"
+      "Phường Hiệp Hoà"
     ]
   },
   {
     "code": "07150",
-    "name": "Cộng Hòa",
+    "name": "Cộng Hoà",
     "name_en": "Cong Hoa",
-    "full_name": "Phường Cộng Hòa",
+    "full_name": "Phường Cộng Hoà",
     "full_name_en": "Cong Hoa Ward",
     "code_name": "cong_hoa",
     "district_code": "206",
@@ -23850,15 +23850,15 @@
   },
   {
     "code": "07180",
-    "name": "Liên Hòa",
+    "name": "Liên Hoà",
     "name_en": "Lien Hoa",
-    "full_name": "Xã Liên Hòa",
+    "full_name": "Xã Liên Hoà",
     "full_name_en": "Lien Hoa Commune",
     "code_name": "lien_hoa",
     "district_code": "206",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Phường Liên Hòa"
+      "Phường Liên Hoà"
     ]
   },
   {
@@ -24267,9 +24267,9 @@
   },
   {
     "code": "07312",
-    "name": "Đại Hóa",
+    "name": "Đại Hoá",
     "name_en": "Dai Hoa",
-    "full_name": "Xã Đại Hóa",
+    "full_name": "Xã Đại Hoá",
     "full_name_en": "Dai Hoa Commune",
     "code_name": "dai_hoa",
     "district_code": "216",
@@ -24311,9 +24311,9 @@
   },
   {
     "code": "07324",
-    "name": "Phúc Hòa",
+    "name": "Phúc Hoà",
     "name_en": "Phuc Hoa",
-    "full_name": "Xã Phúc Hòa",
+    "full_name": "Xã Phúc Hoà",
     "full_name_en": "Phuc Hoa Commune",
     "code_name": "phuc_hoa",
     "district_code": "216",
@@ -24483,9 +24483,9 @@
   },
   {
     "code": "07378",
-    "name": "Nghĩa Hòa",
+    "name": "Nghĩa Hoà",
     "name_en": "Nghia Hoa",
-    "full_name": "Xã Nghĩa Hòa",
+    "full_name": "Xã Nghĩa Hoà",
     "full_name_en": "Nghia Hoa Commune",
     "code_name": "nghia_hoa",
     "district_code": "217",
@@ -25673,15 +25673,15 @@
   },
   {
     "code": "07738",
-    "name": "Cảnh Thụy",
+    "name": "Cảnh Thuỵ",
     "name_en": "Canh Thuy",
-    "full_name": "Phường Cảnh Thụy",
+    "full_name": "Phường Cảnh Thuỵ",
     "full_name_en": "Canh Thuy Ward",
     "code_name": "canh_thuy",
     "district_code": "213",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Cảnh Thụy"
+      "Xã Cảnh Thuỵ"
     ]
   },
   {
@@ -26014,9 +26014,9 @@
   },
   {
     "code": "07837",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "223",
@@ -26032,8 +26032,8 @@
     "district_code": "223",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hiệp Hòa",
-      "Hiệp Hòa"
+      "Xã Hiệp Hoà",
+      "Hiệp Hoà"
     ]
   },
   {
@@ -26323,9 +26323,9 @@
   },
   {
     "code": "07924",
-    "name": "Thụy Vân",
+    "name": "Thuỵ Vân",
     "name_en": "Thuy Van",
-    "full_name": "Xã Thụy Vân",
+    "full_name": "Xã Thuỵ Vân",
     "full_name_en": "Thuy Van Commune",
     "code_name": "thuy_van",
     "district_code": "227",
@@ -26680,8 +26680,8 @@
     "district_code": "231",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hạ Hòa",
-      "Hạ Hòa"
+      "Xã Hạ Hoà",
+      "Hạ Hoà"
     ]
   },
   {
@@ -27334,9 +27334,9 @@
   },
   {
     "code": "08308",
-    "name": "Xuân Thủy",
+    "name": "Xuân Thuỷ",
     "name_en": "Xuan Thuy",
-    "full_name": "Xã Xuân Thủy",
+    "full_name": "Xã Xuân Thuỷ",
     "full_name_en": "Xuan Thuy Commune",
     "code_name": "xuan_thuy",
     "district_code": "234",
@@ -27414,9 +27414,9 @@
   },
   {
     "code": "08332",
-    "name": "Minh Hòa",
+    "name": "Minh Hoà",
     "name_en": "Minh Hoa",
-    "full_name": "Xã Minh Hòa",
+    "full_name": "Xã Minh Hoà",
     "full_name_en": "Minh Hoa Commune",
     "code_name": "minh_hoa",
     "district_code": "234",
@@ -27511,9 +27511,9 @@
   },
   {
     "code": "08362",
-    "name": "Thụy Liễu",
+    "name": "Thuỵ Liễu",
     "name_en": "Thuy Lieu",
-    "full_name": "Xã Thụy Liễu",
+    "full_name": "Xã Thuỵ Liễu",
     "full_name_en": "Thuy Lieu Commune",
     "code_name": "thuy_lieu",
     "district_code": "235",
@@ -27870,9 +27870,9 @@
   },
   {
     "code": "08506",
-    "name": "Chu Hóa",
+    "name": "Chu Hoá",
     "name_en": "Chu Hoa",
-    "full_name": "Xã Chu Hóa",
+    "full_name": "Xã Chu Hoá",
     "full_name_en": "Chu Hoa Commune",
     "code_name": "chu_hoa",
     "district_code": "227",
@@ -28416,22 +28416,22 @@
   },
   {
     "code": "08674",
-    "name": "Thanh Thủy",
+    "name": "Thanh Thuỷ",
     "name_en": "Thanh Thuy",
-    "full_name": "Thị trấn Thanh Thủy",
+    "full_name": "Thị trấn Thanh Thuỷ",
     "full_name_en": "Thanh Thuy Township",
     "code_name": "thanh_thuy",
     "district_code": "239",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Thanh Thủy"
+      "Xã Thanh Thuỷ"
     ]
   },
   {
     "code": "08677",
-    "name": "Sơn Thủy",
+    "name": "Sơn Thuỷ",
     "name_en": "Son Thuy",
-    "full_name": "Xã Sơn Thủy",
+    "full_name": "Xã Sơn Thuỷ",
     "full_name_en": "Son Thuy Commune",
     "code_name": "son_thuy",
     "district_code": "239",
@@ -28644,8 +28644,8 @@
     "district_code": "244",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Xuân Hòa",
-      "Xuân Hòa"
+      "Phường Xuân Hoà",
+      "Xuân Hoà"
     ]
   },
   {
@@ -28797,9 +28797,9 @@
   },
   {
     "code": "08788",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Xã Thái Hòa",
+    "full_name": "Xã Thái Hoà",
     "full_name_en": "Thai Hoa Commune",
     "code_name": "thai_hoa",
     "district_code": "246",
@@ -28827,9 +28827,9 @@
   },
   {
     "code": "08794",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "246",
@@ -28887,9 +28887,9 @@
   },
   {
     "code": "08812",
-    "name": "Liên Hòa",
+    "name": "Liên Hoà",
     "name_en": "Lien Hoa",
-    "full_name": "Xã Liên Hòa",
+    "full_name": "Xã Liên Hoà",
     "full_name_en": "Lien Hoa Commune",
     "code_name": "lien_hoa",
     "district_code": "246",
@@ -28940,9 +28940,9 @@
   },
   {
     "code": "08827",
-    "name": "Như Thụy",
+    "name": "Như Thuỵ",
     "name_en": "Nhu Thuy",
-    "full_name": "Xã Như Thụy",
+    "full_name": "Xã Như Thuỵ",
     "full_name_en": "Nhu Thuy Commune",
     "code_name": "nhu_thuy",
     "district_code": "253",
@@ -29088,9 +29088,9 @@
   },
   {
     "code": "08869",
-    "name": "Hợp Hòa",
+    "name": "Hợp Hoà",
     "name_en": "Hop Hoa",
-    "full_name": "Thị trấn Hợp Hòa",
+    "full_name": "Thị trấn Hợp Hoà",
     "full_name_en": "Hop Hoa Township",
     "code_name": "hop_hoa",
     "district_code": "247",
@@ -29159,9 +29159,9 @@
   },
   {
     "code": "08887",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Xã An Hòa",
+    "full_name": "Xã An Hoà",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "247",
@@ -30314,9 +30314,9 @@
   },
   {
     "code": "09208",
-    "name": "Thụy Hòa",
+    "name": "Thuỵ Hoà",
     "name_en": "Thuy Hoa",
-    "full_name": "Xã Thụy Hòa",
+    "full_name": "Xã Thuỵ Hoà",
     "full_name_en": "Thuy Hoa Commune",
     "code_name": "thuy_hoa",
     "district_code": "258",
@@ -30324,9 +30324,9 @@
   },
   {
     "code": "09211",
-    "name": "Hòa Tiến",
+    "name": "Hoà Tiến",
     "name_en": "Hoa Tien",
-    "full_name": "Xã Hòa Tiến",
+    "full_name": "Xã Hoà Tiến",
     "full_name_en": "Hoa Tien Commune",
     "code_name": "hoa_tien",
     "district_code": "258",
@@ -30334,9 +30334,9 @@
   },
   {
     "code": "09214",
-    "name": "Hòa Long",
+    "name": "Hoà Long",
     "name_en": "Hoa Long",
-    "full_name": "Phường Hòa Long",
+    "full_name": "Phường Hoà Long",
     "full_name_en": "Hoa Long Ward",
     "code_name": "hoa_long",
     "district_code": "256",
@@ -30492,15 +30492,15 @@
   },
   {
     "code": "09259",
-    "name": "Nhân Hòa",
+    "name": "Nhân Hoà",
     "name_en": "Nhan Hoa",
-    "full_name": "Phường Nhân Hòa",
+    "full_name": "Phường Nhân Hoà",
     "full_name_en": "Nhan Hoa Ward",
     "code_name": "nhan_hoa",
     "district_code": "259",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Nhân Hòa"
+      "Xã Nhân Hoà"
     ]
   },
   {
@@ -31409,9 +31409,9 @@
   },
   {
     "code": "09505",
-    "name": "Phú Hòa",
+    "name": "Phú Hoà",
     "name_en": "Phu Hoa",
-    "full_name": "Xã Phú Hòa",
+    "full_name": "Xã Phú Hoà",
     "full_name_en": "Phu Hoa Commune",
     "code_name": "phu_hoa",
     "district_code": "264",
@@ -31927,9 +31927,9 @@
   },
   {
     "code": "09652",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Xã Thái Hòa",
+    "full_name": "Xã Thái Hoà",
     "full_name_en": "Thai Hoa Commune",
     "code_name": "thai_hoa",
     "district_code": "271",
@@ -32041,9 +32041,9 @@
   },
   {
     "code": "09685",
-    "name": "Thụy An",
+    "name": "Thuỵ An",
     "name_en": "Thuy An",
-    "full_name": "Xã Thụy An",
+    "full_name": "Xã Thuỵ An",
     "full_name_en": "Thuy An Commune",
     "code_name": "thuy_an",
     "district_code": "271",
@@ -32115,9 +32115,9 @@
   },
   {
     "code": "09706",
-    "name": "Vân Hòa",
+    "name": "Vân Hoà",
     "name_en": "Van Hoa",
-    "full_name": "Xã Vân Hòa",
+    "full_name": "Xã Vân Hoà",
     "full_name_en": "Van Hoa Commune",
     "code_name": "van_hoa",
     "district_code": "271",
@@ -32304,9 +32304,9 @@
   },
   {
     "code": "09763",
-    "name": "Phúc Hòa",
+    "name": "Phúc Hoà",
     "name_en": "Phuc Hoa",
-    "full_name": "Xã Phúc Hòa",
+    "full_name": "Xã Phúc Hoà",
     "full_name_en": "Phuc Hoa Commune",
     "code_name": "phuc_hoa",
     "district_code": "272",
@@ -32634,8 +32634,8 @@
     "district_code": "274",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Dương Hòa",
-      "Dương Hòa"
+      "Xã Dương Hoà",
+      "Dương Hoà"
     ]
   },
   {
@@ -32895,9 +32895,9 @@
   },
   {
     "code": "09931",
-    "name": "Cộng Hòa",
+    "name": "Cộng Hoà",
     "name_en": "Cong Hoa",
-    "full_name": "Xã Cộng Hòa",
+    "full_name": "Xã Cộng Hoà",
     "full_name_en": "Cong Hoa Commune",
     "code_name": "cong_hoa",
     "district_code": "275",
@@ -32949,9 +32949,9 @@
   },
   {
     "code": "09946",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "275",
@@ -32959,9 +32959,9 @@
   },
   {
     "code": "09949",
-    "name": "Hòa Thạch",
+    "name": "Hoà Thạch",
     "name_en": "Hoa Thach",
-    "full_name": "Xã Hòa Thạch",
+    "full_name": "Xã Hoà Thạch",
     "full_name_en": "Hoa Thach Commune",
     "code_name": "hoa_thach",
     "district_code": "275",
@@ -33105,8 +33105,8 @@
     "district_code": "276",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Lạc",
-      "Hòa Lạc"
+      "Xã Hoà Lạc",
+      "Hoà Lạc"
     ]
   },
   {
@@ -33283,9 +33283,9 @@
   },
   {
     "code": "10042",
-    "name": "Ngọc Hòa",
+    "name": "Ngọc Hoà",
     "name_en": "Ngoc Hoa",
-    "full_name": "Xã Ngọc Hòa",
+    "full_name": "Xã Ngọc Hoà",
     "full_name_en": "Ngoc Hoa Commune",
     "code_name": "ngoc_hoa",
     "district_code": "277",
@@ -33293,9 +33293,9 @@
   },
   {
     "code": "10045",
-    "name": "Thủy Xuân Tiên",
+    "name": "Thuỷ Xuân Tiên",
     "name_en": "Thuy Xuan Tien",
-    "full_name": "Xã Thủy Xuân Tiên",
+    "full_name": "Xã Thuỷ Xuân Tiên",
     "full_name_en": "Thuy Xuan Tien Commune",
     "code_name": "thuy_xuan_tien",
     "district_code": "277",
@@ -33316,9 +33316,9 @@
   },
   {
     "code": "10051",
-    "name": "Trung Hòa",
+    "name": "Trung Hoà",
     "name_en": "Trung Hoa",
-    "full_name": "Xã Trung Hòa",
+    "full_name": "Xã Trung Hoà",
     "full_name_en": "Trung Hoa Commune",
     "code_name": "trung_hoa",
     "district_code": "277",
@@ -33336,9 +33336,9 @@
   },
   {
     "code": "10057",
-    "name": "Thụy Hương",
+    "name": "Thuỵ Hương",
     "name_en": "Thuy Huong",
-    "full_name": "Xã Thụy Hương",
+    "full_name": "Xã Thuỵ Hương",
     "full_name_en": "Thuy Huong Commune",
     "code_name": "thuy_huong",
     "district_code": "277",
@@ -33510,16 +33510,16 @@
   },
   {
     "code": "10108",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "277",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Chính",
-      "Hòa Chính"
+      "Xã Hoà Chính",
+      "Hoà Chính"
     ]
   },
   {
@@ -33578,9 +33578,9 @@
   },
   {
     "code": "10126",
-    "name": "Bích Hòa",
+    "name": "Bích Hoà",
     "name_en": "Bich Hoa",
-    "full_name": "Xã Bích Hòa",
+    "full_name": "Xã Bích Hoà",
     "full_name_en": "Bich Hoa Commune",
     "code_name": "bich_hoa",
     "district_code": "278",
@@ -33638,9 +33638,9 @@
   },
   {
     "code": "10144",
-    "name": "Thanh Thùy",
+    "name": "Thanh Thuỳ",
     "name_en": "Thanh Thuy",
-    "full_name": "Xã Thanh Thùy",
+    "full_name": "Xã Thanh Thuỳ",
     "full_name_en": "Thanh Thuy Commune",
     "code_name": "thanh_thuy",
     "district_code": "278",
@@ -33718,9 +33718,9 @@
   },
   {
     "code": "10168",
-    "name": "Dân Hòa",
+    "name": "Dân Hoà",
     "name_en": "Dan Hoa",
-    "full_name": "Xã Dân Hòa",
+    "full_name": "Xã Dân Hoà",
     "full_name_en": "Dan Hoa Commune",
     "code_name": "dan_hoa",
     "district_code": "278",
@@ -33825,9 +33825,9 @@
   },
   {
     "code": "10198",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "279",
@@ -34268,9 +34268,9 @@
   },
   {
     "code": "10333",
-    "name": "Tri Thủy",
+    "name": "Tri Thuỷ",
     "name_en": "Tri Thuy",
-    "full_name": "Xã Tri Thủy",
+    "full_name": "Xã Tri Thuỷ",
     "full_name_en": "Tri Thuy Commune",
     "code_name": "tri_thuy",
     "district_code": "280",
@@ -34493,9 +34493,9 @@
   },
   {
     "code": "10396",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Xã Thái Hòa",
+    "full_name": "Xã Thái Hoà",
     "full_name_en": "Thai Hoa Commune",
     "code_name": "thai_hoa",
     "district_code": "281",
@@ -34525,17 +34525,17 @@
     "district_code": "281",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Lâm",
-      "Hòa Lâm",
-      "Xã Ứng Hòa",
-      "Ứng Hòa"
+      "Xã Hoà Lâm",
+      "Hoà Lâm",
+      "Xã Ứng Hoà",
+      "Ứng Hoà"
     ]
   },
   {
     "code": "10405",
-    "name": "Hòa Xá",
+    "name": "Hoà Xá",
     "name_en": "Hoa Xa",
-    "full_name": "Xã Hòa Xá",
+    "full_name": "Xã Hoà Xá",
     "full_name_en": "Hoa Xa Commune",
     "code_name": "hoa_xa",
     "district_code": "281",
@@ -34553,9 +34553,9 @@
   },
   {
     "code": "10414",
-    "name": "Hòa Nam",
+    "name": "Hoà Nam",
     "name_en": "Hoa Nam",
-    "full_name": "Xã Hòa Nam",
+    "full_name": "Xã Hoà Nam",
     "full_name_en": "Hoa Nam Commune",
     "code_name": "hoa_nam",
     "district_code": "281",
@@ -34563,9 +34563,9 @@
   },
   {
     "code": "10417",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "281",
@@ -35037,8 +35037,8 @@
     "district_code": "288",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Việt Hòa",
-      "Việt Hòa"
+      "Phường Việt Hoà",
+      "Việt Hoà"
     ]
   },
   {
@@ -35368,9 +35368,9 @@
   },
   {
     "code": "10639",
-    "name": "Cộng Hòa",
+    "name": "Cộng Hoà",
     "name_en": "Cong Hoa",
-    "full_name": "Xã Cộng Hòa",
+    "full_name": "Xã Cộng Hoà",
     "full_name_en": "Cong Hoa Commune",
     "code_name": "cong_hoa",
     "district_code": "291",
@@ -35594,9 +35594,9 @@
   },
   {
     "code": "10708",
-    "name": "Hiệp Hòa",
+    "name": "Hiệp Hoà",
     "name_en": "Hiep Hoa",
-    "full_name": "Xã Hiệp Hòa",
+    "full_name": "Xã Hiệp Hoà",
     "full_name_en": "Hiep Hoa Commune",
     "code_name": "hiep_hoa",
     "district_code": "292",
@@ -35730,9 +35730,9 @@
   },
   {
     "code": "10747",
-    "name": "Minh Hòa",
+    "name": "Minh Hoà",
     "name_en": "Minh Hoa",
-    "full_name": "Xã Minh Hòa",
+    "full_name": "Xã Minh Hoà",
     "full_name_en": "Minh Hoa Commune",
     "code_name": "minh_hoa",
     "district_code": "292",
@@ -35771,8 +35771,8 @@
     "district_code": "293",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Cộng Hòa",
-      "Cộng Hòa"
+      "Xã Cộng Hoà",
+      "Cộng Hoà"
     ]
   },
   {
@@ -35885,9 +35885,9 @@
   },
   {
     "code": "10798",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "293",
@@ -35923,9 +35923,9 @@
   },
   {
     "code": "10807",
-    "name": "Liên Hòa",
+    "name": "Liên Hoà",
     "name_en": "Lien Hoa",
-    "full_name": "Xã Liên Hòa",
+    "full_name": "Xã Liên Hoà",
     "full_name_en": "Lien Hoa Commune",
     "code_name": "lien_hoa",
     "district_code": "293",
@@ -36120,8 +36120,8 @@
     "district_code": "294",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Thanh Thủy",
-      "Thanh Thủy"
+      "Xã Thanh Thuỷ",
+      "Thanh Thuỷ"
     ]
   },
   {
@@ -36539,9 +36539,9 @@
   },
   {
     "code": "10993",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Xã Thái Hòa",
+    "full_name": "Xã Thái Hoà",
     "full_name_en": "Thai Hoa Commune",
     "code_name": "thai_hoa",
     "district_code": "296",
@@ -37129,9 +37129,9 @@
   },
   {
     "code": "11185",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "299",
@@ -38304,9 +38304,9 @@
   },
   {
     "code": "11530",
-    "name": "Thủy Hà",
+    "name": "Thuỷ Hà",
     "name_en": "Thuy Ha",
-    "full_name": "Phường Thủy Hà",
+    "full_name": "Phường Thuỷ Hà",
     "full_name_en": "Thuy Ha Ward",
     "code_name": "thuy_ha",
     "district_code": "311",
@@ -38441,8 +38441,8 @@
       "Xã Thuỷ Sơn",
       "Thuỷ Sơn",
       "Xã Thuỷ Đường",
-      "Phường Thủy Nguyên",
-      "Thủy Nguyên"
+      "Phường Thuỷ Nguyên",
+      "Thuỷ Nguyên"
     ]
   },
   {
@@ -38901,8 +38901,8 @@
     "district_code": "314",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Kiến Thụy",
-      "Kiến Thụy"
+      "Xã Kiến Thuỵ",
+      "Kiến Thuỵ"
     ]
   },
   {
@@ -39497,8 +39497,8 @@
     "legacy_names": [
       "Xã Hiệp Hoà",
       "Hiệp Hoà",
-      "Xã Vĩnh Hòa",
-      "Vĩnh Hòa"
+      "Xã Vĩnh Hoà",
+      "Vĩnh Hoà"
     ]
   },
   {
@@ -40337,9 +40337,9 @@
   },
   {
     "code": "12085",
-    "name": "Trung Hòa",
+    "name": "Trung Hoà",
     "name_en": "Trung Hoa",
-    "full_name": "Xã Trung Hòa",
+    "full_name": "Xã Trung Hoà",
     "full_name_en": "Trung Hoa Commune",
     "code_name": "trung_hoa",
     "district_code": "327",
@@ -40347,9 +40347,9 @@
   },
   {
     "code": "12088",
-    "name": "Yên Hòa",
+    "name": "Yên Hoà",
     "name_en": "Yen Hoa",
-    "full_name": "Xã Yên Hòa",
+    "full_name": "Xã Yên Hoà",
     "full_name_en": "Yen Hoa Commune",
     "code_name": "yen_hoa",
     "district_code": "327",
@@ -40449,9 +40449,9 @@
   },
   {
     "code": "12115",
-    "name": "Hòa Phong",
+    "name": "Hoà Phong",
     "name_en": "Hoa Phong",
-    "full_name": "Xã Hòa Phong",
+    "full_name": "Xã Hoà Phong",
     "full_name_en": "Hoa Phong Commune",
     "code_name": "hoa_phong",
     "district_code": "328",
@@ -40459,9 +40459,9 @@
   },
   {
     "code": "12118",
-    "name": "Nhân Hòa",
+    "name": "Nhân Hoà",
     "name_en": "Nhan Hoa",
-    "full_name": "Phường Nhân Hòa",
+    "full_name": "Phường Nhân Hoà",
     "full_name_en": "Nhan Hoa Ward",
     "code_name": "nhan_hoa",
     "district_code": "328",
@@ -40929,9 +40929,9 @@
   },
   {
     "code": "12256",
-    "name": "Việt Hòa",
+    "name": "Việt Hoà",
     "name_en": "Viet Hoa",
-    "full_name": "Xã Việt Hòa",
+    "full_name": "Xã Việt Hoà",
     "full_name_en": "Viet Hoa Commune",
     "code_name": "viet_hoa",
     "district_code": "330",
@@ -41352,9 +41352,9 @@
   },
   {
     "code": "12373",
-    "name": "Thụy Lôi",
+    "name": "Thuỵ Lôi",
     "name_en": "Thuy Loi",
-    "full_name": "Xã Thụy Lôi",
+    "full_name": "Xã Thuỵ Lôi",
     "full_name_en": "Thuy Loi Commune",
     "code_name": "thuy_loi",
     "district_code": "332",
@@ -41528,9 +41528,9 @@
   },
   {
     "code": "12427",
-    "name": "Nguyên Hòa",
+    "name": "Nguyên Hoà",
     "name_en": "Nguyen Hoa",
-    "full_name": "Xã Nguyên Hòa",
+    "full_name": "Xã Nguyên Hoà",
     "full_name_en": "Nguyen Hoa Commune",
     "code_name": "nguyen_hoa",
     "district_code": "333",
@@ -41638,9 +41638,9 @@
   },
   {
     "code": "12457",
-    "name": "Đông Hòa",
+    "name": "Đông Hoà",
     "name_en": "Dong Hoa",
-    "full_name": "Xã Đông Hòa",
+    "full_name": "Xã Đông Hoà",
     "full_name_en": "Dong Hoa Commune",
     "code_name": "dong_hoa",
     "district_code": "336",
@@ -42136,9 +42136,9 @@
   },
   {
     "code": "12595",
-    "name": "Cộng Hòa",
+    "name": "Cộng Hoà",
     "name_en": "Cong Hoa",
-    "full_name": "Xã Cộng Hòa",
+    "full_name": "Xã Cộng Hoà",
     "full_name_en": "Cong Hoa Commune",
     "code_name": "cong_hoa",
     "district_code": "339",
@@ -42170,9 +42170,9 @@
   },
   {
     "code": "12604",
-    "name": "Hòa Tiến",
+    "name": "Hoà Tiến",
     "name_en": "Hoa Tien",
-    "full_name": "Xã Hòa Tiến",
+    "full_name": "Xã Hoà Tiến",
     "full_name_en": "Hoa Tien Commune",
     "code_name": "hoa_tien",
     "district_code": "339",
@@ -42238,9 +42238,9 @@
   },
   {
     "code": "12622",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "339",
@@ -42356,9 +42356,9 @@
   },
   {
     "code": "12655",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "339",
@@ -42450,9 +42450,9 @@
   },
   {
     "code": "12679",
-    "name": "Chí Hòa",
+    "name": "Chí Hoà",
     "name_en": "Chi Hoa",
-    "full_name": "Xã Chí Hòa",
+    "full_name": "Xã Chí Hoà",
     "full_name_en": "Chi Hoa Commune",
     "code_name": "chi_hoa",
     "district_code": "339",
@@ -42460,9 +42460,9 @@
   },
   {
     "code": "12682",
-    "name": "Minh Hòa",
+    "name": "Minh Hoà",
     "name_en": "Minh Hoa",
-    "full_name": "Xã Minh Hòa",
+    "full_name": "Xã Minh Hoà",
     "full_name_en": "Minh Hoa Commune",
     "code_name": "minh_hoa",
     "district_code": "339",
@@ -42929,15 +42929,15 @@
     "district_code": "341",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Thái Thụy",
-      "Thái Thụy"
+      "Xã Thái Thuỵ",
+      "Thái Thuỵ"
     ]
   },
   {
     "code": "12832",
-    "name": "Thụy Trường",
+    "name": "Thuỵ Trường",
     "name_en": "Thuy Truong",
-    "full_name": "Xã Thụy Trường",
+    "full_name": "Xã Thuỵ Trường",
     "full_name_en": "Thuy Truong Commune",
     "code_name": "thuy_truong",
     "district_code": "341",
@@ -42955,9 +42955,9 @@
   },
   {
     "code": "12844",
-    "name": "Thụy Quỳnh",
+    "name": "Thuỵ Quỳnh",
     "name_en": "Thuy Quynh",
-    "full_name": "Xã Thụy Quỳnh",
+    "full_name": "Xã Thuỵ Quỳnh",
     "full_name_en": "Thuy Quynh Commune",
     "code_name": "thuy_quynh",
     "district_code": "341",
@@ -42975,23 +42975,23 @@
   },
   {
     "code": "12850",
-    "name": "Thụy Ninh",
+    "name": "Thuỵ Ninh",
     "name_en": "Thuy Ninh",
-    "full_name": "Xã Thụy Ninh",
+    "full_name": "Xã Thuỵ Ninh",
     "full_name_en": "Thuy Ninh Commune",
     "code_name": "thuy_ninh",
     "district_code": "341",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Tây Thụy Anh",
-      "Tây Thụy Anh"
+      "Xã Tây Thuỵ Anh",
+      "Tây Thuỵ Anh"
     ]
   },
   {
     "code": "12853",
-    "name": "Thụy Hưng",
+    "name": "Thuỵ Hưng",
     "name_en": "Thuy Hung",
-    "full_name": "Xã Thụy Hưng",
+    "full_name": "Xã Thuỵ Hưng",
     "full_name_en": "Thuy Hung Commune",
     "code_name": "thuy_hung",
     "district_code": "341",
@@ -42999,9 +42999,9 @@
   },
   {
     "code": "12856",
-    "name": "Thụy Việt",
+    "name": "Thuỵ Việt",
     "name_en": "Thuy Viet",
-    "full_name": "Xã Thụy Việt",
+    "full_name": "Xã Thuỵ Việt",
     "full_name_en": "Thuy Viet Commune",
     "code_name": "thuy_viet",
     "district_code": "341",
@@ -43009,30 +43009,30 @@
   },
   {
     "code": "12859",
-    "name": "Thụy Văn",
+    "name": "Thuỵ Văn",
     "name_en": "Thuy Van",
-    "full_name": "Xã Thụy Văn",
+    "full_name": "Xã Thuỵ Văn",
     "full_name_en": "Thuy Van Commune",
     "code_name": "thuy_van",
     "district_code": "341",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Bắc Thụy Anh",
-      "Bắc Thụy Anh"
+      "Xã Bắc Thuỵ Anh",
+      "Bắc Thuỵ Anh"
     ]
   },
   {
     "code": "12862",
-    "name": "Thụy Xuân",
+    "name": "Thuỵ Xuân",
     "name_en": "Thuy Xuan",
-    "full_name": "Xã Thụy Xuân",
+    "full_name": "Xã Thuỵ Xuân",
     "full_name_en": "Thuy Xuan Commune",
     "code_name": "thuy_xuan",
     "district_code": "341",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Đông Thụy Anh",
-      "Đông Thụy Anh"
+      "Xã Đông Thuỵ Anh",
+      "Đông Thuỵ Anh"
     ]
   },
   {
@@ -43045,15 +43045,15 @@
     "district_code": "341",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Thụy Anh",
-      "Thụy Anh"
+      "Xã Thuỵ Anh",
+      "Thuỵ Anh"
     ]
   },
   {
     "code": "12868",
-    "name": "Thụy Trình",
+    "name": "Thuỵ Trình",
     "name_en": "Thuy Trinh",
-    "full_name": "Xã Thụy Trình",
+    "full_name": "Xã Thuỵ Trình",
     "full_name_en": "Thuy Trinh Commune",
     "code_name": "thuy_trinh",
     "district_code": "341",
@@ -43061,9 +43061,9 @@
   },
   {
     "code": "12871",
-    "name": "Thụy Bình",
+    "name": "Thuỵ Bình",
     "name_en": "Thuy Binh",
-    "full_name": "Xã Thụy Bình",
+    "full_name": "Xã Thuỵ Bình",
     "full_name_en": "Thuy Binh Commune",
     "code_name": "thuy_binh",
     "district_code": "341",
@@ -43071,9 +43071,9 @@
   },
   {
     "code": "12874",
-    "name": "Thụy Chính",
+    "name": "Thuỵ Chính",
     "name_en": "Thuy Chinh",
-    "full_name": "Xã Thụy Chính",
+    "full_name": "Xã Thuỵ Chính",
     "full_name_en": "Thuy Chinh Commune",
     "code_name": "thuy_chinh",
     "district_code": "341",
@@ -43081,9 +43081,9 @@
   },
   {
     "code": "12877",
-    "name": "Thụy Dân",
+    "name": "Thuỵ Dân",
     "name_en": "Thuy Dan",
-    "full_name": "Xã Thụy Dân",
+    "full_name": "Xã Thuỵ Dân",
     "full_name_en": "Thuy Dan Commune",
     "code_name": "thuy_dan",
     "district_code": "341",
@@ -43091,9 +43091,9 @@
   },
   {
     "code": "12880",
-    "name": "Thụy Hải",
+    "name": "Thuỵ Hải",
     "name_en": "Thuy Hai",
-    "full_name": "Xã Thụy Hải",
+    "full_name": "Xã Thuỵ Hải",
     "full_name_en": "Thuy Hai Commune",
     "code_name": "thuy_hai",
     "district_code": "341",
@@ -43101,9 +43101,9 @@
   },
   {
     "code": "12889",
-    "name": "Thụy Liên",
+    "name": "Thuỵ Liên",
     "name_en": "Thuy Lien",
-    "full_name": "Xã Thụy Liên",
+    "full_name": "Xã Thuỵ Liên",
     "full_name_en": "Thuy Lien Commune",
     "code_name": "thuy_lien",
     "district_code": "341",
@@ -43111,9 +43111,9 @@
   },
   {
     "code": "12892",
-    "name": "Thụy Duyên",
+    "name": "Thuỵ Duyên",
     "name_en": "Thuy Duyen",
-    "full_name": "Xã Thụy Duyên",
+    "full_name": "Xã Thuỵ Duyên",
     "full_name_en": "Thuy Duyen Commune",
     "code_name": "thuy_duyen",
     "district_code": "341",
@@ -43121,9 +43121,9 @@
   },
   {
     "code": "12898",
-    "name": "Thụy Thanh",
+    "name": "Thuỵ Thanh",
     "name_en": "Thuy Thanh",
-    "full_name": "Xã Thụy Thanh",
+    "full_name": "Xã Thuỵ Thanh",
     "full_name_en": "Thuy Thanh Commune",
     "code_name": "thuy_thanh",
     "district_code": "341",
@@ -43131,9 +43131,9 @@
   },
   {
     "code": "12901",
-    "name": "Thụy Sơn",
+    "name": "Thuỵ Sơn",
     "name_en": "Thuy Son",
-    "full_name": "Xã Thụy Sơn",
+    "full_name": "Xã Thuỵ Sơn",
     "full_name_en": "Thuy Son Commune",
     "code_name": "thuy_son",
     "district_code": "341",
@@ -43141,16 +43141,16 @@
   },
   {
     "code": "12904",
-    "name": "Thụy Phong",
+    "name": "Thuỵ Phong",
     "name_en": "Thuy Phong",
-    "full_name": "Xã Thụy Phong",
+    "full_name": "Xã Thuỵ Phong",
     "full_name_en": "Thuy Phong Commune",
     "code_name": "thuy_phong",
     "district_code": "341",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Nam Thụy Anh",
-      "Nam Thụy Anh"
+      "Xã Nam Thuỵ Anh",
+      "Nam Thuỵ Anh"
     ]
   },
   {
@@ -43175,16 +43175,16 @@
   },
   {
     "code": "12916",
-    "name": "Dương Hồng Thủy",
+    "name": "Dương Hồng Thuỷ",
     "name_en": "Duong Hong Thuy",
-    "full_name": "Xã Dương Hồng Thủy",
+    "full_name": "Xã Dương Hồng Thuỷ",
     "full_name_en": "Duong Hong Thuy Commune",
     "code_name": "duong_hong_thuy",
     "district_code": "341",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Dương Hồng  Thủy",
-      "Dương Hồng  Thủy",
+      "Xã Dương Hồng  Thuỷ",
+      "Dương Hồng  Thuỷ",
       "Xã Bắc Thái Ninh",
       "Bắc Thái Ninh"
     ]
@@ -43205,9 +43205,9 @@
   },
   {
     "code": "12922",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "341",
@@ -43872,9 +43872,9 @@
   },
   {
     "code": "13135",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "343",
@@ -43954,8 +43954,8 @@
     "district_code": "343",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Vũ Hòa",
-      "Vũ Hòa"
+      "Xã Vũ Hoà",
+      "Vũ Hoà"
     ]
   },
   {
@@ -44083,9 +44083,9 @@
   },
   {
     "code": "13201",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "344",
@@ -44093,9 +44093,9 @@
   },
   {
     "code": "13204",
-    "name": "Hiệp Hòa",
+    "name": "Hiệp Hoà",
     "name_en": "Hiep Hoa",
-    "full_name": "Xã Hiệp Hòa",
+    "full_name": "Xã Hiệp Hoà",
     "full_name_en": "Hiep Hoa Commune",
     "code_name": "hiep_hoa",
     "district_code": "344",
@@ -44133,9 +44133,9 @@
   },
   {
     "code": "13216",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "344",
@@ -44289,9 +44289,9 @@
   },
   {
     "code": "13258",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "344",
@@ -44524,9 +44524,9 @@
   },
   {
     "code": "13324",
-    "name": "Hòa Mạc",
+    "name": "Hoà Mạc",
     "name_en": "Hoa Mac",
-    "full_name": "Phường Hòa Mạc",
+    "full_name": "Phường Hoà Mạc",
     "full_name_en": "Hoa Mac Ward",
     "code_name": "hoa_mac",
     "district_code": "349",
@@ -44744,9 +44744,9 @@
   },
   {
     "code": "13387",
-    "name": "Nguyễn Úy",
+    "name": "Nguyễn Uý",
     "name_en": "Nguyen Uy",
-    "full_name": "Xã Nguyễn Úy",
+    "full_name": "Xã Nguyễn Uý",
     "full_name_en": "Nguyen Uy Commune",
     "code_name": "nguyen_uy",
     "district_code": "350",
@@ -44789,7 +44789,7 @@
     "administrative_unit_id": 8,
     "legacy_names": [
       "Xã Tượng Lĩnh",
-      "Phường Nguyễn Úy"
+      "Phường Nguyễn Uý"
     ]
   },
   {
@@ -44820,15 +44820,15 @@
   },
   {
     "code": "13405",
-    "name": "Đồng Hóa",
+    "name": "Đồng Hoá",
     "name_en": "Dong Hoa",
-    "full_name": "Phường Đồng Hóa",
+    "full_name": "Phường Đồng Hoá",
     "full_name_en": "Dong Hoa Ward",
     "code_name": "dong_hoa",
     "district_code": "350",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Đồng Hóa"
+      "Xã Đồng Hoá"
     ]
   },
   {
@@ -44856,9 +44856,9 @@
   },
   {
     "code": "13414",
-    "name": "Thụy Lôi",
+    "name": "Thuỵ Lôi",
     "name_en": "Thuy Loi",
-    "full_name": "Xã Thụy Lôi",
+    "full_name": "Xã Thuỵ Lôi",
     "full_name_en": "Thuy Loi Commune",
     "code_name": "thuy_loi",
     "district_code": "350",
@@ -45050,9 +45050,9 @@
   },
   {
     "code": "13468",
-    "name": "Thanh Thủy",
+    "name": "Thanh Thuỷ",
     "name_en": "Thanh Thuy",
-    "full_name": "Xã Thanh Thủy",
+    "full_name": "Xã Thanh Thuỷ",
     "full_name_en": "Thanh Thuy Commune",
     "code_name": "thanh_thuy",
     "district_code": "351",
@@ -45607,9 +45607,9 @@
   },
   {
     "code": "13630",
-    "name": "Hòa Hậu",
+    "name": "Hoà Hậu",
     "name_en": "Hoa Hau",
-    "full_name": "Xã Hòa Hậu",
+    "full_name": "Xã Hoà Hậu",
     "full_name_en": "Hoa Hau Commune",
     "code_name": "hoa_hau",
     "district_code": "353",
@@ -45799,9 +45799,9 @@
   },
   {
     "code": "13693",
-    "name": "Lộc Hòa",
+    "name": "Lộc Hoà",
     "name_en": "Loc Hoa",
-    "full_name": "Phường Lộc Hòa",
+    "full_name": "Phường Lộc Hoà",
     "full_name_en": "Loc Hoa Ward",
     "code_name": "loc_hoa",
     "district_code": "356",
@@ -46059,9 +46059,9 @@
   },
   {
     "code": "13762",
-    "name": "Cộng Hòa",
+    "name": "Cộng Hoà",
     "name_en": "Cong Hoa",
-    "full_name": "Xã Cộng Hòa",
+    "full_name": "Xã Cộng Hoà",
     "full_name_en": "Cong Hoa Commune",
     "code_name": "cong_hoa",
     "district_code": "359",
@@ -47292,9 +47292,9 @@
   },
   {
     "code": "14113",
-    "name": "Xuân Thủy",
+    "name": "Xuân Thuỷ",
     "name_en": "Xuan Thuy",
-    "full_name": "Xã Xuân Thủy",
+    "full_name": "Xã Xuân Thuỷ",
     "full_name_en": "Xuan Thuy Commune",
     "code_name": "xuan_thuy",
     "district_code": "364",
@@ -47416,8 +47416,8 @@
     "district_code": "364",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Xuân Hòa",
-      "Xuân Hòa"
+      "Xã Xuân Hoà",
+      "Xuân Hoà"
     ]
   },
   {
@@ -47486,9 +47486,9 @@
   },
   {
     "code": "14167",
-    "name": "Giao Thủy",
+    "name": "Giao Thuỷ",
     "name_en": "Giao Thuy",
-    "full_name": "Thị trấn Giao Thủy",
+    "full_name": "Thị trấn Giao Thuỷ",
     "full_name_en": "Giao Thuy Township",
     "code_name": "giao_thuy",
     "district_code": "365",
@@ -47496,14 +47496,14 @@
     "legacy_names": [
       "Xã Hoành Sơn",
       "Hoành Sơn",
-      "Xã Giao Thủy"
+      "Xã Giao Thuỷ"
     ]
   },
   {
     "code": "14170",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Xã Bình Hòa",
+    "full_name": "Xã Bình Hoà",
     "full_name_en": "Binh Hoa Commune",
     "code_name": "binh_hoa",
     "district_code": "365",
@@ -47553,8 +47553,8 @@
     "district_code": "365",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Giao Hòa",
-      "Giao Hòa"
+      "Xã Giao Hoà",
+      "Giao Hoà"
     ]
   },
   {
@@ -48007,9 +48007,9 @@
   },
   {
     "code": "14317",
-    "name": "Hải Hòa",
+    "name": "Hải Hoà",
     "name_en": "Hai Hoa",
-    "full_name": "Xã Hải Hòa",
+    "full_name": "Xã Hải Hoà",
     "full_name_en": "Hai Hoa Commune",
     "code_name": "hai_hoa",
     "district_code": "366",
@@ -48305,9 +48305,9 @@
   },
   {
     "code": "14398",
-    "name": "Gia Thủy",
+    "name": "Gia Thuỷ",
     "name_en": "Gia Thuy",
-    "full_name": "Xã Gia Thủy",
+    "full_name": "Xã Gia Thuỷ",
     "full_name_en": "Gia Thuy Commune",
     "code_name": "gia_thuy",
     "district_code": "372",
@@ -48395,9 +48395,9 @@
   },
   {
     "code": "14425",
-    "name": "Thượng Hòa",
+    "name": "Thượng Hoà",
     "name_en": "Thuong Hoa",
-    "full_name": "Xã Thượng Hòa",
+    "full_name": "Xã Thượng Hoà",
     "full_name_en": "Thuong Hoa Commune",
     "code_name": "thuong_hoa",
     "district_code": "372",
@@ -48554,9 +48554,9 @@
   },
   {
     "code": "14467",
-    "name": "Gia Hòa",
+    "name": "Gia Hoà",
     "name_en": "Gia Hoa",
-    "full_name": "Xã Gia Hòa",
+    "full_name": "Xã Gia Hoà",
     "full_name_en": "Gia Hoa Commune",
     "code_name": "gia_hoa",
     "district_code": "373",
@@ -48814,9 +48814,9 @@
   },
   {
     "code": "14542",
-    "name": "Ninh Hòa",
+    "name": "Ninh Hoà",
     "name_en": "Ninh Hoa",
-    "full_name": "Xã Ninh Hòa",
+    "full_name": "Xã Ninh Hoà",
     "full_name_en": "Ninh Hoa Commune",
     "code_name": "ninh_hoa",
     "district_code": "374",
@@ -48910,9 +48910,9 @@
   },
   {
     "code": "14569",
-    "name": "Khánh Hòa",
+    "name": "Khánh Hoà",
     "name_en": "Khanh Hoa",
-    "full_name": "Xã Khánh Hòa",
+    "full_name": "Xã Khánh Hoà",
     "full_name_en": "Khanh Hoa Commune",
     "code_name": "khanh_hoa",
     "district_code": "375",
@@ -49040,9 +49040,9 @@
   },
   {
     "code": "14614",
-    "name": "Khánh Thủy",
+    "name": "Khánh Thuỷ",
     "name_en": "Khanh Thuy",
-    "full_name": "Xã Khánh Thủy",
+    "full_name": "Xã Khánh Thuỷ",
     "full_name_en": "Khanh Thuy Commune",
     "code_name": "khanh_thuy",
     "district_code": "375",
@@ -49116,9 +49116,9 @@
   },
   {
     "code": "14638",
-    "name": "Ân Hòa",
+    "name": "Ân Hoà",
     "name_en": "An Hoa",
-    "full_name": "Xã Ân Hòa",
+    "full_name": "Xã Ân Hoà",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "376",
@@ -49150,9 +49150,9 @@
   },
   {
     "code": "14650",
-    "name": "Như Hòa",
+    "name": "Như Hoà",
     "name_en": "Nhu Hoa",
-    "full_name": "Xã Như Hòa",
+    "full_name": "Xã Như Hoà",
     "full_name_en": "Nhu Hoa Commune",
     "code_name": "nhu_hoa",
     "district_code": "376",
@@ -49240,9 +49240,9 @@
   },
   {
     "code": "14677",
-    "name": "Định Hóa",
+    "name": "Định Hoá",
     "name_en": "Dinh Hoa",
-    "full_name": "Xã Định Hóa",
+    "full_name": "Xã Định Hoá",
     "full_name_en": "Dinh Hoa Commune",
     "code_name": "dinh_hoa",
     "district_code": "376",
@@ -49384,9 +49384,9 @@
   },
   {
     "code": "14722",
-    "name": "Yên Hòa",
+    "name": "Yên Hoà",
     "name_en": "Yen Hoa",
-    "full_name": "Xã Yên Hòa",
+    "full_name": "Xã Yên Hoà",
     "full_name_en": "Yen Hoa Commune",
     "code_name": "yen_hoa",
     "district_code": "377",
@@ -50330,9 +50330,9 @@
   },
   {
     "code": "15010",
-    "name": "Sơn Thủy",
+    "name": "Sơn Thuỷ",
     "name_en": "Son Thuy",
-    "full_name": "Xã Sơn Thủy",
+    "full_name": "Xã Sơn Thuỷ",
     "full_name_en": "Son Thuy Commune",
     "code_name": "son_thuy",
     "district_code": "387",
@@ -50535,9 +50535,9 @@
   },
   {
     "code": "15070",
-    "name": "Thúy Sơn",
+    "name": "Thuý Sơn",
     "name_en": "Thuy Son",
-    "full_name": "Xã Thúy Sơn",
+    "full_name": "Xã Thuý Sơn",
     "full_name_en": "Thuy Son Commune",
     "code_name": "thuy_son",
     "district_code": "389",
@@ -50723,8 +50723,8 @@
     "district_code": "390",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Cẩm Thủy",
-      "Cẩm Thủy"
+      "Xã Cẩm Thuỷ",
+      "Cẩm Thuỷ"
     ]
   },
   {
@@ -51441,9 +51441,9 @@
   },
   {
     "code": "15376",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "393",
@@ -51642,9 +51642,9 @@
   },
   {
     "code": "15448",
-    "name": "Định Hòa",
+    "name": "Định Hoà",
     "name_en": "Dinh Hoa",
-    "full_name": "Xã Định Hòa",
+    "full_name": "Xã Định Hoà",
     "full_name_en": "Dinh Hoa Commune",
     "code_name": "dinh_hoa",
     "district_code": "394",
@@ -51833,9 +51833,9 @@
   },
   {
     "code": "15517",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "395",
@@ -52389,9 +52389,9 @@
   },
   {
     "code": "15715",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Xã Thái Hòa",
+    "full_name": "Xã Thái Hoà",
     "full_name_en": "Thai Hoa Commune",
     "code_name": "thai_hoa",
     "district_code": "397",
@@ -52571,17 +52571,17 @@
   },
   {
     "code": "15772",
-    "name": "Thiệu Hóa",
+    "name": "Thiệu Hoá",
     "name_en": "Thieu Hoa",
-    "full_name": "Thị trấn Thiệu Hóa",
+    "full_name": "Thị trấn Thiệu Hoá",
     "full_name_en": "Thieu Hoa Township",
     "code_name": "thieu_hoa",
     "district_code": "398",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Thiệu Hóa",
-      "Xã Thiệu Hòa",
-      "Thiệu Hòa"
+      "Xã Thiệu Hoá",
+      "Xã Thiệu Hoà",
+      "Thiệu Hoà"
     ]
   },
   {
@@ -52862,8 +52862,8 @@
     "district_code": "399",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hoằng Hóa",
-      "Hoằng Hóa"
+      "Xã Hoằng Hoá",
+      "Hoằng Hoá"
     ]
   },
   {
@@ -53407,9 +53407,9 @@
   },
   {
     "code": "16075",
-    "name": "Hòa Lộc",
+    "name": "Hoà Lộc",
     "name_en": "Hoa Loc",
-    "full_name": "Xã Hòa Lộc",
+    "full_name": "Xã Hoà Lộc",
     "full_name_en": "Hoa Loc Commune",
     "code_name": "hoa_loc",
     "district_code": "400",
@@ -53664,9 +53664,9 @@
   },
   {
     "code": "16156",
-    "name": "Nga Thủy",
+    "name": "Nga Thuỷ",
     "name_en": "Nga Thuy",
-    "full_name": "Xã Nga Thủy",
+    "full_name": "Xã Nga Thuỷ",
     "full_name_en": "Nga Thuy Commune",
     "code_name": "nga_thuy",
     "district_code": "401",
@@ -53748,9 +53748,9 @@
   },
   {
     "code": "16180",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "402",
@@ -53768,9 +53768,9 @@
   },
   {
     "code": "16186",
-    "name": "Hóa Quỳ",
+    "name": "Hoá Quỳ",
     "name_en": "Hoa Quy",
-    "full_name": "Xã Hóa Quỳ",
+    "full_name": "Xã Hoá Quỳ",
     "full_name_en": "Hoa Quy Commune",
     "code_name": "hoa_quy",
     "district_code": "402",
@@ -53838,9 +53838,9 @@
   },
   {
     "code": "16213",
-    "name": "Thanh Hòa",
+    "name": "Thanh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thanh Hòa",
+    "full_name": "Xã Thanh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "402",
@@ -54169,9 +54169,9 @@
   },
   {
     "code": "16327",
-    "name": "Vạn Hòa",
+    "name": "Vạn Hoà",
     "name_en": "Van Hoa",
-    "full_name": "Xã Vạn Hòa",
+    "full_name": "Xã Vạn Hoà",
     "full_name_en": "Van Hoa Commune",
     "code_name": "van_hoa",
     "district_code": "404",
@@ -54366,9 +54366,9 @@
   },
   {
     "code": "16390",
-    "name": "Đông Hòa",
+    "name": "Đông Hoà",
     "name_en": "Dong Hoa",
-    "full_name": "Xã Đông Hòa",
+    "full_name": "Xã Đông Hoà",
     "full_name_en": "Dong Hoa Commune",
     "code_name": "dong_hoa",
     "district_code": "380",
@@ -54666,9 +54666,9 @@
   },
   {
     "code": "16483",
-    "name": "Quảng Hòa",
+    "name": "Quảng Hoà",
     "name_en": "Quang Hoa",
-    "full_name": "Xã Quảng Hòa",
+    "full_name": "Xã Quảng Hoà",
     "full_name_en": "Quang Hoa Commune",
     "code_name": "quang_hoa",
     "district_code": "406",
@@ -54916,9 +54916,9 @@
   },
   {
     "code": "16561",
-    "name": "Hải Hòa",
+    "name": "Hải Hoà",
     "name_en": "Hai Hoa",
-    "full_name": "Phường Hải Hòa",
+    "full_name": "Phường Hải Hoà",
     "full_name_en": "Hai Hoa Ward",
     "code_name": "hai_hoa",
     "district_code": "407",
@@ -54940,9 +54940,9 @@
   },
   {
     "code": "16567",
-    "name": "Thanh Thủy",
+    "name": "Thanh Thuỷ",
     "name_en": "Thanh Thuy",
-    "full_name": "Xã Thanh Thủy",
+    "full_name": "Xã Thanh Thuỷ",
     "full_name_en": "Thanh Thuy Commune",
     "code_name": "thanh_thuy",
     "district_code": "407",
@@ -55369,9 +55369,9 @@
   },
   {
     "code": "16693",
-    "name": "Bến Thủy",
+    "name": "Bến Thuỷ",
     "name_en": "Ben Thuy",
-    "full_name": "Phường Bến Thủy",
+    "full_name": "Phường Bến Thuỷ",
     "full_name_en": "Ben Thuy Ward",
     "code_name": "ben_thuy",
     "district_code": "412",
@@ -55442,9 +55442,9 @@
   },
   {
     "code": "16711",
-    "name": "Hưng Hòa",
+    "name": "Hưng Hoà",
     "name_en": "Hung Hoa",
-    "full_name": "Xã Hưng Hòa",
+    "full_name": "Xã Hưng Hoà",
     "full_name_en": "Hung Hoa Commune",
     "code_name": "hung_hoa",
     "district_code": "412",
@@ -55492,9 +55492,9 @@
   },
   {
     "code": "16726",
-    "name": "Nghi Hòa",
+    "name": "Nghi Hoà",
     "name_en": "Nghi Hoa",
-    "full_name": "Phường Nghi Hòa",
+    "full_name": "Phường Nghi Hoà",
     "full_name_en": "Nghi Hoa Ward",
     "code_name": "nghi_hoa",
     "district_code": "412",
@@ -56091,9 +56091,9 @@
   },
   {
     "code": "16909",
-    "name": "Yên Hòa",
+    "name": "Yên Hoà",
     "name_en": "Yen Hoa",
-    "full_name": "Xã Yên Hòa",
+    "full_name": "Xã Yên Hoà",
     "full_name_en": "Yen Hoa Commune",
     "code_name": "yen_hoa",
     "district_code": "418",
@@ -56189,8 +56189,8 @@
     "district_code": "414",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Thái Hòa",
-      "Thái Hòa"
+      "Phường Thái Hoà",
+      "Thái Hoà"
     ]
   },
   {
@@ -57108,9 +57108,9 @@
   },
   {
     "code": "17206",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Xã An Hòa",
+    "full_name": "Xã An Hoà",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "421",
@@ -57126,8 +57126,8 @@
     "district_code": "421",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Tiến Thủy",
-      "Tiến Thủy"
+      "Xã Tiến Thuỷ",
+      "Tiến Thuỷ"
     ]
   },
   {
@@ -57639,8 +57639,8 @@
     "legacy_names": [
       "Xã Đỉnh Sơn",
       "Đỉnh Sơn",
-      "Xã Nhân Hòa",
-      "Nhân Hòa"
+      "Xã Nhân Hoà",
+      "Nhân Hoà"
     ]
   },
   {
@@ -58741,9 +58741,9 @@
   },
   {
     "code": "17647",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "427",
@@ -59034,9 +59034,9 @@
   },
   {
     "code": "17725",
-    "name": "Thanh Hòa",
+    "name": "Thanh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thanh Hòa",
+    "full_name": "Xã Thanh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "428",
@@ -59298,9 +59298,9 @@
   },
   {
     "code": "17797",
-    "name": "Thanh Thủy",
+    "name": "Thanh Thuỷ",
     "name_en": "Thanh Thuy",
-    "full_name": "Xã Thanh Thủy",
+    "full_name": "Xã Thanh Thuỷ",
     "full_name_en": "Thanh Thuy Commune",
     "code_name": "thanh_thuy",
     "district_code": "428",
@@ -59874,9 +59874,9 @@
   },
   {
     "code": "17959",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "430",
@@ -60504,9 +60504,9 @@
   },
   {
     "code": "18163",
-    "name": "An Hòa Thịnh",
+    "name": "An Hoà Thịnh",
     "name_en": "An Hoa Thinh",
-    "full_name": "Xã An Hòa Thịnh",
+    "full_name": "Xã An Hoà Thịnh",
     "full_name_en": "An Hoa Thinh Commune",
     "code_name": "an_hoa_thinh",
     "district_code": "439",
@@ -60789,9 +60789,9 @@
   },
   {
     "code": "18277",
-    "name": "Lâm Trung Thủy",
+    "name": "Lâm Trung Thuỷ",
     "name_en": "Lam Trung Thuy",
-    "full_name": "Xã Lâm Trung Thủy",
+    "full_name": "Xã Lâm Trung Thuỷ",
     "full_name_en": "Lam Trung Thuy Commune",
     "code_name": "lam_trung_thuy",
     "district_code": "440",
@@ -60803,9 +60803,9 @@
   },
   {
     "code": "18280",
-    "name": "Hòa Lạc",
+    "name": "Hoà Lạc",
     "name_en": "Hoa Lac",
-    "full_name": "Xã Hòa Lạc",
+    "full_name": "Xã Hoà Lạc",
     "full_name_en": "Hoa Lac Commune",
     "code_name": "hoa_lac",
     "district_code": "440",
@@ -61449,9 +61449,9 @@
   },
   {
     "code": "18505",
-    "name": "Hương Thủy",
+    "name": "Hương Thuỷ",
     "name_en": "Huong Thuy",
-    "full_name": "Xã Hương Thủy",
+    "full_name": "Xã Hương Thuỷ",
     "full_name_en": "Huong Thuy Commune",
     "code_name": "huong_thuy",
     "district_code": "444",
@@ -61459,9 +61459,9 @@
   },
   {
     "code": "18508",
-    "name": "Hòa Hải",
+    "name": "Hoà Hải",
     "name_en": "Hoa Hai",
-    "full_name": "Xã Hòa Hải",
+    "full_name": "Xã Hoà Hải",
     "full_name_en": "Hoa Hai Commune",
     "code_name": "hoa_hai",
     "district_code": "444",
@@ -61961,9 +61961,9 @@
   },
   {
     "code": "18679",
-    "name": "Yên Hòa",
+    "name": "Yên Hoà",
     "name_en": "Yen Hoa",
-    "full_name": "Xã Yên Hòa",
+    "full_name": "Xã Yên Hoà",
     "full_name_en": "Yen Hoa Commune",
     "code_name": "yen_hoa",
     "district_code": "446",
@@ -62678,9 +62678,9 @@
   },
   {
     "code": "18904",
-    "name": "Dân Hóa",
+    "name": "Dân Hoá",
     "name_en": "Dan Hoa",
-    "full_name": "Xã Dân Hóa",
+    "full_name": "Xã Dân Hoá",
     "full_name_en": "Dan Hoa Commune",
     "code_name": "dan_hoa",
     "district_code": "452",
@@ -62688,9 +62688,9 @@
   },
   {
     "code": "18907",
-    "name": "Trọng Hóa",
+    "name": "Trọng Hoá",
     "name_en": "Trong Hoa",
-    "full_name": "Xã Trọng Hóa",
+    "full_name": "Xã Trọng Hoá",
     "full_name_en": "Trong Hoa Commune",
     "code_name": "trong_hoa",
     "district_code": "452",
@@ -62698,9 +62698,9 @@
   },
   {
     "code": "18910",
-    "name": "Hóa Phúc",
+    "name": "Hoá Phúc",
     "name_en": "Hoa Phuc",
-    "full_name": "Xã Hóa Phúc",
+    "full_name": "Xã Hoá Phúc",
     "full_name_en": "Hoa Phuc Commune",
     "code_name": "hoa_phuc",
     "district_code": "452",
@@ -62708,9 +62708,9 @@
   },
   {
     "code": "18913",
-    "name": "Hồng Hóa",
+    "name": "Hồng Hoá",
     "name_en": "Hong Hoa",
-    "full_name": "Xã Hồng Hóa",
+    "full_name": "Xã Hồng Hoá",
     "full_name_en": "Hong Hoa Commune",
     "code_name": "hong_hoa",
     "district_code": "452",
@@ -62718,9 +62718,9 @@
   },
   {
     "code": "18916",
-    "name": "Hóa Thanh",
+    "name": "Hoá Thanh",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hóa Thanh",
+    "full_name": "Xã Hoá Thanh",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "452",
@@ -62736,15 +62736,15 @@
     "district_code": "452",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hóa Tiến",
-      "Hóa Tiến"
+      "Xã Hoá Tiến",
+      "Hoá Tiến"
     ]
   },
   {
     "code": "18922",
-    "name": "Hóa Hợp",
+    "name": "Hoá Hợp",
     "name_en": "Hoa Hop",
-    "full_name": "Xã Hóa Hợp",
+    "full_name": "Xã Hoá Hợp",
     "full_name_en": "Hoa Hop Commune",
     "code_name": "hoa_hop",
     "district_code": "452",
@@ -62756,9 +62756,9 @@
   },
   {
     "code": "18925",
-    "name": "Xuân Hóa",
+    "name": "Xuân Hoá",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hóa",
+    "full_name": "Xã Xuân Hoá",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "452",
@@ -62766,9 +62766,9 @@
   },
   {
     "code": "18928",
-    "name": "Yên Hóa",
+    "name": "Yên Hoá",
     "name_en": "Yen Hoa",
-    "full_name": "Xã Yên Hóa",
+    "full_name": "Xã Yên Hoá",
     "full_name_en": "Yen Hoa Commune",
     "code_name": "yen_hoa",
     "district_code": "452",
@@ -62776,9 +62776,9 @@
   },
   {
     "code": "18931",
-    "name": "Minh Hóa",
+    "name": "Minh Hoá",
     "name_en": "Minh Hoa",
-    "full_name": "Xã Minh Hóa",
+    "full_name": "Xã Minh Hoá",
     "full_name_en": "Minh Hoa Commune",
     "code_name": "minh_hoa",
     "district_code": "452",
@@ -62786,9 +62786,9 @@
   },
   {
     "code": "18934",
-    "name": "Tân Hóa",
+    "name": "Tân Hoá",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hóa",
+    "full_name": "Xã Tân Hoá",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "452",
@@ -62796,9 +62796,9 @@
   },
   {
     "code": "18937",
-    "name": "Hóa Sơn",
+    "name": "Hoá Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hóa Sơn",
+    "full_name": "Xã Hoá Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "452",
@@ -62806,9 +62806,9 @@
   },
   {
     "code": "18943",
-    "name": "Trung Hóa",
+    "name": "Trung Hoá",
     "name_en": "Trung Hoa",
-    "full_name": "Xã Trung Hóa",
+    "full_name": "Xã Trung Hoá",
     "full_name_en": "Trung Hoa Commune",
     "code_name": "trung_hoa",
     "district_code": "452",
@@ -62820,9 +62820,9 @@
   },
   {
     "code": "18946",
-    "name": "Thượng Hóa",
+    "name": "Thượng Hoá",
     "name_en": "Thuong Hoa",
-    "full_name": "Xã Thượng Hóa",
+    "full_name": "Xã Thượng Hoá",
     "full_name_en": "Thuong Hoa Commune",
     "code_name": "thuong_hoa",
     "district_code": "452",
@@ -62843,9 +62843,9 @@
   },
   {
     "code": "18952",
-    "name": "Hương Hóa",
+    "name": "Hương Hoá",
     "name_en": "Huong Hoa",
-    "full_name": "Xã Hương Hóa",
+    "full_name": "Xã Hương Hoá",
     "full_name_en": "Huong Hoa Commune",
     "code_name": "huong_hoa",
     "district_code": "453",
@@ -62857,9 +62857,9 @@
   },
   {
     "code": "18955",
-    "name": "Kim Hóa",
+    "name": "Kim Hoá",
     "name_en": "Kim Hoa",
-    "full_name": "Xã Kim Hóa",
+    "full_name": "Xã Kim Hoá",
     "full_name_en": "Kim Hoa Commune",
     "code_name": "kim_hoa",
     "district_code": "453",
@@ -62867,9 +62867,9 @@
   },
   {
     "code": "18958",
-    "name": "Thanh Hóa",
+    "name": "Thanh Hoá",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thanh Hóa",
+    "full_name": "Xã Thanh Hoá",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "453",
@@ -62891,9 +62891,9 @@
   },
   {
     "code": "18964",
-    "name": "Thuận Hóa",
+    "name": "Thuận Hoá",
     "name_en": "Thuan Hoa",
-    "full_name": "Xã Thuận Hóa",
+    "full_name": "Xã Thuận Hoá",
     "full_name_en": "Thuan Hoa Commune",
     "code_name": "thuan_hoa",
     "district_code": "453",
@@ -62901,9 +62901,9 @@
   },
   {
     "code": "18967",
-    "name": "Lâm Hóa",
+    "name": "Lâm Hoá",
     "name_en": "Lam Hoa",
-    "full_name": "Xã Lâm Hóa",
+    "full_name": "Xã Lâm Hoá",
     "full_name_en": "Lam Hoa Commune",
     "code_name": "lam_hoa",
     "district_code": "453",
@@ -62911,9 +62911,9 @@
   },
   {
     "code": "18970",
-    "name": "Lê Hóa",
+    "name": "Lê Hoá",
     "name_en": "Le Hoa",
-    "full_name": "Xã Lê Hóa",
+    "full_name": "Xã Lê Hoá",
     "full_name_en": "Le Hoa Commune",
     "code_name": "le_hoa",
     "district_code": "453",
@@ -62921,9 +62921,9 @@
   },
   {
     "code": "18973",
-    "name": "Sơn Hóa",
+    "name": "Sơn Hoá",
     "name_en": "Son Hoa",
-    "full_name": "Xã Sơn Hóa",
+    "full_name": "Xã Sơn Hoá",
     "full_name_en": "Son Hoa Commune",
     "code_name": "son_hoa",
     "district_code": "453",
@@ -62931,9 +62931,9 @@
   },
   {
     "code": "18976",
-    "name": "Đồng Hóa",
+    "name": "Đồng Hoá",
     "name_en": "Dong Hoa",
-    "full_name": "Xã Đồng Hóa",
+    "full_name": "Xã Đồng Hoá",
     "full_name_en": "Dong Hoa Commune",
     "code_name": "dong_hoa",
     "district_code": "453",
@@ -62941,9 +62941,9 @@
   },
   {
     "code": "18979",
-    "name": "Ngư Hóa",
+    "name": "Ngư Hoá",
     "name_en": "Ngu Hoa",
-    "full_name": "Xã Ngư Hóa",
+    "full_name": "Xã Ngư Hoá",
     "full_name_en": "Ngu Hoa Commune",
     "code_name": "ngu_hoa",
     "district_code": "453",
@@ -62951,9 +62951,9 @@
   },
   {
     "code": "18985",
-    "name": "Thạch Hóa",
+    "name": "Thạch Hoá",
     "name_en": "Thach Hoa",
-    "full_name": "Xã Thạch Hóa",
+    "full_name": "Xã Thạch Hoá",
     "full_name_en": "Thach Hoa Commune",
     "code_name": "thach_hoa",
     "district_code": "453",
@@ -62965,9 +62965,9 @@
   },
   {
     "code": "18988",
-    "name": "Đức Hóa",
+    "name": "Đức Hoá",
     "name_en": "Duc Hoa",
-    "full_name": "Xã Đức Hóa",
+    "full_name": "Xã Đức Hoá",
     "full_name_en": "Duc Hoa Commune",
     "code_name": "duc_hoa",
     "district_code": "453",
@@ -62975,9 +62975,9 @@
   },
   {
     "code": "18991",
-    "name": "Phong Hóa",
+    "name": "Phong Hoá",
     "name_en": "Phong Hoa",
-    "full_name": "Xã Phong Hóa",
+    "full_name": "Xã Phong Hoá",
     "full_name_en": "Phong Hoa Commune",
     "code_name": "phong_hoa",
     "district_code": "453",
@@ -62989,9 +62989,9 @@
   },
   {
     "code": "18994",
-    "name": "Mai Hóa",
+    "name": "Mai Hoá",
     "name_en": "Mai Hoa",
-    "full_name": "Xã Mai Hóa",
+    "full_name": "Xã Mai Hoá",
     "full_name_en": "Mai Hoa Commune",
     "code_name": "mai_hoa",
     "district_code": "453",
@@ -62999,23 +62999,23 @@
   },
   {
     "code": "18997",
-    "name": "Tiến Hóa",
+    "name": "Tiến Hoá",
     "name_en": "Tien Hoa",
-    "full_name": "Xã Tiến Hóa",
+    "full_name": "Xã Tiến Hoá",
     "full_name_en": "Tien Hoa Commune",
     "code_name": "tien_hoa",
     "district_code": "453",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Tuyên Hóa",
-      "Tuyên Hóa"
+      "Xã Tuyên Hoá",
+      "Tuyên Hoá"
     ]
   },
   {
     "code": "19000",
-    "name": "Châu Hóa",
+    "name": "Châu Hoá",
     "name_en": "Chau Hoa",
-    "full_name": "Xã Châu Hóa",
+    "full_name": "Xã Châu Hoá",
     "full_name_en": "Chau Hoa Commune",
     "code_name": "chau_hoa",
     "district_code": "453",
@@ -63033,9 +63033,9 @@
   },
   {
     "code": "19006",
-    "name": "Văn Hóa",
+    "name": "Văn Hoá",
     "name_en": "Van Hoa",
-    "full_name": "Xã Văn Hóa",
+    "full_name": "Xã Văn Hoá",
     "full_name_en": "Van Hoa Commune",
     "code_name": "van_hoa",
     "district_code": "453",
@@ -63139,8 +63139,8 @@
     "district_code": "454",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Trạch",
-      "Hòa Trạch"
+      "Xã Hoà Trạch",
+      "Hoà Trạch"
     ]
   },
   {
@@ -63185,9 +63185,9 @@
   },
   {
     "code": "19048",
-    "name": "Cảnh Hóa",
+    "name": "Cảnh Hoá",
     "name_en": "Canh Hoa",
-    "full_name": "Xã Cảnh Hóa",
+    "full_name": "Xã Cảnh Hoá",
     "full_name_en": "Canh Hoa Commune",
     "code_name": "canh_hoa",
     "district_code": "454",
@@ -63241,8 +63241,8 @@
     "district_code": "454",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Phù Hóa",
-      "Phù Hóa"
+      "Xã Phù Hoá",
+      "Phù Hoá"
     ]
   },
   {
@@ -63359,9 +63359,9 @@
   },
   {
     "code": "19096",
-    "name": "Quảng Thủy",
+    "name": "Quảng Thuỷ",
     "name_en": "Quang Thuy",
-    "full_name": "Xã Quảng Thủy",
+    "full_name": "Xã Quảng Thuỷ",
     "full_name_en": "Quang Thuy Commune",
     "code_name": "quang_thuy",
     "district_code": "458",
@@ -63389,9 +63389,9 @@
   },
   {
     "code": "19105",
-    "name": "Quảng Hòa",
+    "name": "Quảng Hoà",
     "name_en": "Quang Hoa",
-    "full_name": "Xã Quảng Hòa",
+    "full_name": "Xã Quảng Hoà",
     "full_name_en": "Quang Hoa Commune",
     "code_name": "quang_hoa",
     "district_code": "458",
@@ -63647,9 +63647,9 @@
   },
   {
     "code": "19183",
-    "name": "Hòa Trạch",
+    "name": "Hoà Trạch",
     "name_en": "Hoa Trach",
-    "full_name": "Xã Hòa Trạch",
+    "full_name": "Xã Hoà Trạch",
     "full_name_en": "Hoa Trach Commune",
     "code_name": "hoa_trach",
     "district_code": "455",
@@ -63887,15 +63887,15 @@
     "district_code": "457",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Lệ Thủy",
-      "Lệ Thủy"
+      "Xã Lệ Thuỷ",
+      "Lệ Thuỷ"
     ]
   },
   {
     "code": "19252",
-    "name": "Hồng Thủy",
+    "name": "Hồng Thuỷ",
     "name_en": "Hong Thuy",
-    "full_name": "Xã Hồng Thủy",
+    "full_name": "Xã Hồng Thuỷ",
     "full_name_en": "Hong Thuy Commune",
     "code_name": "hong_thuy",
     "district_code": "457",
@@ -63903,9 +63903,9 @@
   },
   {
     "code": "19255",
-    "name": "Ngư Thủy Bắc",
+    "name": "Ngư Thuỷ Bắc",
     "name_en": "Ngu Thuy Bac",
-    "full_name": "Xã Ngư Thủy Bắc",
+    "full_name": "Xã Ngư Thuỷ Bắc",
     "full_name_en": "Ngu Thuy Bac Commune",
     "code_name": "ngu_thuy_bac",
     "district_code": "457",
@@ -63917,9 +63917,9 @@
   },
   {
     "code": "19258",
-    "name": "Hoa Thủy",
+    "name": "Hoa Thuỷ",
     "name_en": "Hoa Thuy",
-    "full_name": "Xã Hoa Thủy",
+    "full_name": "Xã Hoa Thuỷ",
     "full_name_en": "Hoa Thuy Commune",
     "code_name": "hoa_thuy",
     "district_code": "457",
@@ -63927,9 +63927,9 @@
   },
   {
     "code": "19261",
-    "name": "Thanh Thủy",
+    "name": "Thanh Thuỷ",
     "name_en": "Thanh Thuy",
-    "full_name": "Xã Thanh Thủy",
+    "full_name": "Xã Thanh Thuỷ",
     "full_name_en": "Thanh Thuy Commune",
     "code_name": "thanh_thuy",
     "district_code": "457",
@@ -63937,9 +63937,9 @@
   },
   {
     "code": "19264",
-    "name": "An Thủy",
+    "name": "An Thuỷ",
     "name_en": "An Thuy",
-    "full_name": "Xã An Thủy",
+    "full_name": "Xã An Thuỷ",
     "full_name_en": "An Thuy Commune",
     "code_name": "an_thuy",
     "district_code": "457",
@@ -63947,9 +63947,9 @@
   },
   {
     "code": "19267",
-    "name": "Phong Thủy",
+    "name": "Phong Thuỷ",
     "name_en": "Phong Thuy",
-    "full_name": "Xã Phong Thủy",
+    "full_name": "Xã Phong Thuỷ",
     "full_name_en": "Phong Thuy Commune",
     "code_name": "phong_thuy",
     "district_code": "457",
@@ -63957,9 +63957,9 @@
   },
   {
     "code": "19270",
-    "name": "Cam Thủy",
+    "name": "Cam Thuỷ",
     "name_en": "Cam Thuy",
-    "full_name": "Xã Cam Thủy",
+    "full_name": "Xã Cam Thuỷ",
     "full_name_en": "Cam Thuy Commune",
     "code_name": "cam_thuy",
     "district_code": "457",
@@ -63967,9 +63967,9 @@
   },
   {
     "code": "19273",
-    "name": "Ngân Thủy",
+    "name": "Ngân Thuỷ",
     "name_en": "Ngan Thuy",
-    "full_name": "Xã Ngân Thủy",
+    "full_name": "Xã Ngân Thuỷ",
     "full_name_en": "Ngan Thuy Commune",
     "code_name": "ngan_thuy",
     "district_code": "457",
@@ -63977,9 +63977,9 @@
   },
   {
     "code": "19276",
-    "name": "Sơn Thủy",
+    "name": "Sơn Thuỷ",
     "name_en": "Son Thuy",
-    "full_name": "Xã Sơn Thủy",
+    "full_name": "Xã Sơn Thuỷ",
     "full_name_en": "Son Thuy Commune",
     "code_name": "son_thuy",
     "district_code": "457",
@@ -63987,9 +63987,9 @@
   },
   {
     "code": "19279",
-    "name": "Lộc Thủy",
+    "name": "Lộc Thuỷ",
     "name_en": "Loc Thuy",
-    "full_name": "Xã Lộc Thủy",
+    "full_name": "Xã Lộc Thuỷ",
     "full_name_en": "Loc Thuy Commune",
     "code_name": "loc_thuy",
     "district_code": "457",
@@ -63997,9 +63997,9 @@
   },
   {
     "code": "19285",
-    "name": "Liên Thủy",
+    "name": "Liên Thuỷ",
     "name_en": "Lien Thuy",
-    "full_name": "Xã Liên Thủy",
+    "full_name": "Xã Liên Thuỷ",
     "full_name_en": "Lien Thuy Commune",
     "code_name": "lien_thuy",
     "district_code": "457",
@@ -64007,9 +64007,9 @@
   },
   {
     "code": "19288",
-    "name": "Hưng Thủy",
+    "name": "Hưng Thuỷ",
     "name_en": "Hung Thuy",
-    "full_name": "Xã Hưng Thủy",
+    "full_name": "Xã Hưng Thuỷ",
     "full_name_en": "Hung Thuy Commune",
     "code_name": "hung_thuy",
     "district_code": "457",
@@ -64021,9 +64021,9 @@
   },
   {
     "code": "19291",
-    "name": "Dương Thủy",
+    "name": "Dương Thuỷ",
     "name_en": "Duong Thuy",
-    "full_name": "Xã Dương Thủy",
+    "full_name": "Xã Dương Thuỷ",
     "full_name_en": "Duong Thuy Commune",
     "code_name": "duong_thuy",
     "district_code": "457",
@@ -64035,9 +64035,9 @@
   },
   {
     "code": "19294",
-    "name": "Tân Thủy",
+    "name": "Tân Thuỷ",
     "name_en": "Tan Thuy",
-    "full_name": "Xã Tân Thủy",
+    "full_name": "Xã Tân Thuỷ",
     "full_name_en": "Tan Thuy Commune",
     "code_name": "tan_thuy",
     "district_code": "457",
@@ -64045,9 +64045,9 @@
   },
   {
     "code": "19297",
-    "name": "Phú Thủy",
+    "name": "Phú Thuỷ",
     "name_en": "Phu Thuy",
-    "full_name": "Xã Phú Thủy",
+    "full_name": "Xã Phú Thuỷ",
     "full_name_en": "Phu Thuy Commune",
     "code_name": "phu_thuy",
     "district_code": "457",
@@ -64055,9 +64055,9 @@
   },
   {
     "code": "19300",
-    "name": "Xuân Thủy",
+    "name": "Xuân Thuỷ",
     "name_en": "Xuan Thuy",
-    "full_name": "Xã Xuân Thủy",
+    "full_name": "Xã Xuân Thuỷ",
     "full_name_en": "Xuan Thuy Commune",
     "code_name": "xuan_thuy",
     "district_code": "457",
@@ -64065,9 +64065,9 @@
   },
   {
     "code": "19303",
-    "name": "Mỹ Thủy",
+    "name": "Mỹ Thuỷ",
     "name_en": "My Thuy",
-    "full_name": "Xã Mỹ Thủy",
+    "full_name": "Xã Mỹ Thuỷ",
     "full_name_en": "My Thuy Commune",
     "code_name": "my_thuy",
     "district_code": "457",
@@ -64075,9 +64075,9 @@
   },
   {
     "code": "19306",
-    "name": "Ngư Thủy",
+    "name": "Ngư Thuỷ",
     "name_en": "Ngu Thuy",
-    "full_name": "Xã Ngư Thủy",
+    "full_name": "Xã Ngư Thuỷ",
     "full_name_en": "Ngu Thuy Commune",
     "code_name": "ngu_thuy",
     "district_code": "457",
@@ -64085,9 +64085,9 @@
   },
   {
     "code": "19309",
-    "name": "Mai Thủy",
+    "name": "Mai Thuỷ",
     "name_en": "Mai Thuy",
-    "full_name": "Xã Mai Thủy",
+    "full_name": "Xã Mai Thuỷ",
     "full_name_en": "Mai Thuy Commune",
     "code_name": "mai_thuy",
     "district_code": "457",
@@ -64099,9 +64099,9 @@
   },
   {
     "code": "19312",
-    "name": "Sen Thủy",
+    "name": "Sen Thuỷ",
     "name_en": "Sen Thuy",
-    "full_name": "Xã Sen Thủy",
+    "full_name": "Xã Sen Thuỷ",
     "full_name_en": "Sen Thuy Commune",
     "code_name": "sen_thuy",
     "district_code": "457",
@@ -64109,9 +64109,9 @@
   },
   {
     "code": "19315",
-    "name": "Thái Thủy",
+    "name": "Thái Thuỷ",
     "name_en": "Thai Thuy",
-    "full_name": "Xã Thái Thủy",
+    "full_name": "Xã Thái Thuỷ",
     "full_name_en": "Thai Thuy Commune",
     "code_name": "thai_thuy",
     "district_code": "457",
@@ -64119,9 +64119,9 @@
   },
   {
     "code": "19318",
-    "name": "Kim Thủy",
+    "name": "Kim Thuỷ",
     "name_en": "Kim Thuy",
-    "full_name": "Xã Kim Thủy",
+    "full_name": "Xã Kim Thuỷ",
     "full_name_en": "Kim Thuy Commune",
     "code_name": "kim_thuy",
     "district_code": "457",
@@ -64133,9 +64133,9 @@
   },
   {
     "code": "19321",
-    "name": "Trường Thủy",
+    "name": "Trường Thuỷ",
     "name_en": "Truong Thuy",
-    "full_name": "Xã Trường Thủy",
+    "full_name": "Xã Trường Thuỷ",
     "full_name_en": "Truong Thuy Commune",
     "code_name": "truong_thuy",
     "district_code": "457",
@@ -64143,9 +64143,9 @@
   },
   {
     "code": "19327",
-    "name": "Lâm Thủy",
+    "name": "Lâm Thuỷ",
     "name_en": "Lam Thuy",
-    "full_name": "Xã Lâm Thủy",
+    "full_name": "Xã Lâm Thuỷ",
     "full_name_en": "Lam Thuy Commune",
     "code_name": "lam_thuy",
     "district_code": "457",
@@ -64396,9 +64396,9 @@
   },
   {
     "code": "19396",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "464",
@@ -64406,9 +64406,9 @@
   },
   {
     "code": "19402",
-    "name": "Vĩnh Thủy",
+    "name": "Vĩnh Thuỷ",
     "name_en": "Vinh Thuy",
-    "full_name": "Xã Vĩnh Thủy",
+    "full_name": "Xã Vĩnh Thuỷ",
     "full_name_en": "Vinh Thuy Commune",
     "code_name": "vinh_thuy",
     "district_code": "464",
@@ -65067,9 +65067,9 @@
   },
   {
     "code": "19606",
-    "name": "Cam Thủy",
+    "name": "Cam Thuỷ",
     "name_en": "Cam Thuy",
-    "full_name": "Xã Cam Thủy",
+    "full_name": "Xã Cam Thuỷ",
     "full_name_en": "Cam Thuy Commune",
     "code_name": "cam_thuy",
     "district_code": "468",
@@ -65213,9 +65213,9 @@
   },
   {
     "code": "19648",
-    "name": "Triệu Hòa",
+    "name": "Triệu Hoà",
     "name_en": "Trieu Hoa",
-    "full_name": "Xã Triệu Hòa",
+    "full_name": "Xã Triệu Hoà",
     "full_name_en": "Trieu Hoa Commune",
     "code_name": "trieu_hoa",
     "district_code": "469",
@@ -65507,8 +65507,8 @@
     "district_code": "470",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Mỹ Thủy",
-      "Mỹ Thủy"
+      "Xã Mỹ Thuỷ",
+      "Mỹ Thuỷ"
     ]
   },
   {
@@ -65567,9 +65567,9 @@
   },
   {
     "code": "19762",
-    "name": "Thuận Hòa",
+    "name": "Thuận Hoà",
     "name_en": "Thuan Hoa",
-    "full_name": "Phường Thuận Hòa",
+    "full_name": "Phường Thuận Hoà",
     "full_name_en": "Thuan Hoa Ward",
     "code_name": "thuan_hoa",
     "district_code": "475",
@@ -65648,8 +65648,8 @@
     "district_code": "474",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Thuận Hóa",
-      "Thuận Hóa"
+      "Phường Thuận Hoá",
+      "Thuận Hoá"
     ]
   },
   {
@@ -65694,9 +65694,9 @@
   },
   {
     "code": "19803",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Phường An Hòa",
+    "full_name": "Phường An Hoà",
     "full_name_en": "An Hoa Ward",
     "code_name": "an_hoa",
     "district_code": "475",
@@ -65742,8 +65742,8 @@
     "district_code": "474",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Thủy Xuân",
-      "Thủy Xuân"
+      "Phường Thuỷ Xuân",
+      "Thuỷ Xuân"
     ]
   },
   {
@@ -65836,9 +65836,9 @@
   },
   {
     "code": "19834",
-    "name": "Điền Hòa",
+    "name": "Điền Hoà",
     "name_en": "Dien Hoa",
-    "full_name": "Xã Điền Hòa",
+    "full_name": "Xã Điền Hoà",
     "full_name_en": "Dien Hoa Commune",
     "code_name": "dien_hoa",
     "district_code": "476",
@@ -65871,15 +65871,15 @@
   },
   {
     "code": "19846",
-    "name": "Phong Hòa",
+    "name": "Phong Hoà",
     "name_en": "Phong Hoa",
-    "full_name": "Phường Phong Hòa",
+    "full_name": "Phường Phong Hoà",
     "full_name_en": "Phong Hoa Ward",
     "code_name": "phong_hoa",
     "district_code": "476",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Phong Hòa"
+      "Xã Phong Hoà"
     ]
   },
   {
@@ -66280,9 +66280,9 @@
   },
   {
     "code": "19963",
-    "name": "Thủy Vân",
+    "name": "Thuỷ Vân",
     "name_en": "Thuy Van",
-    "full_name": "Phường Thủy Vân",
+    "full_name": "Phường Thuỷ Vân",
     "full_name_en": "Thuy Van Ward",
     "code_name": "thuy_van",
     "district_code": "474",
@@ -66290,9 +66290,9 @@
   },
   {
     "code": "19966",
-    "name": "Thủy Thanh",
+    "name": "Thuỷ Thanh",
     "name_en": "Thuy Thanh",
-    "full_name": "Xã Thủy Thanh",
+    "full_name": "Xã Thuỷ Thanh",
     "full_name_en": "Thuy Thanh Commune",
     "code_name": "thuy_thanh",
     "district_code": "479",
@@ -66300,23 +66300,23 @@
   },
   {
     "code": "19969",
-    "name": "Thủy Dương",
+    "name": "Thuỷ Dương",
     "name_en": "Thuy Duong",
-    "full_name": "Phường Thủy Dương",
+    "full_name": "Phường Thuỷ Dương",
     "full_name_en": "Thuy Duong Ward",
     "code_name": "thuy_duong",
     "district_code": "479",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Thanh Thủy",
-      "Thanh Thủy"
+      "Phường Thanh Thuỷ",
+      "Thanh Thuỷ"
     ]
   },
   {
     "code": "19972",
-    "name": "Thủy Phương",
+    "name": "Thuỷ Phương",
     "name_en": "Thuy Phuong",
-    "full_name": "Phường Thủy Phương",
+    "full_name": "Phường Thuỷ Phương",
     "full_name_en": "Thuy Phuong Ward",
     "code_name": "thuy_phuong",
     "district_code": "479",
@@ -66324,23 +66324,23 @@
   },
   {
     "code": "19975",
-    "name": "Thủy Châu",
+    "name": "Thuỷ Châu",
     "name_en": "Thuy Chau",
-    "full_name": "Phường Thủy Châu",
+    "full_name": "Phường Thuỷ Châu",
     "full_name_en": "Thuy Chau Ward",
     "code_name": "thuy_chau",
     "district_code": "479",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hương Thủy",
-      "Hương Thủy"
+      "Phường Hương Thuỷ",
+      "Hương Thuỷ"
     ]
   },
   {
     "code": "19978",
-    "name": "Thủy Lương",
+    "name": "Thuỷ Lương",
     "name_en": "Thuy Luong",
-    "full_name": "Phường Thủy Lương",
+    "full_name": "Phường Thuỷ Lương",
     "full_name_en": "Thuy Luong Ward",
     "code_name": "thuy_luong",
     "district_code": "479",
@@ -66348,22 +66348,22 @@
   },
   {
     "code": "19981",
-    "name": "Thủy Bằng",
+    "name": "Thuỷ Bằng",
     "name_en": "Thuy Bang",
-    "full_name": "Phường Thủy Bằng",
+    "full_name": "Phường Thuỷ Bằng",
     "full_name_en": "Thuy Bang Ward",
     "code_name": "thuy_bang",
     "district_code": "474",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Thủy Bằng"
+      "Xã Thuỷ Bằng"
     ]
   },
   {
     "code": "19984",
-    "name": "Thủy Tân",
+    "name": "Thuỷ Tân",
     "name_en": "Thuy Tan",
-    "full_name": "Xã Thủy Tân",
+    "full_name": "Xã Thuỷ Tân",
     "full_name_en": "Thuy Tan Commune",
     "code_name": "thuy_tan",
     "district_code": "479",
@@ -66371,9 +66371,9 @@
   },
   {
     "code": "19987",
-    "name": "Thủy Phù",
+    "name": "Thuỷ Phù",
     "name_en": "Thuy Phu",
-    "full_name": "Xã Thủy Phù",
+    "full_name": "Xã Thuỷ Phù",
     "full_name_en": "Thuy Phu Commune",
     "code_name": "thuy_phu",
     "district_code": "479",
@@ -66391,9 +66391,9 @@
   },
   {
     "code": "19993",
-    "name": "Dương Hòa",
+    "name": "Dương Hoà",
     "name_en": "Duong Hoa",
-    "full_name": "Xã Dương Hòa",
+    "full_name": "Xã Dương Hoà",
     "full_name_en": "Duong Hoa Commune",
     "code_name": "duong_hoa",
     "district_code": "479",
@@ -66470,8 +66470,8 @@
     "district_code": "475",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hóa Châu",
-      "Hóa Châu"
+      "Phường Hoá Châu",
+      "Hoá Châu"
     ]
   },
   {
@@ -66660,9 +66660,9 @@
   },
   {
     "code": "20071",
-    "name": "Sơn Thủy",
+    "name": "Sơn Thuỷ",
     "name_en": "Son Thuy",
-    "full_name": "Xã Sơn Thủy",
+    "full_name": "Xã Sơn Thuỷ",
     "full_name_en": "Son Thuy Commune",
     "code_name": "son_thuy",
     "district_code": "481",
@@ -66758,9 +66758,9 @@
   },
   {
     "code": "20104",
-    "name": "Hồng Thủy",
+    "name": "Hồng Thuỷ",
     "name_en": "Hong Thuy",
-    "full_name": "Xã Hồng Thủy",
+    "full_name": "Xã Hồng Thuỷ",
     "full_name_en": "Hong Thuy Commune",
     "code_name": "hong_thuy",
     "district_code": "481",
@@ -66904,9 +66904,9 @@
   },
   {
     "code": "20146",
-    "name": "Lộc Thủy",
+    "name": "Lộc Thuỷ",
     "name_en": "Loc Thuy",
-    "full_name": "Xã Lộc Thủy",
+    "full_name": "Xã Lộc Thuỷ",
     "full_name_en": "Loc Thuy Commune",
     "code_name": "loc_thuy",
     "district_code": "482",
@@ -66934,9 +66934,9 @@
   },
   {
     "code": "20155",
-    "name": "Lộc Hòa",
+    "name": "Lộc Hoà",
     "name_en": "Loc Hoa",
-    "full_name": "Xã Lộc Hòa",
+    "full_name": "Xã Lộc Hoà",
     "full_name_en": "Loc Hoa Commune",
     "code_name": "loc_hoa",
     "district_code": "482",
@@ -67007,9 +67007,9 @@
   },
   {
     "code": "20176",
-    "name": "Hương Hòa",
+    "name": "Hương Hoà",
     "name_en": "Huong Hoa",
-    "full_name": "Xã Hương Hòa",
+    "full_name": "Xã Hương Hoà",
     "full_name_en": "Huong Hoa Commune",
     "code_name": "huong_hoa",
     "district_code": "482",
@@ -67075,9 +67075,9 @@
   },
   {
     "code": "20194",
-    "name": "Hòa Hiệp Bắc",
+    "name": "Hoà Hiệp Bắc",
     "name_en": "Hoa Hiep Bac",
-    "full_name": "Phường Hòa Hiệp Bắc",
+    "full_name": "Phường Hoà Hiệp Bắc",
     "full_name_en": "Hoa Hiep Bac Ward",
     "code_name": "hoa_hiep_bac",
     "district_code": "490",
@@ -67089,9 +67089,9 @@
   },
   {
     "code": "20195",
-    "name": "Hòa Hiệp Nam",
+    "name": "Hoà Hiệp Nam",
     "name_en": "Hoa Hiep Nam",
-    "full_name": "Phường Hòa Hiệp Nam",
+    "full_name": "Phường Hoà Hiệp Nam",
     "full_name_en": "Hoa Hiep Nam Ward",
     "code_name": "hoa_hiep_nam",
     "district_code": "490",
@@ -67099,9 +67099,9 @@
   },
   {
     "code": "20197",
-    "name": "Hòa Khánh Bắc",
+    "name": "Hoà Khánh Bắc",
     "name_en": "Hoa Khanh Bac",
-    "full_name": "Phường Hòa Khánh Bắc",
+    "full_name": "Phường Hoà Khánh Bắc",
     "full_name_en": "Hoa Khanh Bac Ward",
     "code_name": "hoa_khanh_bac",
     "district_code": "490",
@@ -67113,9 +67113,9 @@
   },
   {
     "code": "20198",
-    "name": "Hòa Khánh Nam",
+    "name": "Hoà Khánh Nam",
     "name_en": "Hoa Khanh Nam",
-    "full_name": "Phường Hòa Khánh Nam",
+    "full_name": "Phường Hoà Khánh Nam",
     "full_name_en": "Hoa Khanh Nam Ward",
     "code_name": "hoa_khanh_nam",
     "district_code": "490",
@@ -67123,16 +67123,16 @@
   },
   {
     "code": "20200",
-    "name": "Hòa Minh",
+    "name": "Hoà Minh",
     "name_en": "Hoa Minh",
-    "full_name": "Phường Hòa Minh",
+    "full_name": "Phường Hoà Minh",
     "full_name_en": "Hoa Minh Ward",
     "code_name": "hoa_minh",
     "district_code": "490",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Khánh",
-      "Hòa Khánh"
+      "Phường Hoà Khánh",
+      "Hoà Khánh"
     ]
   },
   {
@@ -67225,9 +67225,9 @@
   },
   {
     "code": "20225",
-    "name": "Hòa Khê",
+    "name": "Hoà Khê",
     "name_en": "Hoa Khe",
-    "full_name": "Phường Hòa Khê",
+    "full_name": "Phường Hoà Khê",
     "full_name_en": "Hoa Khe Ward",
     "code_name": "hoa_khe",
     "district_code": "491",
@@ -67301,9 +67301,9 @@
   },
   {
     "code": "20245",
-    "name": "Hòa Thuận Tây",
+    "name": "Hoà Thuận Tây",
     "name_en": "Hoa Thuan Tay",
-    "full_name": "Phường Hòa Thuận Tây",
+    "full_name": "Phường Hoà Thuận Tây",
     "full_name_en": "Hoa Thuan Tay Ward",
     "code_name": "hoa_thuan_tay",
     "district_code": "492",
@@ -67311,9 +67311,9 @@
   },
   {
     "code": "20246",
-    "name": "Hòa Thuận Đông",
+    "name": "Hoà Thuận Đông",
     "name_en": "Hoa Thuan Dong",
-    "full_name": "Phường Hòa Thuận Đông",
+    "full_name": "Phường Hoà Thuận Đông",
     "full_name_en": "Hoa Thuan Dong Ward",
     "code_name": "hoa_thuan_dong",
     "district_code": "492",
@@ -67351,23 +67351,23 @@
   },
   {
     "code": "20257",
-    "name": "Hòa Cường Bắc",
+    "name": "Hoà Cường Bắc",
     "name_en": "Hoa Cuong Bac",
-    "full_name": "Phường Hòa Cường Bắc",
+    "full_name": "Phường Hoà Cường Bắc",
     "full_name_en": "Hoa Cuong Bac Ward",
     "code_name": "hoa_cuong_bac",
     "district_code": "492",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Cường",
-      "Hòa Cường"
+      "Phường Hoà Cường",
+      "Hoà Cường"
     ]
   },
   {
     "code": "20258",
-    "name": "Hòa Cường Nam",
+    "name": "Hoà Cường Nam",
     "name_en": "Hoa Cuong Nam",
-    "full_name": "Phường Hòa Cường Nam",
+    "full_name": "Phường Hoà Cường Nam",
     "full_name_en": "Hoa Cuong Nam Ward",
     "code_name": "hoa_cuong_nam",
     "district_code": "492",
@@ -67515,9 +67515,9 @@
   },
   {
     "code": "20293",
-    "name": "Hòa Bắc",
+    "name": "Hoà Bắc",
     "name_en": "Hoa Bac",
-    "full_name": "Xã Hòa Bắc",
+    "full_name": "Xã Hoà Bắc",
     "full_name_en": "Hoa Bac Commune",
     "code_name": "hoa_bac",
     "district_code": "497",
@@ -67525,9 +67525,9 @@
   },
   {
     "code": "20296",
-    "name": "Hòa Liên",
+    "name": "Hoà Liên",
     "name_en": "Hoa Lien",
-    "full_name": "Xã Hòa Liên",
+    "full_name": "Xã Hoà Liên",
     "full_name_en": "Hoa Lien Commune",
     "code_name": "hoa_lien",
     "district_code": "497",
@@ -67535,9 +67535,9 @@
   },
   {
     "code": "20299",
-    "name": "Hòa Ninh",
+    "name": "Hoà Ninh",
     "name_en": "Hoa Ninh",
-    "full_name": "Xã Hòa Ninh",
+    "full_name": "Xã Hoà Ninh",
     "full_name_en": "Hoa Ninh Commune",
     "code_name": "hoa_ninh",
     "district_code": "497",
@@ -67545,9 +67545,9 @@
   },
   {
     "code": "20302",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "497",
@@ -67555,9 +67555,9 @@
   },
   {
     "code": "20305",
-    "name": "Hòa Phát",
+    "name": "Hoà Phát",
     "name_en": "Hoa Phat",
-    "full_name": "Phường Hòa Phát",
+    "full_name": "Phường Hoà Phát",
     "full_name_en": "Hoa Phat Ward",
     "code_name": "hoa_phat",
     "district_code": "495",
@@ -67569,9 +67569,9 @@
   },
   {
     "code": "20306",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Phường Hòa An",
+    "full_name": "Phường Hoà An",
     "full_name_en": "Hoa An Ward",
     "code_name": "hoa_an",
     "district_code": "495",
@@ -67579,9 +67579,9 @@
   },
   {
     "code": "20308",
-    "name": "Hòa Nhơn",
+    "name": "Hoà Nhơn",
     "name_en": "Hoa Nhon",
-    "full_name": "Xã Hòa Nhơn",
+    "full_name": "Xã Hoà Nhơn",
     "full_name_en": "Hoa Nhon Commune",
     "code_name": "hoa_nhon",
     "district_code": "497",
@@ -67593,9 +67593,9 @@
   },
   {
     "code": "20311",
-    "name": "Hòa Thọ Tây",
+    "name": "Hoà Thọ Tây",
     "name_en": "Hoa Tho Tay",
-    "full_name": "Phường Hòa Thọ Tây",
+    "full_name": "Phường Hoà Thọ Tây",
     "full_name_en": "Hoa Tho Tay Ward",
     "code_name": "hoa_tho_tay",
     "district_code": "495",
@@ -67603,9 +67603,9 @@
   },
   {
     "code": "20312",
-    "name": "Hòa Thọ Đông",
+    "name": "Hoà Thọ Đông",
     "name_en": "Hoa Tho Dong",
-    "full_name": "Phường Hòa Thọ Đông",
+    "full_name": "Phường Hoà Thọ Đông",
     "full_name_en": "Hoa Tho Dong Ward",
     "code_name": "hoa_tho_dong",
     "district_code": "495",
@@ -67613,9 +67613,9 @@
   },
   {
     "code": "20314",
-    "name": "Hòa Xuân",
+    "name": "Hoà Xuân",
     "name_en": "Hoa Xuan",
-    "full_name": "Phường Hòa Xuân",
+    "full_name": "Phường Hoà Xuân",
     "full_name_en": "Hoa Xuan Ward",
     "code_name": "hoa_xuan",
     "district_code": "495",
@@ -67623,9 +67623,9 @@
   },
   {
     "code": "20317",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "497",
@@ -67633,23 +67633,23 @@
   },
   {
     "code": "20320",
-    "name": "Hòa Phong",
+    "name": "Hoà Phong",
     "name_en": "Hoa Phong",
-    "full_name": "Xã Hòa Phong",
+    "full_name": "Xã Hoà Phong",
     "full_name_en": "Hoa Phong Commune",
     "code_name": "hoa_phong",
     "district_code": "497",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Vang",
-      "Hòa Vang"
+      "Xã Hoà Vang",
+      "Hoà Vang"
     ]
   },
   {
     "code": "20323",
-    "name": "Hòa Châu",
+    "name": "Hoà Châu",
     "name_en": "Hoa Chau",
-    "full_name": "Xã Hòa Châu",
+    "full_name": "Xã Hoà Châu",
     "full_name_en": "Hoa Chau Commune",
     "code_name": "hoa_chau",
     "district_code": "497",
@@ -67657,9 +67657,9 @@
   },
   {
     "code": "20326",
-    "name": "Hòa Tiến",
+    "name": "Hoà Tiến",
     "name_en": "Hoa Tien",
-    "full_name": "Xã Hòa Tiến",
+    "full_name": "Xã Hoà Tiến",
     "full_name_en": "Hoa Tien Commune",
     "code_name": "hoa_tien",
     "district_code": "497",
@@ -67667,9 +67667,9 @@
   },
   {
     "code": "20329",
-    "name": "Hòa Phước",
+    "name": "Hoà Phước",
     "name_en": "Hoa Phuoc",
-    "full_name": "Xã Hòa Phước",
+    "full_name": "Xã Hoà Phước",
     "full_name_en": "Hoa Phuoc Commune",
     "code_name": "hoa_phuoc",
     "district_code": "497",
@@ -67677,9 +67677,9 @@
   },
   {
     "code": "20332",
-    "name": "Hòa Khương",
+    "name": "Hoà Khương",
     "name_en": "Hoa Khuong",
-    "full_name": "Xã Hòa Khương",
+    "full_name": "Xã Hoà Khương",
     "full_name_en": "Hoa Khuong Commune",
     "code_name": "hoa_khuong",
     "district_code": "497",
@@ -67711,9 +67711,9 @@
   },
   {
     "code": "20338",
-    "name": "Phước Hòa",
+    "name": "Phước Hoà",
     "name_en": "Phuoc Hoa",
-    "full_name": "Phường Phước Hòa",
+    "full_name": "Phường Phước Hoà",
     "full_name_en": "Phuoc Hoa Ward",
     "code_name": "phuoc_hoa",
     "district_code": "502",
@@ -67735,9 +67735,9 @@
   },
   {
     "code": "20344",
-    "name": "Hòa Hương",
+    "name": "Hoà Hương",
     "name_en": "Hoa Huong",
-    "full_name": "Phường Hòa Hương",
+    "full_name": "Phường Hoà Hương",
     "full_name_en": "Hoa Huong Ward",
     "code_name": "hoa_huong",
     "district_code": "502",
@@ -68530,9 +68530,9 @@
   },
   {
     "code": "20548",
-    "name": "Đại Hòa",
+    "name": "Đại Hoà",
     "name_en": "Dai Hoa",
-    "full_name": "Xã Đại Hòa",
+    "full_name": "Xã Đại Hoà",
     "full_name_en": "Dai Hoa Commune",
     "code_name": "dai_hoa",
     "district_code": "506",
@@ -68564,9 +68564,9 @@
   },
   {
     "code": "20557",
-    "name": "Điện Hòa",
+    "name": "Điện Hoà",
     "name_en": "Dien Hoa",
-    "full_name": "Xã Điện Hòa",
+    "full_name": "Xã Điện Hoà",
     "full_name_en": "Dien Hoa Commune",
     "code_name": "dien_hoa",
     "district_code": "507",
@@ -68822,9 +68822,9 @@
   },
   {
     "code": "20611",
-    "name": "Duy Hòa",
+    "name": "Duy Hoà",
     "name_en": "Duy Hoa",
-    "full_name": "Xã Duy Hòa",
+    "full_name": "Xã Duy Hoà",
     "full_name_en": "Duy Hoa Commune",
     "code_name": "duy_hoa",
     "district_code": "508",
@@ -69414,8 +69414,8 @@
     "district_code": "512",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hiệp Hòa",
-      "Hiệp Hòa"
+      "Xã Hiệp Hoà",
+      "Hiệp Hoà"
     ]
   },
   {
@@ -70272,9 +70272,9 @@
   },
   {
     "code": "20986",
-    "name": "Tam Hòa",
+    "name": "Tam Hoà",
     "name_en": "Tam Hoa",
-    "full_name": "Xã Tam Hòa",
+    "full_name": "Xã Tam Hoà",
     "full_name_en": "Tam Hoa Commune",
     "code_name": "tam_hoa",
     "district_code": "517",
@@ -70602,9 +70602,9 @@
   },
   {
     "code": "21079",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Xã Bình Hòa",
+    "full_name": "Xã Bình Hoà",
     "full_name_en": "Binh Hoa Commune",
     "code_name": "binh_hoa",
     "district_code": "524",
@@ -70720,9 +70720,9 @@
   },
   {
     "code": "21121",
-    "name": "Trà Thủy",
+    "name": "Trà Thuỷ",
     "name_en": "Tra Thuy",
-    "full_name": "Xã Trà Thủy",
+    "full_name": "Xã Trà Thuỷ",
     "full_name_en": "Tra Thuy Commune",
     "code_name": "tra_thuy",
     "district_code": "525",
@@ -70934,9 +70934,9 @@
   },
   {
     "code": "21187",
-    "name": "Tịnh Hòa",
+    "name": "Tịnh Hoà",
     "name_en": "Tinh Hoa",
-    "full_name": "Xã Tịnh Hòa",
+    "full_name": "Xã Tịnh Hoà",
     "full_name_en": "Tinh Hoa Commune",
     "code_name": "tinh_hoa",
     "district_code": "522",
@@ -71227,9 +71227,9 @@
   },
   {
     "code": "21268",
-    "name": "Nghĩa Hòa",
+    "name": "Nghĩa Hoà",
     "name_en": "Nghia Hoa",
-    "full_name": "Xã Nghĩa Hòa",
+    "full_name": "Xã Nghĩa Hoà",
     "full_name_en": "Nghia Hoa Commune",
     "code_name": "nghia_hoa",
     "district_code": "528",
@@ -71407,9 +71407,9 @@
   },
   {
     "code": "21322",
-    "name": "Sơn Thủy",
+    "name": "Sơn Thuỷ",
     "name_en": "Son Thuy",
-    "full_name": "Xã Sơn Thủy",
+    "full_name": "Xã Sơn Thuỷ",
     "full_name_en": "Son Thuy Commune",
     "code_name": "son_thuy",
     "district_code": "529",
@@ -71832,9 +71832,9 @@
   },
   {
     "code": "21424",
-    "name": "Đức Hòa",
+    "name": "Đức Hoà",
     "name_en": "Duc Hoa",
-    "full_name": "Xã Đức Hòa",
+    "full_name": "Xã Đức Hoà",
     "full_name_en": "Duc Hoa Commune",
     "code_name": "duc_hoa",
     "district_code": "533",
@@ -71997,9 +71997,9 @@
   },
   {
     "code": "21469",
-    "name": "Phổ Hòa",
+    "name": "Phổ Hoà",
     "name_en": "Pho Hoa",
-    "full_name": "Phường Phổ Hòa",
+    "full_name": "Phường Phổ Hoà",
     "full_name_en": "Pho Hoa Ward",
     "code_name": "pho_hoa",
     "district_code": "534",
@@ -72188,8 +72188,8 @@
     "district_code": "535",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Đặng Thùy Trâm",
-      "Đặng Thùy Trâm"
+      "Xã Đặng Thuỳ Trâm",
+      "Đặng Thuỳ Trâm"
     ]
   },
   {
@@ -72533,9 +72533,9 @@
   },
   {
     "code": "21628",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Xã An Hòa",
+    "full_name": "Xã An Hoà",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "542",
@@ -73051,9 +73051,9 @@
   },
   {
     "code": "21763",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Xã Mỹ Hòa",
+    "full_name": "Xã Mỹ Hoà",
     "full_name_en": "My Hoa Commune",
     "code_name": "my_hoa",
     "district_code": "545",
@@ -73192,9 +73192,9 @@
   },
   {
     "code": "21801",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "546",
@@ -73314,9 +73314,9 @@
   },
   {
     "code": "21829",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Xã Bình Hòa",
+    "full_name": "Xã Bình Hoà",
     "full_name_en": "Binh Hoa Commune",
     "code_name": "binh_hoa",
     "district_code": "547",
@@ -73485,8 +73485,8 @@
     "district_code": "548",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Hội",
-      "Hòa Hội"
+      "Xã Hoà Hội",
+      "Hoà Hội"
     ]
   },
   {
@@ -73838,9 +73838,9 @@
   },
   {
     "code": "21967",
-    "name": "Phước Hòa",
+    "name": "Phước Hoà",
     "name_en": "Phuoc Hoa",
-    "full_name": "Xã Phước Hòa",
+    "full_name": "Xã Phước Hoà",
     "full_name_en": "Phuoc Hoa Commune",
     "code_name": "phuoc_hoa",
     "district_code": "550",
@@ -73999,9 +73999,9 @@
   },
   {
     "code": "22012",
-    "name": "Canh Hòa",
+    "name": "Canh Hoà",
     "name_en": "Canh Hoa",
-    "full_name": "Xã Canh Hòa",
+    "full_name": "Xã Canh Hoà",
     "full_name_en": "Canh Hoa Commune",
     "code_name": "canh_hoa",
     "district_code": "551",
@@ -74017,8 +74017,8 @@
     "district_code": "555",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Tuy Hòa",
-      "Tuy Hòa"
+      "Phường Tuy Hoà",
+      "Tuy Hoà"
     ]
   },
   {
@@ -74117,9 +74117,9 @@
   },
   {
     "code": "22042",
-    "name": "Hòa Kiến",
+    "name": "Hoà Kiến",
     "name_en": "Hoa Kien",
-    "full_name": "Xã Hòa Kiến",
+    "full_name": "Xã Hoà Kiến",
     "full_name_en": "Hoa Kien Commune",
     "code_name": "hoa_kien",
     "district_code": "555",
@@ -74514,9 +74514,9 @@
   },
   {
     "code": "22147",
-    "name": "An Hòa Hải",
+    "name": "An Hoà Hải",
     "name_en": "An Hoa Hai",
-    "full_name": "Xã An Hòa Hải",
+    "full_name": "Xã An Hoà Hải",
     "full_name_en": "An Hoa Hai Commune",
     "code_name": "an_hoa_hai",
     "district_code": "559",
@@ -74590,8 +74590,8 @@
     "district_code": "560",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Sơn Hòa",
-      "Sơn Hòa"
+      "Xã Sơn Hoà",
+      "Sơn Hoà"
     ]
   },
   {
@@ -74638,8 +74638,8 @@
     "district_code": "560",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Vân Hòa",
-      "Vân Hòa"
+      "Xã Vân Hoà",
+      "Vân Hoà"
     ]
   },
   {
@@ -74866,9 +74866,9 @@
   },
   {
     "code": "22243",
-    "name": "Hòa Thành",
+    "name": "Hoà Thành",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hòa Thành",
+    "full_name": "Xã Hoà Thành",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "564",
@@ -74876,9 +74876,9 @@
   },
   {
     "code": "22246",
-    "name": "Hòa Hiệp Bắc",
+    "name": "Hoà Hiệp Bắc",
     "name_en": "Hoa Hiep Bac",
-    "full_name": "Phường Hòa Hiệp Bắc",
+    "full_name": "Phường Hoà Hiệp Bắc",
     "full_name_en": "Hoa Hiep Bac Ward",
     "code_name": "hoa_hiep_bac",
     "district_code": "564",
@@ -74910,9 +74910,9 @@
   },
   {
     "code": "22252",
-    "name": "Hòa Bình 1",
+    "name": "Hoà Bình 1",
     "name_en": "Hoa Binh 1",
-    "full_name": "Xã Hòa Bình 1",
+    "full_name": "Xã Hoà Bình 1",
     "full_name_en": "Commune Hoa Binh 1",
     "code_name": "hoa_binh_1",
     "district_code": "562",
@@ -74928,8 +74928,8 @@
     "district_code": "562",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Tây Hòa",
-      "Tây Hòa"
+      "Xã Tây Hoà",
+      "Tây Hoà"
     ]
   },
   {
@@ -74942,8 +74942,8 @@
     "district_code": "564",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Đông Hòa",
-      "Đông Hòa"
+      "Phường Đông Hoà",
+      "Đông Hoà"
     ]
   },
   {
@@ -74956,15 +74956,15 @@
     "district_code": "564",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Hiệp",
-      "Hòa Hiệp"
+      "Phường Hoà Hiệp",
+      "Hoà Hiệp"
     ]
   },
   {
     "code": "22264",
-    "name": "Hòa Phong",
+    "name": "Hoà Phong",
     "name_en": "Hoa Phong",
-    "full_name": "Xã Hòa Phong",
+    "full_name": "Xã Hoà Phong",
     "full_name_en": "Hoa Phong Commune",
     "code_name": "hoa_phong",
     "district_code": "562",
@@ -74972,9 +74972,9 @@
   },
   {
     "code": "22267",
-    "name": "Hòa Tân Đông",
+    "name": "Hoà Tân Đông",
     "name_en": "Hoa Tan Dong",
-    "full_name": "Xã Hòa Tân Đông",
+    "full_name": "Xã Hoà Tân Đông",
     "full_name_en": "Hoa Tan Dong Commune",
     "code_name": "hoa_tan_dong",
     "district_code": "564",
@@ -74982,9 +74982,9 @@
   },
   {
     "code": "22270",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "562",
@@ -74992,9 +74992,9 @@
   },
   {
     "code": "22273",
-    "name": "Hòa Tân Tây",
+    "name": "Hoà Tân Tây",
     "name_en": "Hoa Tan Tay",
-    "full_name": "Xã Hòa Tân Tây",
+    "full_name": "Xã Hoà Tân Tây",
     "full_name_en": "Hoa Tan Tay Commune",
     "code_name": "hoa_tan_tay",
     "district_code": "562",
@@ -75002,9 +75002,9 @@
   },
   {
     "code": "22276",
-    "name": "Hòa Đồng",
+    "name": "Hoà Đồng",
     "name_en": "Hoa Dong",
-    "full_name": "Xã Hòa Đồng",
+    "full_name": "Xã Hoà Đồng",
     "full_name_en": "Hoa Dong Commune",
     "code_name": "hoa_dong",
     "district_code": "562",
@@ -75012,9 +75012,9 @@
   },
   {
     "code": "22279",
-    "name": "Hòa Xuân Tây",
+    "name": "Hoà Xuân Tây",
     "name_en": "Hoa Xuan Tay",
-    "full_name": "Phường Hòa Xuân Tây",
+    "full_name": "Phường Hoà Xuân Tây",
     "full_name_en": "Hoa Xuan Tay Ward",
     "code_name": "hoa_xuan_tay",
     "district_code": "564",
@@ -75022,9 +75022,9 @@
   },
   {
     "code": "22282",
-    "name": "Hòa Hiệp Nam",
+    "name": "Hoà Hiệp Nam",
     "name_en": "Hoa Hiep Nam",
-    "full_name": "Phường Hòa Hiệp Nam",
+    "full_name": "Phường Hoà Hiệp Nam",
     "full_name_en": "Hoa Hiep Nam Ward",
     "code_name": "hoa_hiep_nam",
     "district_code": "564",
@@ -75032,23 +75032,23 @@
   },
   {
     "code": "22285",
-    "name": "Hòa Mỹ Đông",
+    "name": "Hoà Mỹ Đông",
     "name_en": "Hoa My Dong",
-    "full_name": "Xã Hòa Mỹ Đông",
+    "full_name": "Xã Hoà Mỹ Đông",
     "full_name_en": "Hoa My Dong Commune",
     "code_name": "hoa_my_dong",
     "district_code": "562",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Mỹ",
-      "Hòa Mỹ"
+      "Xã Hoà Mỹ",
+      "Hoà Mỹ"
     ]
   },
   {
     "code": "22288",
-    "name": "Hòa Mỹ Tây",
+    "name": "Hoà Mỹ Tây",
     "name_en": "Hoa My Tay",
-    "full_name": "Xã Hòa Mỹ Tây",
+    "full_name": "Xã Hoà Mỹ Tây",
     "full_name_en": "Hoa My Tay Commune",
     "code_name": "hoa_my_tay",
     "district_code": "562",
@@ -75056,23 +75056,23 @@
   },
   {
     "code": "22291",
-    "name": "Hòa Xuân Đông",
+    "name": "Hoà Xuân Đông",
     "name_en": "Hoa Xuan Dong",
-    "full_name": "Xã Hòa Xuân Đông",
+    "full_name": "Xã Hoà Xuân Đông",
     "full_name_en": "Hoa Xuan Dong Commune",
     "code_name": "hoa_xuan_dong",
     "district_code": "564",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Xuân",
-      "Hòa Xuân"
+      "Xã Hoà Xuân",
+      "Hoà Xuân"
     ]
   },
   {
     "code": "22294",
-    "name": "Hòa Thịnh",
+    "name": "Hoà Thịnh",
     "name_en": "Hoa Thinh",
-    "full_name": "Xã Hòa Thịnh",
+    "full_name": "Xã Hoà Thịnh",
     "full_name_en": "Hoa Thinh Commune",
     "code_name": "hoa_thinh",
     "district_code": "562",
@@ -75080,9 +75080,9 @@
   },
   {
     "code": "22297",
-    "name": "Hòa Tâm",
+    "name": "Hoà Tâm",
     "name_en": "Hoa Tam",
-    "full_name": "Xã Hòa Tâm",
+    "full_name": "Xã Hoà Tâm",
     "full_name_en": "Hoa Tam Commune",
     "code_name": "hoa_tam",
     "district_code": "564",
@@ -75090,9 +75090,9 @@
   },
   {
     "code": "22300",
-    "name": "Hòa Xuân Nam",
+    "name": "Hoà Xuân Nam",
     "name_en": "Hoa Xuan Nam",
-    "full_name": "Xã Hòa Xuân Nam",
+    "full_name": "Xã Hoà Xuân Nam",
     "full_name_en": "Hoa Xuan Nam Commune",
     "code_name": "hoa_xuan_nam",
     "district_code": "564",
@@ -75100,23 +75100,23 @@
   },
   {
     "code": "22303",
-    "name": "Hòa Quang Bắc",
+    "name": "Hoà Quang Bắc",
     "name_en": "Hoa Quang Bac",
-    "full_name": "Xã Hòa Quang Bắc",
+    "full_name": "Xã Hoà Quang Bắc",
     "full_name_en": "Hoa Quang Bac Commune",
     "code_name": "hoa_quang_bac",
     "district_code": "563",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Phú Hòa 2",
-      "Phú Hòa 2"
+      "Xã Phú Hoà 2",
+      "Phú Hoà 2"
     ]
   },
   {
     "code": "22306",
-    "name": "Hòa Quang Nam",
+    "name": "Hoà Quang Nam",
     "name_en": "Hoa Quang Nam",
-    "full_name": "Xã Hòa Quang Nam",
+    "full_name": "Xã Hoà Quang Nam",
     "full_name_en": "Hoa Quang Nam Commune",
     "code_name": "hoa_quang_nam",
     "district_code": "563",
@@ -75124,9 +75124,9 @@
   },
   {
     "code": "22309",
-    "name": "Hòa Hội",
+    "name": "Hoà Hội",
     "name_en": "Hoa Hoi",
-    "full_name": "Xã Hòa Hội",
+    "full_name": "Xã Hoà Hội",
     "full_name_en": "Hoa Hoi Commune",
     "code_name": "hoa_hoi",
     "district_code": "563",
@@ -75134,9 +75134,9 @@
   },
   {
     "code": "22312",
-    "name": "Hòa Trị",
+    "name": "Hoà Trị",
     "name_en": "Hoa Tri",
-    "full_name": "Xã Hòa Trị",
+    "full_name": "Xã Hoà Trị",
     "full_name_en": "Hoa Tri Commune",
     "code_name": "hoa_tri",
     "district_code": "563",
@@ -75144,9 +75144,9 @@
   },
   {
     "code": "22315",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "563",
@@ -75154,9 +75154,9 @@
   },
   {
     "code": "22318",
-    "name": "Hòa Định Đông",
+    "name": "Hoà Định Đông",
     "name_en": "Hoa Dinh Dong",
-    "full_name": "Xã Hòa Định Đông",
+    "full_name": "Xã Hoà Định Đông",
     "full_name_en": "Hoa Dinh Dong Commune",
     "code_name": "hoa_dinh_dong",
     "district_code": "563",
@@ -75172,15 +75172,15 @@
     "district_code": "563",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Phú Hòa 1",
-      "Phú Hòa 1"
+      "Xã Phú Hoà 1",
+      "Phú Hoà 1"
     ]
   },
   {
     "code": "22321",
-    "name": "Hòa Định Tây",
+    "name": "Hoà Định Tây",
     "name_en": "Hoa Dinh Tay",
-    "full_name": "Xã Hòa Định Tây",
+    "full_name": "Xã Hoà Định Tây",
     "full_name_en": "Hoa Dinh Tay Commune",
     "code_name": "hoa_dinh_tay",
     "district_code": "563",
@@ -75188,9 +75188,9 @@
   },
   {
     "code": "22324",
-    "name": "Hòa Thắng",
+    "name": "Hoà Thắng",
     "name_en": "Hoa Thang",
-    "full_name": "Xã Hòa Thắng",
+    "full_name": "Xã Hoà Thắng",
     "full_name_en": "Hoa Thang Commune",
     "code_name": "hoa_thang",
     "district_code": "563",
@@ -75198,9 +75198,9 @@
   },
   {
     "code": "22327",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Phường Vĩnh Hòa",
+    "full_name": "Phường Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Ward",
     "code_name": "vinh_hoa",
     "district_code": "568",
@@ -75358,9 +75358,9 @@
   },
   {
     "code": "22372",
-    "name": "Phước Hòa",
+    "name": "Phước Hoà",
     "name_en": "Phuoc Hoa",
-    "full_name": "Phường Phước Hòa",
+    "full_name": "Phường Phước Hoà",
     "full_name_en": "Phuoc Hoa Ward",
     "code_name": "phuoc_hoa",
     "district_code": "568",
@@ -75598,9 +75598,9 @@
   },
   {
     "code": "22438",
-    "name": "Cam Hòa",
+    "name": "Cam Hoà",
     "name_en": "Cam Hoa",
-    "full_name": "Xã Cam Hòa",
+    "full_name": "Xã Cam Hoà",
     "full_name_en": "Cam Hoa Commune",
     "code_name": "cam_hoa",
     "district_code": "570",
@@ -75926,8 +75926,8 @@
     "district_code": "572",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Ninh Hòa",
-      "Ninh Hòa"
+      "Phường Ninh Hoà",
+      "Ninh Hoà"
     ]
   },
   {
@@ -75990,8 +75990,8 @@
     "district_code": "572",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Bắc Ninh Hòa",
-      "Bắc Ninh Hòa"
+      "Xã Bắc Ninh Hoà",
+      "Bắc Ninh Hoà"
     ]
   },
   {
@@ -76014,8 +76014,8 @@
     "district_code": "572",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Tây Ninh Hòa",
-      "Tây Ninh Hòa"
+      "Xã Tây Ninh Hoà",
+      "Tây Ninh Hoà"
     ]
   },
   {
@@ -76038,8 +76038,8 @@
     "district_code": "572",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Trí",
-      "Hòa Trí"
+      "Xã Hoà Trí",
+      "Hoà Trí"
     ]
   },
   {
@@ -76052,8 +76052,8 @@
     "district_code": "572",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Đông Ninh Hòa",
-      "Đông Ninh Hòa"
+      "Phường Đông Ninh Hoà",
+      "Đông Ninh Hoà"
     ]
   },
   {
@@ -76068,9 +76068,9 @@
   },
   {
     "code": "22567",
-    "name": "Ninh Thủy",
+    "name": "Ninh Thuỷ",
     "name_en": "Ninh Thuy",
-    "full_name": "Phường Ninh Thủy",
+    "full_name": "Phường Ninh Thuỷ",
     "full_name_en": "Ninh Thuy Ward",
     "code_name": "ninh_thuy",
     "district_code": "572",
@@ -76150,8 +76150,8 @@
     "district_code": "572",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Thắng",
-      "Hòa Thắng"
+      "Phường Hoà Thắng",
+      "Hoà Thắng"
     ]
   },
   {
@@ -76174,8 +76174,8 @@
     "district_code": "572",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Nam Ninh Hòa",
-      "Nam Ninh Hòa"
+      "Xã Nam Ninh Hoà",
+      "Nam Ninh Hoà"
     ]
   },
   {
@@ -76490,9 +76490,9 @@
   },
   {
     "code": "22684",
-    "name": "Diên Hòa",
+    "name": "Diên Hoà",
     "name_en": "Dien Hoa",
-    "full_name": "Xã Diên Hòa",
+    "full_name": "Xã Diên Hoà",
     "full_name_en": "Dien Hoa Commune",
     "code_name": "dien_hoa",
     "district_code": "574",
@@ -76877,9 +76877,9 @@
   },
   {
     "code": "22786",
-    "name": "Phước Hòa",
+    "name": "Phước Hoà",
     "name_en": "Phuoc Hoa",
-    "full_name": "Xã Phước Hòa",
+    "full_name": "Xã Phước Hoà",
     "full_name_en": "Phuoc Hoa Commune",
     "code_name": "phuoc_hoa",
     "district_code": "584",
@@ -77023,9 +77023,9 @@
   },
   {
     "code": "22825",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "585",
@@ -77431,9 +77431,9 @@
   },
   {
     "code": "22924",
-    "name": "Phú Thủy",
+    "name": "Phú Thuỷ",
     "name_en": "Phu Thuy",
-    "full_name": "Phường Phú Thủy",
+    "full_name": "Phường Phú Thuỷ",
     "full_name_en": "Phu Thuy Ward",
     "code_name": "phu_thuy",
     "district_code": "593",
@@ -77684,9 +77684,9 @@
   },
   {
     "code": "22993",
-    "name": "Hòa Minh",
+    "name": "Hoà Minh",
     "name_en": "Hoa Minh",
-    "full_name": "Xã Hòa Minh",
+    "full_name": "Xã Hoà Minh",
     "full_name_en": "Hoa Minh Commune",
     "code_name": "hoa_minh",
     "district_code": "595",
@@ -77778,9 +77778,9 @@
   },
   {
     "code": "23023",
-    "name": "Sông Lũy",
+    "name": "Sông Luỹ",
     "name_en": "Song Luy",
-    "full_name": "Xã Sông Lũy",
+    "full_name": "Xã Sông Luỹ",
     "full_name_en": "Song Luy Commune",
     "code_name": "song_luy",
     "district_code": "596",
@@ -77821,9 +77821,9 @@
   },
   {
     "code": "23035",
-    "name": "Phan Hòa",
+    "name": "Phan Hoà",
     "name_en": "Phan Hoa",
-    "full_name": "Xã Phan Hòa",
+    "full_name": "Xã Phan Hoà",
     "full_name_en": "Phan Hoa Commune",
     "code_name": "phan_hoa",
     "district_code": "596",
@@ -77881,9 +77881,9 @@
   },
   {
     "code": "23053",
-    "name": "Hòa Thắng",
+    "name": "Hoà Thắng",
     "name_en": "Hoa Thang",
-    "full_name": "Xã Hòa Thắng",
+    "full_name": "Xã Hoà Thắng",
     "full_name_en": "Hoa Thang Commune",
     "code_name": "hoa_thang",
     "district_code": "596",
@@ -77945,9 +77945,9 @@
   },
   {
     "code": "23071",
-    "name": "Thuận Hòa",
+    "name": "Thuận Hoà",
     "name_en": "Thuan Hoa",
-    "full_name": "Xã Thuận Hòa",
+    "full_name": "Xã Thuận Hoà",
     "full_name_en": "Thuan Hoa Commune",
     "code_name": "thuan_hoa",
     "district_code": "597",
@@ -78924,9 +78924,9 @@
   },
   {
     "code": "23338",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "608",
@@ -80480,9 +80480,9 @@
   },
   {
     "code": "23722",
-    "name": "Phú Hòa",
+    "name": "Phú Hoà",
     "name_en": "Phu Hoa",
-    "full_name": "Thị trấn Phú Hòa",
+    "full_name": "Thị trấn Phú Hoà",
     "full_name_en": "Phu Hoa Township",
     "code_name": "phu_hoa",
     "district_code": "627",
@@ -80567,9 +80567,9 @@
   },
   {
     "code": "23743",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "627",
@@ -80607,9 +80607,9 @@
   },
   {
     "code": "23755",
-    "name": "Nghĩa Hòa",
+    "name": "Nghĩa Hoà",
     "name_en": "Nghia Hoa",
-    "full_name": "Xã Nghĩa Hòa",
+    "full_name": "Xã Nghĩa Hoà",
     "full_name_en": "Nghia Hoa Commune",
     "code_name": "nghia_hoa",
     "district_code": "627",
@@ -81767,9 +81767,9 @@
   },
   {
     "code": "24042",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Phường Hòa Bình",
+    "full_name": "Phường Hoà Bình",
     "full_name_en": "Hoa Binh Ward",
     "code_name": "hoa_binh",
     "district_code": "624",
@@ -82101,9 +82101,9 @@
   },
   {
     "code": "24121",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Phường Tân Hòa",
+    "full_name": "Phường Tân Hoà",
     "full_name_en": "Tan Hoa Ward",
     "code_name": "tan_hoa",
     "district_code": "643",
@@ -82217,9 +82217,9 @@
   },
   {
     "code": "24157",
-    "name": "Hòa Thuận",
+    "name": "Hoà Thuận",
     "name_en": "Hoa Thuan",
-    "full_name": "Xã Hòa Thuận",
+    "full_name": "Xã Hoà Thuận",
     "full_name_en": "Hoa Thuan Commune",
     "code_name": "hoa_thuan",
     "district_code": "643",
@@ -82247,9 +82247,9 @@
   },
   {
     "code": "24166",
-    "name": "Hòa Thắng",
+    "name": "Hoà Thắng",
     "name_en": "Hoa Thang",
-    "full_name": "Xã Hòa Thắng",
+    "full_name": "Xã Hoà Thắng",
     "full_name_en": "Hoa Thang Commune",
     "code_name": "hoa_thang",
     "district_code": "643",
@@ -82270,9 +82270,9 @@
   },
   {
     "code": "24172",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "643",
@@ -82280,9 +82280,9 @@
   },
   {
     "code": "24175",
-    "name": "Hòa Khánh",
+    "name": "Hoà Khánh",
     "name_en": "Hoa Khanh",
-    "full_name": "Xã Hòa Khánh",
+    "full_name": "Xã Hoà Khánh",
     "full_name_en": "Hoa Khanh Commune",
     "code_name": "hoa_khanh",
     "district_code": "643",
@@ -82290,9 +82290,9 @@
   },
   {
     "code": "24178",
-    "name": "Hòa Xuân",
+    "name": "Hoà Xuân",
     "name_en": "Hoa Xuan",
-    "full_name": "Xã Hòa Xuân",
+    "full_name": "Xã Hoà Xuân",
     "full_name_en": "Hoa Xuan Commune",
     "code_name": "hoa_xuan",
     "district_code": "643",
@@ -83372,9 +83372,9 @@
   },
   {
     "code": "24439",
-    "name": "Cư K Róa",
+    "name": "Cư K Roá",
     "name_en": "Cu K Roa",
-    "full_name": "Xã Cư K Róa",
+    "full_name": "Xã Cư K Roá",
     "full_name_en": "Cu K Roa Commune",
     "code_name": "cu_k_roa",
     "district_code": "652",
@@ -83446,9 +83446,9 @@
   },
   {
     "code": "24457",
-    "name": "Hòa Thành",
+    "name": "Hoà Thành",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hòa Thành",
+    "full_name": "Xã Hoà Thành",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "653",
@@ -83456,9 +83456,9 @@
   },
   {
     "code": "24460",
-    "name": "Hòa Tân",
+    "name": "Hoà Tân",
     "name_en": "Hoa Tan",
-    "full_name": "Xã Hòa Tân",
+    "full_name": "Xã Hoà Tân",
     "full_name_en": "Hoa Tan Commune",
     "code_name": "hoa_tan",
     "district_code": "653",
@@ -83466,9 +83466,9 @@
   },
   {
     "code": "24463",
-    "name": "Hòa Phong",
+    "name": "Hoà Phong",
     "name_en": "Hoa Phong",
-    "full_name": "Xã Hòa Phong",
+    "full_name": "Xã Hoà Phong",
     "full_name_en": "Hoa Phong Commune",
     "code_name": "hoa_phong",
     "district_code": "653",
@@ -83476,9 +83476,9 @@
   },
   {
     "code": "24466",
-    "name": "Hòa Lễ",
+    "name": "Hoà Lễ",
     "name_en": "Hoa Le",
-    "full_name": "Xã Hòa Lễ",
+    "full_name": "Xã Hoà Lễ",
     "full_name_en": "Hoa Le Commune",
     "code_name": "hoa_le",
     "district_code": "653",
@@ -83526,9 +83526,9 @@
   },
   {
     "code": "24481",
-    "name": "Hòa Sơn",
+    "name": "Hoà Sơn",
     "name_en": "Hoa Son",
-    "full_name": "Xã Hòa Sơn",
+    "full_name": "Xã Hoà Sơn",
     "full_name_en": "Hoa Son Commune",
     "code_name": "hoa_son",
     "district_code": "653",
@@ -83634,9 +83634,9 @@
   },
   {
     "code": "24511",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "654",
@@ -83654,9 +83654,9 @@
   },
   {
     "code": "24517",
-    "name": "Hòa Đông",
+    "name": "Hoà Đông",
     "name_en": "Hoa Dong",
-    "full_name": "Xã Hòa Đông",
+    "full_name": "Xã Hoà Đông",
     "full_name_en": "Hoa Dong Commune",
     "code_name": "hoa_dong",
     "district_code": "654",
@@ -83674,9 +83674,9 @@
   },
   {
     "code": "24523",
-    "name": "Hòa Tiến",
+    "name": "Hoà Tiến",
     "name_en": "Hoa Tien",
-    "full_name": "Xã Hòa Tiến",
+    "full_name": "Xã Hoà Tiến",
     "full_name_en": "Hoa Tien Commune",
     "code_name": "hoa_tien",
     "district_code": "654",
@@ -83828,9 +83828,9 @@
   },
   {
     "code": "24562",
-    "name": "Hòa Hiệp",
+    "name": "Hoà Hiệp",
     "name_en": "Hoa Hiep",
-    "full_name": "Xã Hòa Hiệp",
+    "full_name": "Xã Hoà Hiệp",
     "full_name_en": "Hoa Hiep Commune",
     "code_name": "hoa_hiep",
     "district_code": "657",
@@ -83868,9 +83868,9 @@
   },
   {
     "code": "24574",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Xã Bình Hòa",
+    "full_name": "Xã Bình Hoà",
     "full_name_en": "Binh Hoa Commune",
     "code_name": "binh_hoa",
     "district_code": "655",
@@ -84102,8 +84102,8 @@
     "district_code": "661",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Quảng Hòa",
-      "Quảng Hòa"
+      "Xã Quảng Hoà",
+      "Quảng Hoà"
     ]
   },
   {
@@ -84517,9 +84517,9 @@
   },
   {
     "code": "24719",
-    "name": "Đắk Hòa",
+    "name": "Đắk Hoà",
     "name_en": "Dak Hoa",
-    "full_name": "Xã Đắk Hòa",
+    "full_name": "Xã Đắk Hoà",
     "full_name_en": "Dak Hoa Commune",
     "code_name": "dak_hoa",
     "district_code": "665",
@@ -85757,9 +85757,9 @@
   },
   {
     "code": "25024",
-    "name": "Đinh Trang Hòa",
+    "name": "Đinh Trang Hoà",
     "name_en": "Dinh Trang Hoa",
-    "full_name": "Xã Đinh Trang Hòa",
+    "full_name": "Xã Đinh Trang Hoà",
     "full_name_en": "Dinh Trang Hoa Commune",
     "code_name": "dinh_trang_hoa",
     "district_code": "679",
@@ -85797,9 +85797,9 @@
   },
   {
     "code": "25036",
-    "name": "Hòa Ninh",
+    "name": "Hoà Ninh",
     "name_en": "Hoa Ninh",
-    "full_name": "Xã Hòa Ninh",
+    "full_name": "Xã Hoà Ninh",
     "full_name_en": "Hoa Ninh Commune",
     "code_name": "hoa_ninh",
     "district_code": "679",
@@ -85807,9 +85807,9 @@
   },
   {
     "code": "25039",
-    "name": "Hòa Trung",
+    "name": "Hoà Trung",
     "name_en": "Hoa Trung",
-    "full_name": "Xã Hòa Trung",
+    "full_name": "Xã Hoà Trung",
     "full_name_en": "Hoa Trung Commune",
     "code_name": "hoa_trung",
     "district_code": "679",
@@ -85817,9 +85817,9 @@
   },
   {
     "code": "25042",
-    "name": "Hòa Nam",
+    "name": "Hoà Nam",
     "name_en": "Hoa Nam",
-    "full_name": "Xã Hòa Nam",
+    "full_name": "Xã Hoà Nam",
     "full_name_en": "Hoa Nam Commune",
     "code_name": "hoa_nam",
     "district_code": "679",
@@ -85827,9 +85827,9 @@
   },
   {
     "code": "25045",
-    "name": "Hòa Bắc",
+    "name": "Hoà Bắc",
     "name_en": "Hoa Bac",
-    "full_name": "Xã Hòa Bắc",
+    "full_name": "Xã Hoà Bắc",
     "full_name_en": "Hoa Bac Commune",
     "code_name": "hoa_bac",
     "district_code": "679",
@@ -86445,9 +86445,9 @@
   },
   {
     "code": "25217",
-    "name": "Long Thủy",
+    "name": "Long Thuỷ",
     "name_en": "Long Thuy",
-    "full_name": "Phường Long Thủy",
+    "full_name": "Phường Long Thuỷ",
     "full_name_en": "Long Thuy Ward",
     "code_name": "long_thuy",
     "district_code": "688",
@@ -86710,9 +86710,9 @@
   },
   {
     "code": "25273",
-    "name": "Lộc Hòa",
+    "name": "Lộc Hoà",
     "name_en": "Loc Hoa",
-    "full_name": "Xã Lộc Hòa",
+    "full_name": "Xã Lộc Hoà",
     "full_name_en": "Loc Hoa Commune",
     "code_name": "loc_hoa",
     "district_code": "692",
@@ -86894,9 +86894,9 @@
   },
   {
     "code": "25315",
-    "name": "Thanh Hòa",
+    "name": "Thanh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thanh Hòa",
+    "full_name": "Xã Thanh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "693",
@@ -87185,9 +87185,9 @@
   },
   {
     "code": "25384",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "695",
@@ -87676,9 +87676,9 @@
   },
   {
     "code": "25504",
-    "name": "Hòa Hiệp",
+    "name": "Hoà Hiệp",
     "name_en": "Hoa Hiep",
-    "full_name": "Xã Hòa Hiệp",
+    "full_name": "Xã Hoà Hiệp",
     "full_name_en": "Hoa Hiep Commune",
     "code_name": "hoa_hiep",
     "district_code": "705",
@@ -87759,9 +87759,9 @@
   },
   {
     "code": "25528",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "706",
@@ -88029,9 +88029,9 @@
   },
   {
     "code": "25606",
-    "name": "Hòa Thạnh",
+    "name": "Hoà Thạnh",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hòa Thạnh",
+    "full_name": "Xã Hoà Thạnh",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "708",
@@ -88049,9 +88049,9 @@
   },
   {
     "code": "25612",
-    "name": "Hòa Hội",
+    "name": "Hoà Hội",
     "name_en": "Hoa Hoi",
-    "full_name": "Xã Hòa Hội",
+    "full_name": "Xã Hoà Hội",
     "full_name_en": "Hoa Hoi Commune",
     "code_name": "hoa_hoi",
     "district_code": "708",
@@ -88143,9 +88143,9 @@
   },
   {
     "code": "25639",
-    "name": "Trường Hòa",
+    "name": "Trường Hoà",
     "name_en": "Truong Hoa",
-    "full_name": "Xã Trường Hòa",
+    "full_name": "Xã Trường Hoà",
     "full_name_en": "Truong Hoa Commune",
     "code_name": "truong_hoa",
     "district_code": "709",
@@ -88171,8 +88171,8 @@
     "district_code": "709",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Thành",
-      "Hòa Thành"
+      "Phường Hoà Thành",
+      "Hoà Thành"
     ]
   },
   {
@@ -88471,9 +88471,9 @@
   },
   {
     "code": "25735",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Phường An Hòa",
+    "full_name": "Phường An Hoà",
     "full_name_en": "An Hoa Ward",
     "code_name": "an_hoa",
     "district_code": "712",
@@ -88525,9 +88525,9 @@
   },
   {
     "code": "25750",
-    "name": "Phú Hòa",
+    "name": "Phú Hoà",
     "name_en": "Phu Hoa",
-    "full_name": "Phường Phú Hòa",
+    "full_name": "Phường Phú Hoà",
     "full_name_en": "Phu Hoa Ward",
     "code_name": "phu_hoa",
     "district_code": "718",
@@ -88708,8 +88708,8 @@
     "district_code": "720",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Long Hòa",
-      "Long Hòa"
+      "Xã Long Hoà",
+      "Long Hoà"
     ]
   },
   {
@@ -88842,9 +88842,9 @@
   },
   {
     "code": "25831",
-    "name": "Hưng Hòa",
+    "name": "Hưng Hoà",
     "name_en": "Hung Hoa",
-    "full_name": "Xã Hưng Hòa",
+    "full_name": "Xã Hưng Hoà",
     "full_name_en": "Hung Hoa Commune",
     "code_name": "hung_hoa",
     "district_code": "719",
@@ -88862,9 +88862,9 @@
   },
   {
     "code": "25837",
-    "name": "Chánh Phú Hòa",
+    "name": "Chánh Phú Hoà",
     "name_en": "Chanh Phu Hoa",
-    "full_name": "Phường Chánh Phú Hòa",
+    "full_name": "Phường Chánh Phú Hoà",
     "full_name_en": "Chanh Phu Hoa Ward",
     "code_name": "chanh_phu_hoa",
     "district_code": "721",
@@ -88902,9 +88902,9 @@
   },
   {
     "code": "25846",
-    "name": "Thới Hòa",
+    "name": "Thới Hoà",
     "name_en": "Thoi Hoa",
-    "full_name": "Phường Thới Hòa",
+    "full_name": "Phường Thới Hoà",
     "full_name_en": "Thoi Hoa Ward",
     "code_name": "thoi_hoa",
     "district_code": "721",
@@ -88912,9 +88912,9 @@
   },
   {
     "code": "25849",
-    "name": "Hòa Lợi",
+    "name": "Hoà Lợi",
     "name_en": "Hoa Loi",
-    "full_name": "Phường Hòa Lợi",
+    "full_name": "Phường Hoà Lợi",
     "full_name_en": "Hoa Loi Ward",
     "code_name": "hoa_loi",
     "district_code": "721",
@@ -89286,9 +89286,9 @@
   },
   {
     "code": "25939",
-    "name": "Thái Hòa",
+    "name": "Thái Hoà",
     "name_en": "Thai Hoa",
-    "full_name": "Phường Thái Hòa",
+    "full_name": "Phường Thái Hoà",
     "full_name_en": "Thai Hoa Ward",
     "code_name": "thai_hoa",
     "district_code": "723",
@@ -89346,9 +89346,9 @@
   },
   {
     "code": "25957",
-    "name": "Đông Hòa",
+    "name": "Đông Hoà",
     "name_en": "Dong Hoa",
-    "full_name": "Phường Đông Hòa",
+    "full_name": "Phường Đông Hoà",
     "full_name_en": "Dong Hoa Ward",
     "code_name": "dong_hoa",
     "district_code": "724",
@@ -89450,9 +89450,9 @@
   },
   {
     "code": "25987",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Phường Bình Hòa",
+    "full_name": "Phường Bình Hoà",
     "full_name_en": "Binh Hoa Ward",
     "code_name": "binh_hoa",
     "district_code": "725",
@@ -89510,9 +89510,9 @@
   },
   {
     "code": "26005",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Phường Tân Hòa",
+    "full_name": "Phường Tân Hoà",
     "full_name_en": "Tan Hoa Ward",
     "code_name": "tan_hoa",
     "district_code": "731",
@@ -89594,9 +89594,9 @@
   },
   {
     "code": "26035",
-    "name": "Tam Hòa",
+    "name": "Tam Hoà",
     "name_en": "Tam Hoa",
-    "full_name": "Phường Tam Hòa",
+    "full_name": "Phường Tam Hoà",
     "full_name_en": "Tam Hoa Ward",
     "code_name": "tam_hoa",
     "district_code": "731",
@@ -89604,9 +89604,9 @@
   },
   {
     "code": "26038",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Phường Hòa Bình",
+    "full_name": "Phường Hoà Bình",
     "full_name_en": "Hoa Binh Ward",
     "code_name": "hoa_binh",
     "district_code": "731",
@@ -89660,9 +89660,9 @@
   },
   {
     "code": "26053",
-    "name": "Bửu Hòa",
+    "name": "Bửu Hoà",
     "name_en": "Buu Hoa",
-    "full_name": "Phường Bửu Hòa",
+    "full_name": "Phường Bửu Hoà",
     "full_name_en": "Buu Hoa Ward",
     "code_name": "buu_hoa",
     "district_code": "731",
@@ -89700,9 +89700,9 @@
   },
   {
     "code": "26065",
-    "name": "Hiệp Hòa",
+    "name": "Hiệp Hoà",
     "name_en": "Hiep Hoa",
-    "full_name": "Phường Hiệp Hòa",
+    "full_name": "Phường Hiệp Hoà",
     "full_name_en": "Hiep Hoa Ward",
     "code_name": "hiep_hoa",
     "district_code": "731",
@@ -89710,16 +89710,16 @@
   },
   {
     "code": "26068",
-    "name": "Hóa An",
+    "name": "Hoá An",
     "name_en": "Hoa An",
-    "full_name": "Phường Hóa An",
+    "full_name": "Phường Hoá An",
     "full_name_en": "Hoa An Ward",
     "code_name": "hoa_an",
     "district_code": "731",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Biên Hòa",
-      "Biên Hòa"
+      "Phường Biên Hoà",
+      "Biên Hoà"
     ]
   },
   {
@@ -90159,9 +90159,9 @@
   },
   {
     "code": "26197",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Xã Bình Hòa",
+    "full_name": "Xã Bình Hoà",
     "full_name_en": "Binh Hoa Commune",
     "code_name": "binh_hoa",
     "district_code": "735",
@@ -90242,9 +90242,9 @@
   },
   {
     "code": "26221",
-    "name": "Phú Hòa",
+    "name": "Phú Hoà",
     "name_en": "Phu Hoa",
-    "full_name": "Xã Phú Hòa",
+    "full_name": "Xã Phú Hoà",
     "full_name_en": "Phu Hoa Commune",
     "code_name": "phu_hoa",
     "district_code": "736",
@@ -90759,9 +90759,9 @@
   },
   {
     "code": "26371",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Phường An Hòa",
+    "full_name": "Phường An Hoà",
     "full_name_en": "An Hoa Ward",
     "code_name": "an_hoa",
     "district_code": "731",
@@ -90996,9 +90996,9 @@
   },
   {
     "code": "26443",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "741",
@@ -91754,9 +91754,9 @@
   },
   {
     "code": "26641",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "751",
@@ -91764,9 +91764,9 @@
   },
   {
     "code": "26644",
-    "name": "Hòa Hưng",
+    "name": "Hoà Hưng",
     "name_en": "Hoa Hung",
-    "full_name": "Xã Hòa Hưng",
+    "full_name": "Xã Hoà Hưng",
     "full_name_en": "Hoa Hung Commune",
     "code_name": "hoa_hung",
     "district_code": "751",
@@ -91774,9 +91774,9 @@
   },
   {
     "code": "26647",
-    "name": "Hòa Hiệp",
+    "name": "Hoà Hiệp",
     "name_en": "Hoa Hiep",
-    "full_name": "Xã Hòa Hiệp",
+    "full_name": "Xã Hoà Hiệp",
     "full_name_en": "Hoa Hiep Commune",
     "code_name": "hoa_hiep",
     "district_code": "751",
@@ -91784,9 +91784,9 @@
   },
   {
     "code": "26650",
-    "name": "Hòa Hội",
+    "name": "Hoà Hội",
     "name_en": "Hoa Hoi",
-    "full_name": "Xã Hòa Hội",
+    "full_name": "Xã Hoà Hội",
     "full_name_en": "Hoa Hoi Commune",
     "code_name": "hoa_hoi",
     "district_code": "751",
@@ -93034,8 +93034,8 @@
     "legacy_names": [
       "Phường 01",
       "01",
-      "Phường Tân Sơn Hòa",
-      "Tân Sơn Hòa"
+      "Phường Tân Sơn Hoà",
+      "Tân Sơn Hoà"
     ]
   },
   {
@@ -93116,8 +93116,8 @@
     "legacy_names": [
       "Phường 06",
       "06",
-      "Phường Tân Hòa",
-      "Tân Hòa"
+      "Phường Tân Hoà",
+      "Tân Hoà"
     ]
   },
   {
@@ -93228,9 +93228,9 @@
   },
   {
     "code": "27025",
-    "name": "Phú Thọ Hòa",
+    "name": "Phú Thọ Hoà",
     "name_en": "Phu Tho Hoa",
-    "full_name": "Phường Phú Thọ Hòa",
+    "full_name": "Phường Phú Thọ Hoà",
     "full_name_en": "Phu Tho Hoa Ward",
     "code_name": "phu_tho_hoa",
     "district_code": "767",
@@ -93262,9 +93262,9 @@
   },
   {
     "code": "27034",
-    "name": "Hòa Thạnh",
+    "name": "Hoà Thạnh",
     "name_en": "Hoa Thanh",
-    "full_name": "Phường Hòa Thạnh",
+    "full_name": "Phường Hoà Thạnh",
     "full_name_en": "Hoa Thanh Ward",
     "code_name": "hoa_thanh",
     "district_code": "767",
@@ -93282,9 +93282,9 @@
   },
   {
     "code": "27040",
-    "name": "Tân Thới Hòa",
+    "name": "Tân Thới Hoà",
     "name_en": "Tan Thoi Hoa",
-    "full_name": "Phường Tân Thới Hòa",
+    "full_name": "Phường Tân Thới Hoà",
     "full_name_en": "Tan Thoi Hoa Ward",
     "code_name": "tan_thoi_hoa",
     "district_code": "767",
@@ -93594,8 +93594,8 @@
     "district_code": "770",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Xuân Hòa",
-      "Xuân Hòa",
+      "Phường Xuân Hoà",
+      "Xuân Hoà",
       "Ph??ng 6",
       "Ph??ng 06",
       "Ph??ng 7",
@@ -93712,8 +93712,8 @@
     "district_code": "771",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Hòa Hưng",
-      "Hòa Hưng"
+      "Phường Hoà Hưng",
+      "Hoà Hưng"
     ]
   },
   {
@@ -93898,8 +93898,8 @@
     "legacy_names": [
       "Phường 05",
       "05",
-      "Phường Hòa Bình",
-      "Hòa Bình"
+      "Phường Hoà Bình",
+      "Hoà Bình"
     ]
   },
   {
@@ -94716,9 +94716,9 @@
   },
   {
     "code": "27436",
-    "name": "Bình Hưng Hòa",
+    "name": "Bình Hưng Hoà",
     "name_en": "Binh Hung Hoa",
-    "full_name": "Phường Bình Hưng Hòa",
+    "full_name": "Phường Bình Hưng Hoà",
     "full_name_en": "Binh Hung Hoa Ward",
     "code_name": "binh_hung_hoa",
     "district_code": "777",
@@ -95001,9 +95001,9 @@
   },
   {
     "code": "27517",
-    "name": "Phú Hòa Đông",
+    "name": "Phú Hoà Đông",
     "name_en": "Phu Hoa Dong",
-    "full_name": "Xã Phú Hòa Đông",
+    "full_name": "Xã Phú Hoà Đông",
     "full_name_en": "Phu Hoa Dong Commune",
     "code_name": "phu_hoa_dong",
     "district_code": "783",
@@ -95091,9 +95091,9 @@
   },
   {
     "code": "27544",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "783",
@@ -95562,9 +95562,9 @@
   },
   {
     "code": "27679",
-    "name": "Long Hòa",
+    "name": "Long Hoà",
     "name_en": "Long Hoa",
-    "full_name": "Xã Long Hòa",
+    "full_name": "Xã Long Hoà",
     "full_name_en": "Long Hoa Commune",
     "code_name": "long_hoa",
     "district_code": "787",
@@ -96004,9 +96004,9 @@
   },
   {
     "code": "27796",
-    "name": "Bình Hòa Tây",
+    "name": "Bình Hoà Tây",
     "name_en": "Binh Hoa Tay",
-    "full_name": "Xã Bình Hòa Tây",
+    "full_name": "Xã Bình Hoà Tây",
     "full_name_en": "Binh Hoa Tay Commune",
     "code_name": "binh_hoa_tay",
     "district_code": "798",
@@ -96054,9 +96054,9 @@
   },
   {
     "code": "27808",
-    "name": "Bình Hòa Trung",
+    "name": "Bình Hoà Trung",
     "name_en": "Binh Hoa Trung",
-    "full_name": "Xã Bình Hòa Trung",
+    "full_name": "Xã Bình Hoà Trung",
     "full_name_en": "Binh Hoa Trung Commune",
     "code_name": "binh_hoa_trung",
     "district_code": "798",
@@ -96064,16 +96064,16 @@
   },
   {
     "code": "27811",
-    "name": "Bình Hòa Đông",
+    "name": "Bình Hoà Đông",
     "name_en": "Binh Hoa Dong",
-    "full_name": "Xã Bình Hòa Đông",
+    "full_name": "Xã Bình Hoà Đông",
     "full_name_en": "Binh Hoa Dong Commune",
     "code_name": "binh_hoa_dong",
     "district_code": "798",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Bình Hòa",
-      "Bình Hòa"
+      "Xã Bình Hoà",
+      "Bình Hoà"
     ]
   },
   {
@@ -96116,8 +96116,8 @@
     "district_code": "798",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Mộc Hóa",
-      "Mộc Hóa"
+      "Xã Mộc Hoá",
+      "Mộc Hoá"
     ]
   },
   {
@@ -96137,9 +96137,9 @@
   },
   {
     "code": "27829",
-    "name": "Bắc Hòa",
+    "name": "Bắc Hoà",
     "name_en": "Bac Hoa",
-    "full_name": "Xã Bắc Hòa",
+    "full_name": "Xã Bắc Hoà",
     "full_name_en": "Bac Hoa Commune",
     "code_name": "bac_hoa",
     "district_code": "799",
@@ -96157,9 +96157,9 @@
   },
   {
     "code": "27835",
-    "name": "Nhơn Hòa Lập",
+    "name": "Nhơn Hoà Lập",
     "name_en": "Nhon Hoa Lap",
-    "full_name": "Xã Nhơn Hòa Lập",
+    "full_name": "Xã Nhơn Hoà Lập",
     "full_name_en": "Nhon Hoa Lap Commune",
     "code_name": "nhon_hoa_lap",
     "district_code": "799",
@@ -96241,9 +96241,9 @@
   },
   {
     "code": "27862",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "799",
@@ -96251,15 +96251,15 @@
   },
   {
     "code": "27865",
-    "name": "Thạnh Hóa",
+    "name": "Thạnh Hoá",
     "name_en": "Thanh Hoa",
-    "full_name": "Thị trấn Thạnh Hóa",
+    "full_name": "Thị trấn Thạnh Hoá",
     "full_name_en": "Thanh Hoa Township",
     "code_name": "thanh_hoa",
     "district_code": "800",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Thạnh Hóa"
+      "Xã Thạnh Hoá"
     ]
   },
   {
@@ -96308,9 +96308,9 @@
   },
   {
     "code": "27880",
-    "name": "Thuận Nghĩa Hòa",
+    "name": "Thuận Nghĩa Hoà",
     "name_en": "Thuan Nghia Hoa",
-    "full_name": "Xã Thuận Nghĩa Hòa",
+    "full_name": "Xã Thuận Nghĩa Hoà",
     "full_name_en": "Thuan Nghia Hoa Commune",
     "code_name": "thuan_nghia_hoa",
     "district_code": "800",
@@ -96318,9 +96318,9 @@
   },
   {
     "code": "27883",
-    "name": "Thủy Đông",
+    "name": "Thuỷ Đông",
     "name_en": "Thuy Dong",
-    "full_name": "Xã Thủy Đông",
+    "full_name": "Xã Thuỷ Đông",
     "full_name_en": "Thuy Dong Commune",
     "code_name": "thuy_dong",
     "district_code": "800",
@@ -96328,9 +96328,9 @@
   },
   {
     "code": "27886",
-    "name": "Thủy Tây",
+    "name": "Thuỷ Tây",
     "name_en": "Thuy Tay",
-    "full_name": "Xã Thủy Tây",
+    "full_name": "Xã Thuỷ Tây",
     "full_name_en": "Thuy Tay Commune",
     "code_name": "thuy_tay",
     "district_code": "800",
@@ -96445,9 +96445,9 @@
   },
   {
     "code": "27919",
-    "name": "Bình Hòa Bắc",
+    "name": "Bình Hoà Bắc",
     "name_en": "Binh Hoa Bac",
-    "full_name": "Xã Bình Hòa Bắc",
+    "full_name": "Xã Bình Hoà Bắc",
     "full_name_en": "Binh Hoa Bac Commune",
     "code_name": "binh_hoa_bac",
     "district_code": "801",
@@ -96455,9 +96455,9 @@
   },
   {
     "code": "27922",
-    "name": "Bình Hòa Hưng",
+    "name": "Bình Hoà Hưng",
     "name_en": "Binh Hoa Hung",
-    "full_name": "Xã Bình Hòa Hưng",
+    "full_name": "Xã Bình Hoà Hưng",
     "full_name_en": "Binh Hoa Hung Commune",
     "code_name": "binh_hoa_hung",
     "district_code": "801",
@@ -96465,9 +96465,9 @@
   },
   {
     "code": "27925",
-    "name": "Bình Hòa Nam",
+    "name": "Bình Hoà Nam",
     "name_en": "Binh Hoa Nam",
-    "full_name": "Xã Bình Hòa Nam",
+    "full_name": "Xã Bình Hoà Nam",
     "full_name_en": "Binh Hoa Nam Commune",
     "code_name": "binh_hoa_nam",
     "district_code": "801",
@@ -96502,28 +96502,28 @@
   },
   {
     "code": "27934",
-    "name": "Hiệp Hòa",
+    "name": "Hiệp Hoà",
     "name_en": "Hiep Hoa",
-    "full_name": "Thị trấn Hiệp Hòa",
+    "full_name": "Thị trấn Hiệp Hoà",
     "full_name_en": "Hiep Hoa Township",
     "code_name": "hiep_hoa",
     "district_code": "802",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hiệp Hòa"
+      "Xã Hiệp Hoà"
     ]
   },
   {
     "code": "27937",
-    "name": "Đức Hòa",
+    "name": "Đức Hoà",
     "name_en": "Duc Hoa",
-    "full_name": "Thị trấn Đức Hòa",
+    "full_name": "Thị trấn Đức Hoà",
     "full_name_en": "Duc Hoa Township",
     "code_name": "duc_hoa",
     "district_code": "802",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Đức Hòa"
+      "Xã Đức Hoà"
     ]
   },
   {
@@ -96616,9 +96616,9 @@
   },
   {
     "code": "27967",
-    "name": "Đức Hòa Thượng",
+    "name": "Đức Hoà Thượng",
     "name_en": "Duc Hoa Thuong",
-    "full_name": "Xã Đức Hòa Thượng",
+    "full_name": "Xã Đức Hoà Thượng",
     "full_name_en": "Duc Hoa Thuong Commune",
     "code_name": "duc_hoa_thuong",
     "district_code": "802",
@@ -96626,9 +96626,9 @@
   },
   {
     "code": "27970",
-    "name": "Hòa Khánh Tây",
+    "name": "Hoà Khánh Tây",
     "name_en": "Hoa Khanh Tay",
-    "full_name": "Xã Hòa Khánh Tây",
+    "full_name": "Xã Hoà Khánh Tây",
     "full_name_en": "Hoa Khanh Tay Commune",
     "code_name": "hoa_khanh_tay",
     "district_code": "802",
@@ -96636,9 +96636,9 @@
   },
   {
     "code": "27973",
-    "name": "Hòa Khánh Đông",
+    "name": "Hoà Khánh Đông",
     "name_en": "Hoa Khanh Dong",
-    "full_name": "Xã Hòa Khánh Đông",
+    "full_name": "Xã Hoà Khánh Đông",
     "full_name_en": "Hoa Khanh Dong Commune",
     "code_name": "hoa_khanh_dong",
     "district_code": "802",
@@ -96660,23 +96660,23 @@
   },
   {
     "code": "27979",
-    "name": "Hòa Khánh Nam",
+    "name": "Hoà Khánh Nam",
     "name_en": "Hoa Khanh Nam",
-    "full_name": "Xã Hòa Khánh Nam",
+    "full_name": "Xã Hoà Khánh Nam",
     "full_name_en": "Hoa Khanh Nam Commune",
     "code_name": "hoa_khanh_nam",
     "district_code": "802",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Khánh",
-      "Hòa Khánh"
+      "Xã Hoà Khánh",
+      "Hoà Khánh"
     ]
   },
   {
     "code": "27982",
-    "name": "Đức Hòa Đông",
+    "name": "Đức Hoà Đông",
     "name_en": "Duc Hoa Dong",
-    "full_name": "Xã Đức Hòa Đông",
+    "full_name": "Xã Đức Hoà Đông",
     "full_name_en": "Duc Hoa Dong Commune",
     "code_name": "duc_hoa_dong",
     "district_code": "802",
@@ -96684,9 +96684,9 @@
   },
   {
     "code": "27985",
-    "name": "Đức Hòa Hạ",
+    "name": "Đức Hoà Hạ",
     "name_en": "Duc Hoa Ha",
-    "full_name": "Xã Đức Hòa Hạ",
+    "full_name": "Xã Đức Hoà Hạ",
     "full_name_en": "Duc Hoa Ha Commune",
     "code_name": "duc_hoa_ha",
     "district_code": "802",
@@ -96737,9 +96737,9 @@
   },
   {
     "code": "28000",
-    "name": "Thạnh Hòa",
+    "name": "Thạnh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thạnh Hòa",
+    "full_name": "Xã Thạnh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "803",
@@ -96747,9 +96747,9 @@
   },
   {
     "code": "28003",
-    "name": "Lương Hòa",
+    "name": "Lương Hoà",
     "name_en": "Luong Hoa",
-    "full_name": "Xã Lương Hòa",
+    "full_name": "Xã Lương Hoà",
     "full_name_en": "Luong Hoa Commune",
     "code_name": "luong_hoa",
     "district_code": "803",
@@ -96757,9 +96757,9 @@
   },
   {
     "code": "28006",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "803",
@@ -97148,9 +97148,9 @@
   },
   {
     "code": "28123",
-    "name": "Long Hòa",
+    "name": "Long Hoà",
     "name_en": "Long Hoa",
-    "full_name": "Xã Long Hòa",
+    "full_name": "Xã Long Hoà",
     "full_name_en": "Long Hoa Commune",
     "code_name": "long_hoa",
     "district_code": "806",
@@ -97448,9 +97448,9 @@
   },
   {
     "code": "28216",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "808",
@@ -97812,15 +97812,15 @@
   },
   {
     "code": "28318",
-    "name": "Long Hòa",
+    "name": "Long Hoà",
     "name_en": "Long Hoa",
-    "full_name": "Phường Long Hòa",
+    "full_name": "Phường Long Hoà",
     "full_name_en": "Long Hoa Ward",
     "code_name": "long_hoa",
     "district_code": "816",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Xã Long Hòa"
+      "Xã Long Hoà"
     ]
   },
   {
@@ -97839,9 +97839,9 @@
   },
   {
     "code": "28324",
-    "name": "Tân Hòa Đông",
+    "name": "Tân Hoà Đông",
     "name_en": "Tan Hoa Dong",
-    "full_name": "Xã Tân Hòa Đông",
+    "full_name": "Xã Tân Hoà Đông",
     "full_name_en": "Tan Hoa Dong Commune",
     "code_name": "tan_hoa_dong",
     "district_code": "818",
@@ -97893,9 +97893,9 @@
   },
   {
     "code": "28339",
-    "name": "Tân Hòa Thành",
+    "name": "Tân Hoà Thành",
     "name_en": "Tan Hoa Thanh",
-    "full_name": "Xã Tân Hòa Thành",
+    "full_name": "Xã Tân Hoà Thành",
     "full_name_en": "Tan Hoa Thanh Commune",
     "code_name": "tan_hoa_thanh",
     "district_code": "818",
@@ -97927,9 +97927,9 @@
   },
   {
     "code": "28348",
-    "name": "Tân Hòa Tây",
+    "name": "Tân Hoà Tây",
     "name_en": "Tan Hoa Tay",
-    "full_name": "Xã Tân Hòa Tây",
+    "full_name": "Xã Tân Hoà Tây",
     "full_name_en": "Tan Hoa Tay Commune",
     "code_name": "tan_hoa_tay",
     "district_code": "818",
@@ -98102,9 +98102,9 @@
   },
   {
     "code": "28399",
-    "name": "Hòa Khánh",
+    "name": "Hoà Khánh",
     "name_en": "Hoa Khanh",
-    "full_name": "Xã Hòa Khánh",
+    "full_name": "Xã Hoà Khánh",
     "full_name_en": "Hoa Khanh Commune",
     "code_name": "hoa_khanh",
     "district_code": "819",
@@ -98142,9 +98142,9 @@
   },
   {
     "code": "28411",
-    "name": "Đông Hòa Hiệp",
+    "name": "Đông Hoà Hiệp",
     "name_en": "Dong Hoa Hiep",
-    "full_name": "Xã Đông Hòa Hiệp",
+    "full_name": "Xã Đông Hoà Hiệp",
     "full_name_en": "Dong Hoa Hiep Commune",
     "code_name": "dong_hoa_hiep",
     "district_code": "819",
@@ -98220,9 +98220,9 @@
   },
   {
     "code": "28432",
-    "name": "Hòa Hưng",
+    "name": "Hoà Hưng",
     "name_en": "Hoa Hung",
-    "full_name": "Xã Hòa Hưng",
+    "full_name": "Xã Hoà Hưng",
     "full_name_en": "Hoa Hung Commune",
     "code_name": "hoa_hung",
     "district_code": "819",
@@ -98251,7 +98251,7 @@
     "district_code": "817",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Thanh Hòa"
+      "Phường Thanh Hoà"
     ]
   },
   {
@@ -98444,9 +98444,9 @@
   },
   {
     "code": "28480",
-    "name": "Thanh Hòa",
+    "name": "Thanh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thanh Hòa",
+    "full_name": "Xã Thanh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "817",
@@ -98678,9 +98678,9 @@
   },
   {
     "code": "28549",
-    "name": "Đông Hòa",
+    "name": "Đông Hoà",
     "name_en": "Dong Hoa",
-    "full_name": "Xã Đông Hòa",
+    "full_name": "Xã Đông Hoà",
     "full_name_en": "Dong Hoa Commune",
     "code_name": "dong_hoa",
     "district_code": "821",
@@ -98841,9 +98841,9 @@
   },
   {
     "code": "28597",
-    "name": "Trung Hòa",
+    "name": "Trung Hoà",
     "name_en": "Trung Hoa",
-    "full_name": "Xã Trung Hòa",
+    "full_name": "Xã Trung Hoà",
     "full_name_en": "Trung Hoa Commune",
     "code_name": "trung_hoa",
     "district_code": "822",
@@ -98851,9 +98851,9 @@
   },
   {
     "code": "28600",
-    "name": "Hòa Tịnh",
+    "name": "Hoà Tịnh",
     "name_en": "Hoa Tinh",
-    "full_name": "Xã Hòa Tịnh",
+    "full_name": "Xã Hoà Tịnh",
     "full_name_en": "Hoa Tinh Commune",
     "code_name": "hoa_tinh",
     "district_code": "822",
@@ -98891,9 +98891,9 @@
   },
   {
     "code": "28612",
-    "name": "Lương Hòa Lạc",
+    "name": "Lương Hoà Lạc",
     "name_en": "Luong Hoa Lac",
-    "full_name": "Xã Lương Hòa Lạc",
+    "full_name": "Xã Lương Hoà Lạc",
     "full_name_en": "Luong Hoa Lac Commune",
     "code_name": "luong_hoa_lac",
     "district_code": "822",
@@ -98981,9 +98981,9 @@
   },
   {
     "code": "28639",
-    "name": "An Thạnh Thủy",
+    "name": "An Thạnh Thuỷ",
     "name_en": "An Thanh Thuy",
-    "full_name": "Xã An Thạnh Thủy",
+    "full_name": "Xã An Thạnh Thuỷ",
     "full_name_en": "An Thanh Thuy Commune",
     "code_name": "an_thanh_thuy",
     "district_code": "822",
@@ -99001,9 +99001,9 @@
   },
   {
     "code": "28645",
-    "name": "Hòa Định",
+    "name": "Hoà Định",
     "name_en": "Hoa Dinh",
-    "full_name": "Xã Hòa Định",
+    "full_name": "Xã Hoà Định",
     "full_name_en": "Hoa Dinh Commune",
     "code_name": "hoa_dinh",
     "district_code": "822",
@@ -99202,15 +99202,15 @@
   },
   {
     "code": "28702",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Thị trấn Tân Hòa",
+    "full_name": "Thị trấn Tân Hoà",
     "full_name_en": "Tan Hoa Township",
     "code_name": "tan_hoa",
     "district_code": "824",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Tân Hòa"
+      "Xã Tân Hoà"
     ]
   },
   {
@@ -99604,9 +99604,9 @@
   },
   {
     "code": "28825",
-    "name": "Phú An Hòa",
+    "name": "Phú An Hoà",
     "name_en": "Phu An Hoa",
-    "full_name": "Xã Phú An Hòa",
+    "full_name": "Xã Phú An Hoà",
     "full_name_en": "Phu An Hoa Commune",
     "code_name": "phu_an_hoa",
     "district_code": "831",
@@ -99674,9 +99674,9 @@
   },
   {
     "code": "28849",
-    "name": "An Hóa",
+    "name": "An Hoá",
     "name_en": "An Hoa",
-    "full_name": "Xã An Hóa",
+    "full_name": "Xã An Hoá",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "831",
@@ -99722,22 +99722,22 @@
   },
   {
     "code": "28861",
-    "name": "Tiên Thủy",
+    "name": "Tiên Thuỷ",
     "name_en": "Tien Thuy",
-    "full_name": "Thị trấn Tiên Thủy",
+    "full_name": "Thị trấn Tiên Thuỷ",
     "full_name_en": "Tien Thuy Township",
     "code_name": "tien_thuy",
     "district_code": "831",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Tiên Thủy"
+      "Xã Tiên Thuỷ"
     ]
   },
   {
     "code": "28864",
-    "name": "Sơn Hòa",
+    "name": "Sơn Hoà",
     "name_en": "Son Hoa",
-    "full_name": "Xã Sơn Hòa",
+    "full_name": "Xã Sơn Hoà",
     "full_name_en": "Son Hoa Commune",
     "code_name": "son_hoa",
     "district_code": "831",
@@ -99788,9 +99788,9 @@
   },
   {
     "code": "28882",
-    "name": "Hòa Nghĩa",
+    "name": "Hoà Nghĩa",
     "name_en": "Hoa Nghia",
-    "full_name": "Xã Hòa Nghĩa",
+    "full_name": "Xã Hoà Nghĩa",
     "full_name_en": "Hoa Nghia Commune",
     "code_name": "hoa_nghia",
     "district_code": "832",
@@ -99848,9 +99848,9 @@
   },
   {
     "code": "28897",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "832",
@@ -99958,9 +99958,9 @@
   },
   {
     "code": "28924",
-    "name": "Hòa Lộc",
+    "name": "Hoà Lộc",
     "name_en": "Hoa Loc",
-    "full_name": "Xã Hòa Lộc",
+    "full_name": "Xã Hoà Lộc",
     "full_name_en": "Hoa Loc Commune",
     "code_name": "hoa_loc",
     "district_code": "838",
@@ -99978,9 +99978,9 @@
   },
   {
     "code": "28930",
-    "name": "Định Thủy",
+    "name": "Định Thuỷ",
     "name_en": "Dinh Thuy",
-    "full_name": "Xã Định Thủy",
+    "full_name": "Xã Định Thuỷ",
     "full_name_en": "Dinh Thuy Commune",
     "code_name": "dinh_thuy",
     "district_code": "833",
@@ -100199,9 +100199,9 @@
   },
   {
     "code": "28996",
-    "name": "Châu Hòa",
+    "name": "Châu Hoà",
     "name_en": "Chau Hoa",
-    "full_name": "Xã Châu Hòa",
+    "full_name": "Xã Châu Hoà",
     "full_name_en": "Chau Hoa Commune",
     "code_name": "chau_hoa",
     "district_code": "834",
@@ -100209,9 +100209,9 @@
   },
   {
     "code": "28999",
-    "name": "Lương Hòa",
+    "name": "Lương Hoà",
     "name_en": "Luong Hoa",
-    "full_name": "Xã Lương Hòa",
+    "full_name": "Xã Lương Hoà",
     "full_name_en": "Luong Hoa Commune",
     "code_name": "luong_hoa",
     "district_code": "834",
@@ -100412,9 +100412,9 @@
   },
   {
     "code": "29059",
-    "name": "Long Hòa",
+    "name": "Long Hoà",
     "name_en": "Long Hoa",
-    "full_name": "Xã Long Hòa",
+    "full_name": "Xã Long Hoà",
     "full_name_en": "Long Hoa Commune",
     "code_name": "long_hoa",
     "district_code": "835",
@@ -100542,9 +100542,9 @@
   },
   {
     "code": "29098",
-    "name": "Đại Hòa Lộc",
+    "name": "Đại Hoà Lộc",
     "name_en": "Dai Hoa Loc",
-    "full_name": "Xã Đại Hòa Lộc",
+    "full_name": "Xã Đại Hoà Lộc",
     "full_name_en": "Dai Hoa Loc Commune",
     "code_name": "dai_hoa_loc",
     "district_code": "835",
@@ -100605,9 +100605,9 @@
   },
   {
     "code": "29116",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Xã Mỹ Hòa",
+    "full_name": "Xã Mỹ Hoà",
     "full_name_en": "My Hoa Commune",
     "code_name": "my_hoa",
     "district_code": "836",
@@ -100633,8 +100633,8 @@
     "district_code": "836",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Mỹ Chánh Hòa",
-      "Mỹ Chánh Hòa"
+      "Xã Mỹ Chánh Hoà",
+      "Mỹ Chánh Hoà"
     ]
   },
   {
@@ -100759,9 +100759,9 @@
   },
   {
     "code": "29164",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "836",
@@ -100769,9 +100769,9 @@
   },
   {
     "code": "29167",
-    "name": "Tân Thủy",
+    "name": "Tân Thuỷ",
     "name_en": "Tan Thuy",
-    "full_name": "Xã Tân Thủy",
+    "full_name": "Xã Tân Thuỷ",
     "full_name_en": "Tan Thuy Commune",
     "code_name": "tan_thuy",
     "district_code": "836",
@@ -100799,9 +100799,9 @@
   },
   {
     "code": "29176",
-    "name": "An Hòa Tây",
+    "name": "An Hoà Tây",
     "name_en": "An Hoa Tay",
-    "full_name": "Xã An Hòa Tây",
+    "full_name": "Xã An Hoà Tây",
     "full_name_en": "An Hoa Tay Commune",
     "code_name": "an_hoa_tay",
     "district_code": "836",
@@ -100817,8 +100817,8 @@
     "district_code": "836",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã An Thủy",
-      "An Thủy"
+      "Xã An Thuỷ",
+      "An Thuỷ"
     ]
   },
   {
@@ -100906,9 +100906,9 @@
   },
   {
     "code": "29206",
-    "name": "Hòa Lợi",
+    "name": "Hoà Lợi",
     "name_en": "Hoa Loi",
-    "full_name": "Xã Hòa Lợi",
+    "full_name": "Xã Hoà Lợi",
     "full_name_en": "Hoa Loi Commune",
     "code_name": "hoa_loi",
     "district_code": "837",
@@ -101082,8 +101082,8 @@
     "district_code": "842",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Nguyệt Hóa",
-      "Nguyệt Hóa"
+      "Phường Nguyệt Hoá",
+      "Nguyệt Hoá"
     ]
   },
   {
@@ -101277,9 +101277,9 @@
   },
   {
     "code": "29311",
-    "name": "Hòa Ân",
+    "name": "Hoà Ân",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa Ân",
+    "full_name": "Xã Hoà Ân",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "845",
@@ -101357,9 +101357,9 @@
   },
   {
     "code": "29335",
-    "name": "Thông Hòa",
+    "name": "Thông Hoà",
     "name_en": "Thong Hoa",
-    "full_name": "Xã Thông Hòa",
+    "full_name": "Xã Thông Hoà",
     "full_name_en": "Thong Hoa Commune",
     "code_name": "thong_hoa",
     "district_code": "845",
@@ -101440,9 +101440,9 @@
   },
   {
     "code": "29359",
-    "name": "Hùng Hòa",
+    "name": "Hùng Hoà",
     "name_en": "Hung Hoa",
-    "full_name": "Xã Hùng Hòa",
+    "full_name": "Xã Hùng Hoà",
     "full_name_en": "Hung Hoa Commune",
     "code_name": "hung_hoa",
     "district_code": "846",
@@ -101480,9 +101480,9 @@
   },
   {
     "code": "29371",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "846",
@@ -101543,9 +101543,9 @@
   },
   {
     "code": "29389",
-    "name": "Lương Hòa",
+    "name": "Lương Hoà",
     "name_en": "Luong Hoa",
-    "full_name": "Xã Lương Hòa",
+    "full_name": "Xã Lương Hoà",
     "full_name_en": "Luong Hoa Commune",
     "code_name": "luong_hoa",
     "district_code": "847",
@@ -101563,9 +101563,9 @@
   },
   {
     "code": "29395",
-    "name": "Nguyệt Hóa",
+    "name": "Nguyệt Hoá",
     "name_en": "Nguyet Hoa",
-    "full_name": "Xã Nguyệt Hóa",
+    "full_name": "Xã Nguyệt Hoá",
     "full_name_en": "Nguyet Hoa Commune",
     "code_name": "nguyet_hoa",
     "district_code": "847",
@@ -101573,22 +101573,22 @@
   },
   {
     "code": "29398",
-    "name": "Hòa Thuận",
+    "name": "Hoà Thuận",
     "name_en": "Hoa Thuan",
-    "full_name": "Xã Hòa Thuận",
+    "full_name": "Xã Hoà Thuận",
     "full_name_en": "Hoa Thuan Commune",
     "code_name": "hoa_thuan",
     "district_code": "847",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Phường Hòa Thuận"
+      "Phường Hoà Thuận"
     ]
   },
   {
     "code": "29401",
-    "name": "Hòa Lợi",
+    "name": "Hoà Lợi",
     "name_en": "Hoa Loi",
-    "full_name": "Xã Hòa Lợi",
+    "full_name": "Xã Hoà Lợi",
     "full_name_en": "Hoa Loi Commune",
     "code_name": "hoa_loi",
     "district_code": "847",
@@ -101616,9 +101616,9 @@
   },
   {
     "code": "29410",
-    "name": "Hòa Minh",
+    "name": "Hoà Minh",
     "name_en": "Hoa Minh",
-    "full_name": "Xã Hòa Minh",
+    "full_name": "Xã Hoà Minh",
     "full_name_en": "Hoa Minh Commune",
     "code_name": "hoa_minh",
     "district_code": "847",
@@ -101626,9 +101626,9 @@
   },
   {
     "code": "29413",
-    "name": "Long Hòa",
+    "name": "Long Hoà",
     "name_en": "Long Hoa",
-    "full_name": "Xã Long Hòa",
+    "full_name": "Xã Long Hoà",
     "full_name_en": "Long Hoa Commune",
     "code_name": "long_hoa",
     "district_code": "847",
@@ -101682,9 +101682,9 @@
   },
   {
     "code": "29428",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Xã Mỹ Hòa",
+    "full_name": "Xã Mỹ Hoà",
     "full_name_en": "My Hoa Commune",
     "code_name": "my_hoa",
     "district_code": "848",
@@ -101706,9 +101706,9 @@
   },
   {
     "code": "29434",
-    "name": "Kim Hòa",
+    "name": "Kim Hoà",
     "name_en": "Kim Hoa",
-    "full_name": "Xã Kim Hòa",
+    "full_name": "Xã Kim Hoà",
     "full_name_en": "Kim Hoa Commune",
     "code_name": "kim_hoa",
     "district_code": "848",
@@ -101716,9 +101716,9 @@
   },
   {
     "code": "29437",
-    "name": "Hiệp Hòa",
+    "name": "Hiệp Hoà",
     "name_en": "Hiep Hoa",
-    "full_name": "Xã Hiệp Hòa",
+    "full_name": "Xã Hiệp Hoà",
     "full_name_en": "Hiep Hoa Commune",
     "code_name": "hiep_hoa",
     "district_code": "848",
@@ -101726,9 +101726,9 @@
   },
   {
     "code": "29440",
-    "name": "Thuận Hòa",
+    "name": "Thuận Hoà",
     "name_en": "Thuan Hoa",
-    "full_name": "Xã Thuận Hòa",
+    "full_name": "Xã Thuận Hoà",
     "full_name_en": "Thuan Hoa Commune",
     "code_name": "thuan_hoa",
     "district_code": "848",
@@ -101790,9 +101790,9 @@
   },
   {
     "code": "29458",
-    "name": "Thạnh Hòa Sơn",
+    "name": "Thạnh Hoà Sơn",
     "name_en": "Thanh Hoa Son",
-    "full_name": "Xã Thạnh Hòa Sơn",
+    "full_name": "Xã Thạnh Hoà Sơn",
     "full_name_en": "Thanh Hoa Son Commune",
     "code_name": "thanh_hoa_son",
     "district_code": "848",
@@ -102031,7 +102031,7 @@
     "district_code": "850",
     "administrative_unit_id": 8,
     "legacy_names": [
-      "Phường Trường Long Hòa"
+      "Phường Trường Long Hoà"
     ]
   },
   {
@@ -102066,9 +102066,9 @@
   },
   {
     "code": "29527",
-    "name": "Trường Long Hòa",
+    "name": "Trường Long Hoà",
     "name_en": "Truong Long Hoa",
-    "full_name": "Xã Trường Long Hòa",
+    "full_name": "Xã Trường Long Hoà",
     "full_name_en": "Truong Long Hoa Commune",
     "code_name": "truong_long_hoa",
     "district_code": "850",
@@ -102196,9 +102196,9 @@
   },
   {
     "code": "29566",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Phường Tân Hòa",
+    "full_name": "Phường Tân Hoà",
     "full_name_en": "Tan Hoa Ward",
     "code_name": "tan_hoa",
     "district_code": "855",
@@ -102236,9 +102236,9 @@
   },
   {
     "code": "29581",
-    "name": "Bình Hòa Phước",
+    "name": "Bình Hoà Phước",
     "name_en": "Binh Hoa Phuoc",
-    "full_name": "Xã Bình Hòa Phước",
+    "full_name": "Xã Bình Hoà Phước",
     "full_name_en": "Binh Hoa Phuoc Commune",
     "code_name": "binh_hoa_phuoc",
     "district_code": "857",
@@ -102246,9 +102246,9 @@
   },
   {
     "code": "29584",
-    "name": "Hòa Ninh",
+    "name": "Hoà Ninh",
     "name_en": "Hoa Ninh",
-    "full_name": "Xã Hòa Ninh",
+    "full_name": "Xã Hoà Ninh",
     "full_name_en": "Hoa Ninh Commune",
     "code_name": "hoa_ninh",
     "district_code": "857",
@@ -102327,9 +102327,9 @@
   },
   {
     "code": "29605",
-    "name": "Lộc Hòa",
+    "name": "Lộc Hoà",
     "name_en": "Loc Hoa",
-    "full_name": "Xã Lộc Hòa",
+    "full_name": "Xã Lộc Hoà",
     "full_name_en": "Loc Hoa Commune",
     "code_name": "loc_hoa",
     "district_code": "857",
@@ -102367,9 +102367,9 @@
   },
   {
     "code": "29617",
-    "name": "Hòa Phú",
+    "name": "Hoà Phú",
     "name_en": "Hoa Phu",
-    "full_name": "Xã Hòa Phú",
+    "full_name": "Xã Hoà Phú",
     "full_name_en": "Hoa Phu Commune",
     "code_name": "hoa_phu",
     "district_code": "857",
@@ -102427,9 +102427,9 @@
   },
   {
     "code": "29638",
-    "name": "Hòa Tịnh",
+    "name": "Hoà Tịnh",
     "name_en": "Hoa Tinh",
-    "full_name": "Xã Hòa Tịnh",
+    "full_name": "Xã Hoà Tịnh",
     "full_name_en": "Hoa Tinh Commune",
     "code_name": "hoa_tinh",
     "district_code": "858",
@@ -102747,9 +102747,9 @@
   },
   {
     "code": "29731",
-    "name": "Hòa Thạnh",
+    "name": "Hoà Thạnh",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hòa Thạnh",
+    "full_name": "Xã Hoà Thạnh",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "860",
@@ -102787,9 +102787,9 @@
   },
   {
     "code": "29743",
-    "name": "Hòa Hiệp",
+    "name": "Hoà Hiệp",
     "name_en": "Hoa Hiep",
-    "full_name": "Xã Hòa Hiệp",
+    "full_name": "Xã Hoà Hiệp",
     "full_name_en": "Hoa Hiep Commune",
     "code_name": "hoa_hiep",
     "district_code": "860",
@@ -103051,9 +103051,9 @@
   },
   {
     "code": "29815",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Xã Mỹ Hòa",
+    "full_name": "Xã Mỹ Hoà",
     "full_name_en": "My Hoa Commune",
     "code_name": "my_hoa",
     "district_code": "861",
@@ -103094,9 +103094,9 @@
   },
   {
     "code": "29830",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "862",
@@ -103104,9 +103104,9 @@
   },
   {
     "code": "29833",
-    "name": "Thới Hòa",
+    "name": "Thới Hoà",
     "name_en": "Thoi Hoa",
-    "full_name": "Xã Thới Hòa",
+    "full_name": "Xã Thới Hoà",
     "full_name_en": "Thoi Hoa Commune",
     "code_name": "thoi_hoa",
     "district_code": "862",
@@ -103330,9 +103330,9 @@
   },
   {
     "code": "29893",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "866",
@@ -103812,9 +103812,9 @@
   },
   {
     "code": "30019",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Xã An Hòa",
+    "full_name": "Xã An Hoà",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "871",
@@ -103931,9 +103931,9 @@
   },
   {
     "code": "30052",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Xã Mỹ Hòa",
+    "full_name": "Xã Mỹ Hoà",
     "full_name_en": "My Hoa Commune",
     "code_name": "my_hoa",
     "district_code": "872",
@@ -104201,9 +104201,9 @@
   },
   {
     "code": "30136",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "874",
@@ -104472,9 +104472,9 @@
   },
   {
     "code": "30214",
-    "name": "Hòa Thành",
+    "name": "Hoà Thành",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hòa Thành",
+    "full_name": "Xã Hoà Thành",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "876",
@@ -104502,9 +104502,9 @@
   },
   {
     "code": "30223",
-    "name": "Hòa Long",
+    "name": "Hoà Long",
     "name_en": "Hoa Long",
-    "full_name": "Xã Hòa Long",
+    "full_name": "Xã Hoà Long",
     "full_name_en": "Hoa Long Commune",
     "code_name": "hoa_long",
     "district_code": "876",
@@ -104545,9 +104545,9 @@
   },
   {
     "code": "30235",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "876",
@@ -104555,9 +104555,9 @@
   },
   {
     "code": "30238",
-    "name": "Định Hòa",
+    "name": "Định Hoà",
     "name_en": "Dinh Hoa",
-    "full_name": "Xã Định Hòa",
+    "full_name": "Xã Định Hoà",
     "full_name_en": "Dinh Hoa Commune",
     "code_name": "dinh_hoa",
     "district_code": "876",
@@ -104565,9 +104565,9 @@
   },
   {
     "code": "30241",
-    "name": "Phong Hòa",
+    "name": "Phong Hoà",
     "name_en": "Phong Hoa",
-    "full_name": "Xã Phong Hòa",
+    "full_name": "Xã Phong Hoà",
     "full_name_en": "Phong Hoa Commune",
     "code_name": "phong_hoa",
     "district_code": "876",
@@ -104685,9 +104685,9 @@
   },
   {
     "code": "30277",
-    "name": "Hòa Tân",
+    "name": "Hoà Tân",
     "name_en": "Hoa Tan",
-    "full_name": "Xã Hòa Tân",
+    "full_name": "Xã Hoà Tân",
     "full_name_en": "Hoa Tan Commune",
     "code_name": "hoa_tan",
     "district_code": "877",
@@ -104795,9 +104795,9 @@
   },
   {
     "code": "30307",
-    "name": "Mỹ Hòa",
+    "name": "Mỹ Hoà",
     "name_en": "My Hoa",
-    "full_name": "Phường Mỹ Hòa",
+    "full_name": "Phường Mỹ Hoà",
     "full_name_en": "My Hoa Ward",
     "code_name": "my_hoa",
     "district_code": "883",
@@ -104827,8 +104827,8 @@
     "district_code": "883",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Mỹ Hòa Hưng",
-      "Mỹ Hòa Hưng"
+      "Xã Mỹ Hoà Hưng",
+      "Mỹ Hoà Hưng"
     ]
   },
   {
@@ -105110,9 +105110,9 @@
   },
   {
     "code": "30385",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "887",
@@ -105289,8 +105289,8 @@
     "district_code": "888",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Lạc",
-      "Hòa Lạc"
+      "Xã Hoà Lạc",
+      "Hoà Lạc"
     ]
   },
   {
@@ -105365,9 +105365,9 @@
   },
   {
     "code": "30457",
-    "name": "Tân Hòa",
+    "name": "Tân Hoà",
     "name_en": "Tan Hoa",
-    "full_name": "Xã Tân Hòa",
+    "full_name": "Xã Tân Hoà",
     "full_name_en": "Tan Hoa Commune",
     "code_name": "tan_hoa",
     "district_code": "888",
@@ -105399,9 +105399,9 @@
   },
   {
     "code": "30466",
-    "name": "Khánh Hòa",
+    "name": "Khánh Hoà",
     "name_en": "Khanh Hoa",
-    "full_name": "Xã Khánh Hòa",
+    "full_name": "Xã Khánh Hoà",
     "full_name_en": "Khanh Hoa Commune",
     "code_name": "khanh_hoa",
     "district_code": "889",
@@ -105482,9 +105482,9 @@
   },
   {
     "code": "30490",
-    "name": "Bình Thủy",
+    "name": "Bình Thuỷ",
     "name_en": "Binh Thuy",
-    "full_name": "Xã Bình Thủy",
+    "full_name": "Xã Bình Thuỷ",
     "full_name_en": "Binh Thuy Commune",
     "code_name": "binh_thuy",
     "district_code": "889",
@@ -105859,9 +105859,9 @@
   },
   {
     "code": "30592",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Xã An Hòa",
+    "full_name": "Xã An Hoà",
     "full_name_en": "An Hoa Commune",
     "code_name": "an_hoa",
     "district_code": "892",
@@ -105909,9 +105909,9 @@
   },
   {
     "code": "30607",
-    "name": "Bình Hòa",
+    "name": "Bình Hoà",
     "name_en": "Binh Hoa",
-    "full_name": "Xã Bình Hòa",
+    "full_name": "Xã Bình Hoà",
     "full_name_en": "Binh Hoa Commune",
     "code_name": "binh_hoa",
     "district_code": "892",
@@ -105929,9 +105929,9 @@
   },
   {
     "code": "30613",
-    "name": "Hòa Bình Thạnh",
+    "name": "Hoà Bình Thạnh",
     "name_en": "Hoa Binh Thanh",
-    "full_name": "Xã Hòa Bình Thạnh",
+    "full_name": "Xã Hoà Bình Thạnh",
     "full_name_en": "Hoa Binh Thanh Commune",
     "code_name": "hoa_binh_thanh",
     "district_code": "892",
@@ -106153,9 +106153,9 @@
   },
   {
     "code": "30676",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Xã Hòa Bình",
+    "full_name": "Xã Hoà Bình",
     "full_name_en": "Hoa Binh Commune",
     "code_name": "hoa_binh",
     "district_code": "893",
@@ -106163,9 +106163,9 @@
   },
   {
     "code": "30679",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "893",
@@ -106195,8 +106195,8 @@
     "district_code": "894",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Phú Hòa",
-      "Phú Hòa"
+      "Xã Phú Hoà",
+      "Phú Hoà"
     ]
   },
   {
@@ -106410,9 +106410,9 @@
   },
   {
     "code": "30748",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Phường An Hòa",
+    "full_name": "Phường An Hoà",
     "full_name_en": "An Hoa Ward",
     "code_name": "an_hoa",
     "district_code": "899",
@@ -106587,9 +106587,9 @@
   },
   {
     "code": "30796",
-    "name": "Tân Khánh Hòa",
+    "name": "Tân Khánh Hoà",
     "name_en": "Tan Khanh Hoa",
-    "full_name": "Xã Tân Khánh Hòa",
+    "full_name": "Xã Tân Khánh Hoà",
     "full_name_en": "Tan Khanh Hoa Commune",
     "code_name": "tan_khanh_hoa",
     "district_code": "914",
@@ -106621,9 +106621,9 @@
   },
   {
     "code": "30802",
-    "name": "Hòa Điền",
+    "name": "Hoà Điền",
     "name_en": "Hoa Dien",
-    "full_name": "Xã Hòa Điền",
+    "full_name": "Xã Hoà Điền",
     "full_name_en": "Hoa Dien Commune",
     "code_name": "hoa_dien",
     "district_code": "902",
@@ -106631,9 +106631,9 @@
   },
   {
     "code": "30805",
-    "name": "Dương Hòa",
+    "name": "Dương Hoà",
     "name_en": "Duong Hoa",
-    "full_name": "Xã Dương Hòa",
+    "full_name": "Xã Dương Hoà",
     "full_name_en": "Duong Hoa Commune",
     "code_name": "duong_hoa",
     "district_code": "902",
@@ -106991,9 +106991,9 @@
   },
   {
     "code": "30892",
-    "name": "Vĩnh Hòa Hiệp",
+    "name": "Vĩnh Hoà Hiệp",
     "name_en": "Vinh Hoa Hiep",
-    "full_name": "Xã Vĩnh Hòa Hiệp",
+    "full_name": "Xã Vĩnh Hoà Hiệp",
     "full_name_en": "Vinh Hoa Hiep Commune",
     "code_name": "vinh_hoa_hiep",
     "district_code": "905",
@@ -107011,9 +107011,9 @@
   },
   {
     "code": "30895",
-    "name": "Minh Hòa",
+    "name": "Minh Hoà",
     "name_en": "Minh Hoa",
-    "full_name": "Xã Minh Hòa",
+    "full_name": "Xã Minh Hoà",
     "full_name_en": "Minh Hoa Commune",
     "code_name": "minh_hoa",
     "district_code": "905",
@@ -107084,9 +107084,9 @@
   },
   {
     "code": "30916",
-    "name": "Thạnh Hòa",
+    "name": "Thạnh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thạnh Hòa",
+    "full_name": "Xã Thạnh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "906",
@@ -107154,9 +107154,9 @@
   },
   {
     "code": "30934",
-    "name": "Hòa Hưng",
+    "name": "Hoà Hưng",
     "name_en": "Hoa Hung",
-    "full_name": "Xã Hòa Hưng",
+    "full_name": "Xã Hoà Hưng",
     "full_name_en": "Hoa Hung Commune",
     "code_name": "hoa_hung",
     "district_code": "906",
@@ -107214,15 +107214,15 @@
   },
   {
     "code": "30949",
-    "name": "Hòa Thuận",
+    "name": "Hoà Thuận",
     "name_en": "Hoa Thuan",
-    "full_name": "Xã Hòa Thuận",
+    "full_name": "Xã Hoà Thuận",
     "full_name_en": "Hoa Thuan Commune",
     "code_name": "hoa_thuan",
     "district_code": "906",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã  Hòa Thuận"
+      "Xã  Hoà Thuận"
     ]
   },
   {
@@ -107250,9 +107250,9 @@
   },
   {
     "code": "30955",
-    "name": "Vĩnh Hòa Hưng Bắc",
+    "name": "Vĩnh Hoà Hưng Bắc",
     "name_en": "Vinh Hoa Hung Bac",
-    "full_name": "Xã Vĩnh Hòa Hưng Bắc",
+    "full_name": "Xã Vĩnh Hoà Hưng Bắc",
     "full_name_en": "Vinh Hoa Hung Bac Commune",
     "code_name": "vinh_hoa_hung_bac",
     "district_code": "907",
@@ -107260,9 +107260,9 @@
   },
   {
     "code": "30958",
-    "name": "Định Hòa",
+    "name": "Định Hoà",
     "name_en": "Dinh Hoa",
-    "full_name": "Xã Định Hòa",
+    "full_name": "Xã Định Hoà",
     "full_name_en": "Dinh Hoa Commune",
     "code_name": "dinh_hoa",
     "district_code": "907",
@@ -107290,9 +107290,9 @@
   },
   {
     "code": "30967",
-    "name": "Thủy Liễu",
+    "name": "Thuỷ Liễu",
     "name_en": "Thuy Lieu",
-    "full_name": "Xã Thủy Liễu",
+    "full_name": "Xã Thuỷ Liễu",
     "full_name_en": "Thuy Lieu Commune",
     "code_name": "thuy_lieu",
     "district_code": "907",
@@ -107300,16 +107300,16 @@
   },
   {
     "code": "30970",
-    "name": "Vĩnh Hòa Hưng Nam",
+    "name": "Vĩnh Hoà Hưng Nam",
     "name_en": "Vinh Hoa Hung Nam",
-    "full_name": "Xã Vĩnh Hòa Hưng Nam",
+    "full_name": "Xã Vĩnh Hoà Hưng Nam",
     "full_name_en": "Vinh Hoa Hung Nam Commune",
     "code_name": "vinh_hoa_hung_nam",
     "district_code": "907",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Vĩnh Hòa Hưng",
-      "Vĩnh Hòa Hưng"
+      "Xã Vĩnh Hoà Hưng",
+      "Vĩnh Hoà Hưng"
     ]
   },
   {
@@ -107492,9 +107492,9 @@
   },
   {
     "code": "31024",
-    "name": "Đông Hòa",
+    "name": "Đông Hoà",
     "name_en": "Dong Hoa",
-    "full_name": "Xã Đông Hòa",
+    "full_name": "Xã Đông Hoà",
     "full_name_en": "Dong Hoa Commune",
     "code_name": "dong_hoa",
     "district_code": "909",
@@ -107609,9 +107609,9 @@
   },
   {
     "code": "31054",
-    "name": "Vĩnh Hòa",
+    "name": "Vĩnh Hoà",
     "name_en": "Vinh Hoa",
-    "full_name": "Xã Vĩnh Hòa",
+    "full_name": "Xã Vĩnh Hoà",
     "full_name_en": "Vinh Hoa Commune",
     "code_name": "vinh_hoa",
     "district_code": "913",
@@ -107854,9 +107854,9 @@
   },
   {
     "code": "31120",
-    "name": "An Hòa",
+    "name": "An Hoà",
     "name_en": "An Hoa",
-    "full_name": "Phường An Hòa",
+    "full_name": "Phường An Hoà",
     "full_name_en": "An Hoa Ward",
     "code_name": "an_hoa",
     "district_code": "916",
@@ -107972,9 +107972,9 @@
   },
   {
     "code": "31154",
-    "name": "Thới Hòa",
+    "name": "Thới Hoà",
     "name_en": "Thoi Hoa",
-    "full_name": "Phường Thới Hòa",
+    "full_name": "Phường Thới Hoà",
     "full_name_en": "Thoi Hoa Ward",
     "code_name": "thoi_hoa",
     "district_code": "917",
@@ -108032,9 +108032,9 @@
   },
   {
     "code": "31168",
-    "name": "Bình Thủy",
+    "name": "Bình Thuỷ",
     "name_en": "Binh Thuy",
-    "full_name": "Phường Bình Thủy",
+    "full_name": "Phường Bình Thuỷ",
     "full_name_en": "Binh Thuy Ward",
     "code_name": "binh_thuy",
     "district_code": "918",
@@ -108092,9 +108092,9 @@
   },
   {
     "code": "31180",
-    "name": "Long Hòa",
+    "name": "Long Hoà",
     "name_en": "Long Hoa",
-    "full_name": "Phường Long Hòa",
+    "full_name": "Phường Long Hoà",
     "full_name_en": "Long Hoa Ward",
     "code_name": "long_hoa",
     "district_code": "918",
@@ -109057,9 +109057,9 @@
   },
   {
     "code": "31405",
-    "name": "Thạnh Hòa",
+    "name": "Thạnh Hoà",
     "name_en": "Thanh Hoa",
-    "full_name": "Xã Thạnh Hòa",
+    "full_name": "Xã Thạnh Hoà",
     "full_name_en": "Thanh Hoa Commune",
     "code_name": "thanh_hoa",
     "district_code": "934",
@@ -109110,9 +109110,9 @@
   },
   {
     "code": "31420",
-    "name": "Hòa Mỹ",
+    "name": "Hoà Mỹ",
     "name_en": "Hoa My",
-    "full_name": "Xã Hòa Mỹ",
+    "full_name": "Xã Hoà Mỹ",
     "full_name_en": "Hoa My Commune",
     "code_name": "hoa_my",
     "district_code": "934",
@@ -109120,9 +109120,9 @@
   },
   {
     "code": "31423",
-    "name": "Hòa An",
+    "name": "Hoà An",
     "name_en": "Hoa An",
-    "full_name": "Xã Hòa An",
+    "full_name": "Xã Hoà An",
     "full_name_en": "Hoa An Commune",
     "code_name": "hoa_an",
     "district_code": "934",
@@ -109409,9 +109409,9 @@
   },
   {
     "code": "31484",
-    "name": "Thuận Hòa",
+    "name": "Thuận Hoà",
     "name_en": "Thuan Hoa",
-    "full_name": "Xã Thuận Hòa",
+    "full_name": "Xã Thuận Hoà",
     "full_name_en": "Thuan Hoa Commune",
     "code_name": "thuan_hoa",
     "district_code": "936",
@@ -109610,9 +109610,9 @@
   },
   {
     "code": "31534",
-    "name": "Xuân Hòa",
+    "name": "Xuân Hoà",
     "name_en": "Xuan Hoa",
-    "full_name": "Xã Xuân Hòa",
+    "full_name": "Xã Xuân Hoà",
     "full_name_en": "Xuan Hoa Commune",
     "code_name": "xuan_hoa",
     "district_code": "943",
@@ -109760,9 +109760,9 @@
   },
   {
     "code": "31576",
-    "name": "Thuận Hòa",
+    "name": "Thuận Hoà",
     "name_en": "Thuan Hoa",
-    "full_name": "Xã Thuận Hòa",
+    "full_name": "Xã Thuận Hoà",
     "full_name_en": "Thuan Hoa Commune",
     "code_name": "thuan_hoa",
     "district_code": "942",
@@ -110260,23 +110260,23 @@
   },
   {
     "code": "31717",
-    "name": "Hòa Tú 1",
+    "name": "Hoà Tú 1",
     "name_en": "Hoa Tu 1",
-    "full_name": "Xã Hòa Tú 1",
+    "full_name": "Xã Hoà Tú 1",
     "full_name_en": "Commune Hoa Tu 1",
     "code_name": "hoa_tu_1",
     "district_code": "947",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Hòa Tú",
-      "Hòa Tú"
+      "Xã Hoà Tú",
+      "Hoà Tú"
     ]
   },
   {
     "code": "31720",
-    "name": "Gia Hòa 1",
+    "name": "Gia Hoà 1",
     "name_en": "Gia Hoa 1",
-    "full_name": "Xã Gia Hòa 1",
+    "full_name": "Xã Gia Hoà 1",
     "full_name_en": "Commune Gia Hoa 1",
     "code_name": "gia_hoa_1",
     "district_code": "947",
@@ -110294,23 +110294,23 @@
   },
   {
     "code": "31726",
-    "name": "Gia Hòa 2",
+    "name": "Gia Hoà 2",
     "name_en": "Gia Hoa 2",
-    "full_name": "Xã Gia Hòa 2",
+    "full_name": "Xã Gia Hoà 2",
     "full_name_en": "Commune Gia Hoa 2",
     "code_name": "gia_hoa_2",
     "district_code": "947",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Xã Gia Hòa",
-      "Gia Hòa"
+      "Xã Gia Hoà",
+      "Gia Hoà"
     ]
   },
   {
     "code": "31729",
-    "name": "Hòa Tú II",
+    "name": "Hoà Tú II",
     "name_en": "Hoa Tu II",
-    "full_name": "Xã Hòa Tú II",
+    "full_name": "Xã Hoà Tú II",
     "full_name_en": "Hoa Tu II Commune",
     "code_name": "hoa_tu_ii",
     "district_code": "947",
@@ -110522,9 +110522,9 @@
   },
   {
     "code": "31786",
-    "name": "Hòa Đông",
+    "name": "Hoà Đông",
     "name_en": "Hoa Dong",
-    "full_name": "Xã Hòa Đông",
+    "full_name": "Xã Hoà Đông",
     "full_name_en": "Hoa Dong Commune",
     "code_name": "hoa_dong",
     "district_code": "950",
@@ -110532,9 +110532,9 @@
   },
   {
     "code": "31789",
-    "name": "Khánh Hòa",
+    "name": "Khánh Hoà",
     "name_en": "Khanh Hoa",
-    "full_name": "Phường Khánh Hòa",
+    "full_name": "Phường Khánh Hoà",
     "full_name_en": "Khanh Hoa Ward",
     "code_name": "khanh_hoa",
     "district_code": "950",
@@ -110562,9 +110562,9 @@
   },
   {
     "code": "31798",
-    "name": "Lạc Hòa",
+    "name": "Lạc Hoà",
     "name_en": "Lac Hoa",
-    "full_name": "Xã Lạc Hòa",
+    "full_name": "Xã Lạc Hoà",
     "full_name_en": "Lac Hoa Commune",
     "code_name": "lac_hoa",
     "district_code": "950",
@@ -110602,9 +110602,9 @@
   },
   {
     "code": "31810",
-    "name": "Lai Hòa",
+    "name": "Lai Hoà",
     "name_en": "Lai Hoa",
-    "full_name": "Xã Lai Hòa",
+    "full_name": "Xã Lai Hoà",
     "full_name_en": "Lai Hoa Commune",
     "code_name": "lai_hoa",
     "district_code": "950",
@@ -110756,9 +110756,9 @@
   },
   {
     "code": "31852",
-    "name": "Ninh Hòa",
+    "name": "Ninh Hoà",
     "name_en": "Ninh Hoa",
-    "full_name": "Xã Ninh Hòa",
+    "full_name": "Xã Ninh Hoà",
     "full_name_en": "Ninh Hoa Commune",
     "code_name": "ninh_hoa",
     "district_code": "956",
@@ -110895,15 +110895,15 @@
   },
   {
     "code": "31891",
-    "name": "Hòa Bình",
+    "name": "Hoà Bình",
     "name_en": "Hoa Binh",
-    "full_name": "Thị trấn Hòa Bình",
+    "full_name": "Thị trấn Hoà Bình",
     "full_name_en": "Hoa Binh Township",
     "code_name": "hoa_binh",
     "district_code": "961",
     "administrative_unit_id": 9,
     "legacy_names": [
-      "Xã Hòa Bình"
+      "Xã Hoà Bình"
     ]
   },
   {
@@ -111428,9 +111428,9 @@
   },
   {
     "code": "32038",
-    "name": "Hòa Thành",
+    "name": "Hoà Thành",
     "name_en": "Hoa Thanh",
-    "full_name": "Xã Hòa Thành",
+    "full_name": "Xã Hoà Thành",
     "full_name_en": "Hoa Thanh Commune",
     "code_name": "hoa_thanh",
     "district_code": "964",
@@ -111438,15 +111438,15 @@
   },
   {
     "code": "32041",
-    "name": "Hòa Tân",
+    "name": "Hoà Tân",
     "name_en": "Hoa Tan",
-    "full_name": "Xã Hòa Tân",
+    "full_name": "Xã Hoà Tân",
     "full_name_en": "Hoa Tan Commune",
     "code_name": "hoa_tan",
     "district_code": "964",
     "administrative_unit_id": 10,
     "legacy_names": [
-      "Phường Hòa Thành"
+      "Phường Hoà Thành"
     ]
   },
   {
@@ -111461,9 +111461,9 @@
   },
   {
     "code": "32047",
-    "name": "Khánh Hòa",
+    "name": "Khánh Hoà",
     "name_en": "Khanh Hoa",
-    "full_name": "Xã Khánh Hòa",
+    "full_name": "Xã Khánh Hoà",
     "full_name_en": "Khanh Hoa Commune",
     "code_name": "khanh_hoa",
     "district_code": "966",

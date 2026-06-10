@@ -136,9 +136,9 @@
   },
   {
     "code": "38",
-    "name": "Thanh Hóa",
+    "name": "Thanh Hoá",
     "name_en": "Thanh Hoa",
-    "full_name": "Tỉnh Thanh Hóa",
+    "full_name": "Tỉnh Thanh Hoá",
     "full_name_en": "Thanh Hoa Province",
     "code_name": "thanh_hoa",
     "administrative_unit_id": 2
@@ -208,9 +208,9 @@
   },
   {
     "code": "56",
-    "name": "Khánh Hòa",
+    "name": "Khánh Hoà",
     "name_en": "Khanh Hoa",
-    "full_name": "Tỉnh Khánh Hòa",
+    "full_name": "Tỉnh Khánh Hoà",
     "full_name_en": "Khanh Hoa Province",
     "code_name": "khanh_hoa",
     "administrative_unit_id": 2

@@ -1,0 +1,216 @@
+﻿row,input_address,street_address,format,is_new,province_name,province_full_name,province_id,province_code,district_name,district_full_name,district_id,district_code,ward_name,ward_full_name,ward_id,ward_code
+1,"91/34A Trần Tân, Tân Sơn Nhì, Tân Phú, Hồ Chí Minh",91/34A Trần Tân,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Tân Phú,Quận Tân Phú,767,767,Phường Tân Sơn Nhì,Phường Tân Sơn Nhì,27010,27010
+2,"44, Khu Dân Cư 7, Áp Cây Xăng Phú Túc, Định Quán, Đồng Nai",44 Khu Dân Cư 7 Áp Cây Xăng,old,False,Đồng Nai,Tỉnh Đồng Nai,75,75,Định Quán,Huyện Định Quán,736,736,Xã Phú Túc,Xã Phú Túc,26242,26242
+3,"68 Đường Tôn Thất Hiệp, Phường 11, Quận 11, TP. Hồ Chí Minh",68 Đường Tôn Thất Hiệp,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 11,Quận 11,772,772,Phường 11,Phường 11,27226,27226
+4,"Thôn Mã Hoa Thủy, Lệ Thủy, Quảng Bình",Thôn Mã,old,False,Quảng Bình,Tỉnh Quảng Bình,44,44,Lệ Thuỷ,Huyện Lệ Thuỷ,457,457,Xã Hoa Thuỷ,Xã Hoa Thuỷ,19258,19258
+5,"Khu Phố Phú Nghị, Hòa Lợi, Thị xã Bến Cát, Bình Dương",Khu Phố Phú Nghị,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Bến Cát,Thành phố Bến Cát,721,721,Phường Hoà Lợi,Phường Hoà Lợi,25849,25849
+6,"29 Đường 3/2, Phường 11, Quận 10, TP.Hồ Chí Minh",29 Đường 3/2,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 10,Quận 10,771,771,Phường 11,Phường 11,27175,27175
+7,"Thôn Giang Ché, Giang Hải, Phú Lộc, Thừa Thiên Huế",Thôn Giang Ché,old,False,Huế,Thành phố Huế,46,46,Phú Lộc,Huyện Phú Lộc,482,482,Xã Giang Hải,Xã Giang Hải,20122,20122
+8,"Nguyễn Văn Dung, P.6 Gò Vấp, TP.HCM",Nguyễn Văn Dung,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Gò Vấp,Quận Gò Vấp,764,764,Phường 6,Phường 6,26876,26876
+9,"170/41 Vườn Lài, Tân Thành, Tân Phú, Hồ Chí Minh",170/41 Vườn Lài,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Tân Phú,Quận Tân Phú,767,767,Phường Tân Thành,Phường Tân Thành,27022,27022
+10,"75/3, Tổ 07, KP7 Tân Hưng Thuận, Quận 12, TP. Hồ Chí Minh",75/3 Tổ 07 KP7,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 12,Quận 12,761,761,Phường Tân Hưng Thuận,Phường Tân Hưng Thuận,26787,26787
+11,"499, Tổ 25, KP2 Trung Mỹ Tây, Quận 12, TP.Hồ Chí Minh",499 Tổ 25 KP2,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 12,Quận 12,761,761,Phường Trung Mỹ Tây,Phường Trung Mỹ Tây,26785,26785
+12,"51 C/x Đường Sắt, Lý Thái Tổ, P. 01, Quận 3, TP. Hồ Chí Minh",51 C/x Đường Sắt Lý Thái Tổ,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 3,Quận 3,770,770,Phường 1,Phường 1,27160,27160
+13,"Phú Thượng, Kỳ Phú, Kỳ Anh, Hà Tĩnh",Phú Thượng,old,False,Hà Tĩnh,Tỉnh Hà Tĩnh,42,42,Kỳ Anh,Huyện Kỳ Anh,447,447,Xã Kỳ Phú,Xã Kỳ Phú,18763,18763
+14,"Tổ Dân Phố 5 Thị trấn Phước An, Krông Pắc, Đắk Lắk",Tổ Dân Phố 5,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Krông Pắc,Huyện Krông Pắc,654,654,Thị trấn Phước An,Thị trấn Phước An,24490,24490
+15,"125/24, Đường Số 9, Phường 9, Gò Vấp, TP.Hồ Chí Minh",125/24 Đường Số,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Gò Vấp,Quận Gò Vấp,764,764,Phường 9,Phường 9,26897,26897
+16,"402, Lô A1, C/ Cư, Hòa Bình, P14, Quận 10, TP. Hồ Chí Minh",402 Lô A1 C/ Cư Hòa Bình,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 10,Quận 10,771,771,Phường 14,Phường 14,27169,27169
+17,"Thôn 4, Cư Yang, Ea Kar, Đắk Lắk",Thôn 4,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Ea Kar,Huyện Ea Kar,651,651,Xã Cư Yang,Xã Cư Yang,24406,24406
+18,"Khu Phố 2, Thị trấn Tân Khai, Hớn Quản, Bình Phước",Khu Phố 2,old,False,Bình Phước,Tỉnh Bình Phước,70,70,Hớn Quản,Huyện Hớn Quản,694,694,Thị trấn Tân Khai,Thị trấn Tân Khai,25357,25357
+19,"117/117/7 Hồ Văn Long, Tân Tạo, Bình Tân, TP.HCM",117/117/7 Hồ Văn Long,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Bình Tân,Quận Bình Tân,777,777,Phường Tân Tạo,Phường Tân Tạo,27454,27454
+20,"Tháp Lĩnh, Hoàng Giang, Nông Cống, Thanh Hóa",Tháp Lĩnh,old,False,Thanh Hoá,Tỉnh Thanh Hoá,38,38,Nông Cống,Huyện Nông Cống,404,404,Xã Hoàng Giang,Xã Hoàng Giang,16294,16294
+21,"2/42B Cao Thắng, Phường 5, Quận 3, TP. Hồ Chí Minh",2/42B Cao Thắng,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 3,Quận 3,770,770,Phường 5,Phường 5,27151,27151
+22,"TDP 11, Pơng Drang, Krông Búk, Đắk Lắk",TDP 11,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Krông Búk,Huyện Krông Búk,649,649,Xã Pơng Drang,Xã Pơng Drang,24316,24316
+23,"Ấp Rẫy, Thị trấn Tân Hiệp, Châu Thành, Tiền Giang",Ấp Rẫy,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Châu Thành,Huyện Châu Thành,821,821,Thị trấn Tân Hiệp,Thị trấn Tân Hiệp,28519,28519
+24,"An Bình, Thành phố Dĩ An, Bình Dương",,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Dĩ An,Thành phố Dĩ An,724,724,Phường An Bình,Phường An Bình,25960,25960
+25,"2/28, kp. Đông Tân, Dĩ An, Thành phố Dĩ An, Bình Dương",2/28 kp Đông Tân,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Dĩ An,Thành phố Dĩ An,724,724,Phường Dĩ An,Phường Dĩ An,25942,25942
+26,"Tổ 6, kp 3, Hội Nghĩa, Thị xã Tân Uyên, Bình Dương",Tổ 6 kp 3,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Tân Uyên,Thành phố Tân Uyên,723,723,Hội Nghĩa,Phường Hội Nghĩa,25915,25915
+27,"189A Hòa Bình, Hiệp Tân, Tân Phú, TP. Hồ Chí Minh",189A Hòa Bình,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Tân Phú,Quận Tân Phú,767,767,Phường Hiệp Tân,Phường Hiệp Tân,27037,27037
+28,"Thôn Nam Tiến, Kỳ Bắc, Kỳ Anh, Hà Tĩnh",Thôn Nam Tiến,old,False,Hà Tĩnh,Tỉnh Hà Tĩnh,42,42,Kỳ Anh,Huyện Kỳ Anh,447,447,Xã Kỳ Bắc,Xã Kỳ Bắc,18760,18760
+29,"Thôn 1 Đức Phú, Tánh Linh, Bình Thuận",Thôn 1,old,False,Bình Thuận,Tỉnh Bình Thuận,60,60,Tánh Linh,Huyện Tánh Linh,599,599,Xã Đức Phú,Xã Đức Phú,23170,23170
+30,"TDP Kim 1 Phượng Sơn, Thị xã Chū, Bắc Giang",TDP Kim 1,old,False,Bắc Giang,Tỉnh Bắc Giang,24,24,Chũ,Thị xã Chũ,224,224,Phường Phượng Sơn,Phường Phượng Sơn,07612,07612
+31,"Ấp Mỹ Quới Mỹ Đức Đông, Cái Bè, Tiền Giang",Ấp Mỹ Quới,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Cái Bè,Huyện Cái Bè,819,819,Xã Mỹ Đức Đông,Xã Mỹ Đức Đông,28405,28405
+32,"Khu Phố 6, Thới Hòa, Thị xã Bến Cát, Bình Dương",Khu Phố 6,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Bến Cát,Thành phố Bến Cát,721,721,Phường Thới Hoà,Phường Thới Hoà,25846,25846
+33,"Áp Vùng Tây, Long Tân, Dầu Tiếng, Bình Dương",Áp Vùng Tây,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Dầu Tiếng,Huyện Dầu Tiếng,720,720,Xã Long Tân,Xã Long Tân,25804,25804
+34,"4, Trần Quang Khải, P.Tân Định, Quận 1, TP.Hồ Chí Minh",4 Trần Quang Khải,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Quận 1,Quận 1,760,760,Phường Tân Định,Phường Tân Định,26734,26734
+35,"Thôn Gia Hội, Mỹ Phong, Phú Mỹ, Bình Định",Thôn Gia Hội,old,False,Bình Định,Tỉnh Bình Định,52,52,Phù Mỹ,Huyện Phù Mỹ,545,545,Xã Mỹ Phong,Xã Mỹ Phong,21754,21754
+36,"Nhóm 9 - Cao Cường Đông Quang, Ba Vì, Hà Nội",Nhóm 9 Cao Cường Đông Quang,old,False,Hà Nội,Thành phố Hà Nội,01,01,Ba Vì,Huyện Ba Vì,271,271,Xã Đông Quang,Xã Đông Quang,09679,09679
+37,"B15.18 A1 Celadon City, Số 2 Đường N4, Tân Sơn Nhì, TP. Hồ Chí Minh",B15 18 A1 Celadon City Số 2 Đường N4,new,True,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,,,,,Phường Tân Sơn Nhì,Phường Tân Sơn Nhì,27019,27019
+38,"Thôn Lương Hà, la BLỨ, Chư Pưh, Gia Lai",Thôn Lương Hà la BLỨ,old,False,Gia Lai,Tỉnh Gia Lai,52,52,Chư Pưh,Huyện Chư Pưh,639,639,Xã Chư Pưh,Xã Chư Pưh,23942,23942
+39,"319A Nguyễn Sơn, Phú Thạnh, Tân Phú, Hồ Chí Minh",319A Nguyễn Sơn,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Tân Phú,Quận Tân Phú,767,767,Phường Phú Thạnh,Phường Phú Thạnh,27028,27028
+40,"Tổ 6, Ấp 3 Phước Thái, Long Thành, Đồng Nai",Tổ 6 Ấp 3,old,False,Đồng Nai,Tỉnh Đồng Nai,75,75,Long Thành,Huyện Long Thành,740,740,Xã Phước Thái,Xã Phước Thái,26422,26422
+41,"Tổ 1, Khu Phố 3 Thị trấn Trảng Bom, Trảng Bom, Đồng Nai",Tổ 1 Khu Phố 3,old,False,Đồng Nai,Tỉnh Đồng Nai,75,75,Trảng Bom,Huyện Trảng Bom,737,737,Xã Trảng Bom,Xã Trảng Bom,26248,26248
+42,"266/2A Bach Đằng, P24, Bình Thạnh, TP. Hồ Chí Minh",266/2A Bach Đằng,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Bình Thạnh,Quận Bình Thạnh,765,765,Phường 14,Phường 14,26929,26929
+43,"Thôn Hiệp Hưng, Bình Hải, Thăng Bình, Quảng Nam",Thôn Hiệp Hưng,old,False,Quảng Nam,Tỉnh Quảng Nam,49,49,Thăng Bình,Huyện Thăng Bình,513,513,Xã Bình Hải,Xã Bình Hải,20839,20839
+44,"25 Đ/S 3A, KDC Gia Hòa, Ấp 5, Phong Phú, BC, TP. HCM",25 Đ/S 3A KDC Gia Hòa Ấp 5,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Bình Chánh,Huyện Bình Chánh,785,785,Xã Phong Phú,Xã Phong Phú,27622,27622
+45,"Khu Xóm Làng Yên Dương, Cẩm Khê, Phú Thọ",Khu Xóm Làng,old,False,Phú Thọ,Tỉnh Phú Thọ,25,25,Cẩm Khê,Huyện Cẩm Khê,235,235,Xã Yên Dưỡng,Xã Yên Dưỡng,08422,08422
+46,"Ấp Tân Phát, Đồi 61, Trảng Bom, Đồng Nai",Ấp Tân Phát,old,False,Đồng Nai,Tỉnh Đồng Nai,75,75,Trảng Bom,Huyện Trảng Bom,737,737,Xã Đồi 61,Xã Đồi 61,26284,26284
+47,"Ngọc Diêm 2, Quảng Chính, Quảng Xương, Thanh Hóa",Ngọc Diêm 2,old,False,Thanh Hoá,Tỉnh Thanh Hoá,38,38,Quảng Xương,Huyện Quảng Xương,406,406,Xã Quảng Chính,Xã Quảng Chính,16495,16495
+48,"Kp Mỹ Khoan, Thị trấn Hiệp Phước, Nhơn Trạch, Đồng Nai",Kp Mỹ Khoan,old,False,Đồng Nai,Tỉnh Đồng Nai,75,75,Nhơn Trạch,Huyện Nhơn Trạch,742,742,Thị trấn Hiệp Phước,Thị trấn Hiệp Phước,26479,26479
+49,"Tổ 1, Ấp 4, Sông Trầu, Trảng Bom, Đồng Nai",Tổ 1 Ấp 4,old,False,Đồng Nai,Tỉnh Đồng Nai,75,75,Trảng Bom,Huyện Trảng Bom,737,737,Xã Sông Trầu,Xã Sông Trầu,26263,26263
+50,"Áp Bờ Kinh, Hậu Thạnh, Long Phú, Sóc Trăng",Áp Bờ Kinh,old,False,Sóc Trăng,Tỉnh Sóc Trăng,94,94,Long Phú,Huyện Long Phú,946,946,Xã Hậu Thạnh,Xã Hậu Thạnh,31648,31648
+51,"199, Kp Long Đức 3, Tam Phước, Đồng Nai",199 Kp Long Đức 3,new,True,Đồng Nai,Tỉnh Đồng Nai,75,75,,,,,Phường Tam Phước,Phường Tam Phước,26374,26374
+52,"Khóm 4, Phường 1, Thị xã Vĩnh Châu, Sóc Trăng",Khóm 4,old,False,Sóc Trăng,Tỉnh Sóc Trăng,94,94,Vĩnh Châu,Thị xã Vĩnh Châu,950,950,Phường 1,Phường 1,31783,31783
+53,"Khóm 10, Phường 9, TP. Trà Vinh, Trà Vinh",Khóm 10,old,False,Trà Vinh,Tỉnh Trà Vinh,84,84,Trà Vinh,Thành phố Trà Vinh,842,842,Phường 9,Phường 9,29260,29260
+54,"Ấp Lạc Sơn Thạnh Hòa Sơn, Cầu Ngang, Trà Vinh",Ấp Lạc Sơn,old,False,Trà Vinh,Tỉnh Trà Vinh,84,84,Cầu Ngang,Huyện Cầu Ngang,848,848,Xã Thạnh Hoà Sơn,Xã Thạnh Hoà Sơn,29458,29458
+55,"Thôn 1, Quảng Khê, Quảng Xương, Thanh Hóa",Thôn 1,old,False,Thanh Hoá,Tỉnh Thanh Hoá,38,38,Quảng Xương,Huyện Quảng Xương,406,406,Xã Quảng Khê,Xã Quảng Khê,16489,16489
+56,"Ấp Cái Kè Mỹ Phước, Mang Thịt, Vĩnh Long",Ấp Cái Kè,old,False,Vĩnh Long,Tỉnh Vĩnh Long,86,86,Mang Thít,Huyện Mang Thít,858,858,Xã Mỹ Phước,Xã Mỹ Phước,29626,29626
+57,"Khóm 1, Thị trấn Cái Nhum, Mang Thít, Vĩnh Long",Khóm 1,old,False,Vĩnh Long,Tỉnh Vĩnh Long,86,86,Mang Thít,Huyện Mang Thít,858,858,Thị trấn Cái Nhum,Thị trấn Cái Nhum,29641,29641
+58,"Tổ 1, Long Bình, Khánh Bình, Thị xã Tân Uyên, Bình Dương",Tổ 1 Long Bình,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Tân Uyên,Thành phố Tân Uyên,723,723,Khánh Bình,Phường Khánh Bình,25921,25921
+59,"Xuân Phong, Thọ Xuân, Thanh Hóa",,old,False,Thanh Hoá,Tỉnh Thanh Hoá,38,38,Thọ Xuân,Huyện Thọ Xuân,395,395,Xã Xuân Phong,Xã Xuân Phong,15508,15508
+60,"Ấp Tân Lập, Tân Thành, Bình Tân, Vĩnh Long",Ấp Tân Lập,old,False,Vĩnh Long,Tỉnh Vĩnh Long,86,86,Bình Tân,Huyện Bình Tân,863,863,Xã Tân Thành,Xã Tân Thành,29776,29776
+61,"490/49/5 Hương Lộ 2, Bình Trị Đông, Bình Tân, TP. Hồ Chí Minh",490/49/5 Hương Lộ 2,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Bình Tân,Quận Bình Tân,777,777,Phường Bình Trị Đông,Phường Bình Trị Đông,27445,27445
+62,"Tổ 17, Khu Phố 3 Mỹ Phước, Bến Cát, Bình Dương",Tổ 17 Khu Phố 3,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Bến Cát,Thành phố Bến Cát,721,721,Phường Mỹ Phước,Phường Mỹ Phước,25813,25813
+63,"Tân Hùng, Thanh Tân, Như Thanh, Thanh Hóa",Tân Hùng,old,False,Thanh Hoá,Tỉnh Thanh Hoá,38,38,Như Thanh,Huyện Như Thanh,403,403,Xã Thanh Tân,Xã Thanh Tân,16273,16273
+64,"86, Đường 23, Hòa Phú, Tp. Thủ Dầu Một, Bình Dương",86 Đường 23,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Thủ Dầu Một,Thành phố Thủ Dầu Một,718,718,Phường Hoà Phú,Phường Hoà Phú,25760,25760
+65,"69/15 Bình Phú, Bình Chuẩn, Thuận An, Bình Dương",69/15 Bình Phú,old,False,Bình Dương,Tỉnh Bình Dương,74,74,Thuận An,Thành phố Thuận An,725,725,Phường Bình Chuẩn,Phường Bình Chuẩn,25969,25969
+66,"Khu 1, Ấp Chợ Phước Lợi, Bến Lức, Long An",Khu 1 Ấp Chợ,old,False,Long An,Tỉnh Long An,80,80,Bến Lức,Huyện Bến Lức,803,803,Xã Phước Lợi,Xã Phước Lợi,28030,28030
+67,"186Đ, Khu vực 4, Thị trấn Đức Hòa, Đức Hòa, Long An",186Đ Khu vực 4,old,False,Long An,Tỉnh Long An,80,80,Đức Hoà,Huyện Đức Hoà,802,802,Thị trấn Đức Hoà,Thị trấn Đức Hoà,27937,27937
+68,"Buôn Ariêng, Ea Ral, Ea H'leo, Đắk Lắk",Buôn Ariêng ',old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Ea Hleo,Huyện Ea Hleo,645,645,Xã Ea Ral,Xã Ea Ral,24190,24190
+69,"1A Ô 3 Ấp Bàu Trai, Hậu Nghĩa, Tây Ninh",1A Ô 3 Ấp Bàu Trai,new,True,Tây Ninh,Tỉnh Tây Ninh,80,80,,,,,Xã Hậu Nghĩa,Xã Hậu Nghĩa,27931,27931
+70,"Ấp 1, Mỹ Thạnh Bắc, Đức Huệ, Long An",Ấp 1,old,False,Long An,Tỉnh Long An,80,80,Đức Huệ,Huyện Đức Huệ,801,801,Xã Mỹ Thạnh Bắc,Xã Mỹ Thạnh Bắc,27904,27904
+71,"Tổ 11 Vĩnh Hội, Ngọc Hiệp, Nha Trang, Khánh Hòa",Tổ 11 Vĩnh Hội,old,False,Khánh Hoà,Tỉnh Khánh Hoà,56,56,Nha Trang,Thành phố Nha Trang,568,568,Phường Ngọc Hiệp,Phường Ngọc Hiệp,22336,22336
+72,"Tô Dân Phố Số 02, Vạn Giã, Vạn Ninh, Khánh Hòa",Tô Dân Phố Số 02,old,False,Khánh Hoà,Tỉnh Khánh Hoà,56,56,Vạn Ninh,Huyện Vạn Ninh,571,571,Thị trấn Vạn Giã,Thị trấn Vạn Giã,22489,22489
+73,"Đông Bình, Phước Vĩnh Đông, Cần Giuộc, Long An",Đông Bình,old,False,Long An,Tỉnh Long An,80,80,Cần Giuộc,Huyện Cần Giuộc,807,807,Xã Phước Vĩnh Đông,Xã Phước Vĩnh Đông,28195,28195
+74,"201 Lương Định Của, An Khánh, TP Thủ Đức, TP. Hồ Chí Minh",201 Lương Định Của,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Thủ Đức,Thành phố Thủ Đức,769,769,Phường An Khánh,Phường An Khánh,27094,27094
+75,"Ấp 1B, An Thạnh, Bến Lức, Long An",Ấp 1B,old,False,Long An,Tỉnh Long An,80,80,Bến Lức,Huyện Bến Lức,803,803,Xã An Thạnh,Xã An Thạnh,28012,28012
+76,"Ấp 1B, An Thạnh, Bến Lức, Long An",Ấp 1B,old,False,Long An,Tỉnh Long An,80,80,Bến Lức,Huyện Bến Lức,803,803,Xã An Thạnh,Xã An Thạnh,28012,28012
+77,"Ấp 5 Đức Hòa Đông, Đức Hòa, Long An",Ấp 5,old,False,Long An,Tỉnh Long An,80,80,Đức Hoà,Huyện Đức Hoà,802,802,Xã Đức Hoà Đông,Xã Đức Hoà Đông,27982,27982
+78,"TDP Mỹ Trạch, Ninh Hà, Ninh Hòa, Khánh Hòa",TDP Mỹ Trạch,old,False,Khánh Hoà,Tỉnh Khánh Hoà,56,56,Ninh Hoà,Thị xã Ninh Hoà,572,572,Phường Ninh Hà,Phường Ninh Hà,22594,22594
+79,"Áp Đông Bình, Đông Phước, Châu Thành, Hậu Giang",Áp Đông Bình,old,False,Hậu Giang,Tỉnh Hậu Giang,93,93,Châu Thành,Huyện Châu Thành,933,933,Xã Đông Phước,Xã Đông Phước,31384,31384
+80,"Nghĩa Dũng, Thành phố Quảng Ngãi, Quảng Ngãi",,old,False,Quảng Ngãi,Tỉnh Quảng Ngãi,51,51,Quảng Ngãi,Thành phố Quảng Ngãi,522,522,Xã Nghĩa Dũng,Xã Nghĩa Dũng,21034,21034
+81,"Ấp So Đũa Bé, Thạnh Xuân, Châu Thành A, Hậu Giang",Ấp So Đũa Bé,old,False,Hậu Giang,Tỉnh Hậu Giang,93,93,Châu Thành A,Huyện Châu Thành A,932,932,Xã Thạnh Xuân,Xã Thạnh Xuân,31360,31360
+82,"Ấp 2 Vĩnh Thuận Đông, H. Long Mỹ, Hậu Giang",Ấp 2,old,False,Hậu Giang,Tỉnh Hậu Giang,93,93,Long Mỹ,Huyện Long Mỹ,936,936,Xã Vĩnh Thuận Đông,Xã Vĩnh Thuận Đông,31486,31486
+83,"Kp5, Mỹ Bình, TP. Phan Rang-Tháp Chàm, Ninh Thuận",Kp5,old,False,Ninh Thuận,Tỉnh Ninh Thuận,58,58,Phan Rang-Tháp Chàm,Thành phố Phan Rang-Tháp Chàm,582,582,Phường Mỹ Bình,Phường Mỹ Bình,22779,22779
+84,"Ấp Thạnh Lợi A1, Thạnh Hòa, Cần Thơ",Ấp Thạnh Lợi A1,new,True,Cần Thơ,Thành phố Cần Thơ,92,92,,,,,Thạnh Hoà,Xã Thạnh Hoà,31408,31408
+85,"Ấp 4, Vĩnh Hòa Hưng Bắc, Gò Quao, Kiên Giang",Ấp 4,old,False,Kiên Giang,Tỉnh Kiên Giang,91,91,Gò Quao,Huyện Gò Quao,907,907,Xã Vĩnh Hoà Hưng Bắc,Xã Vĩnh Hoà Hưng Bắc,30955,30955
+86,"Ấp Mỹ Quới, Cây Dương, Phụng Hiệp, Hậu Giang",Ấp Mỹ Quới,old,False,Hậu Giang,Tỉnh Hậu Giang,93,93,Phụng Hiệp,Huyện Phụng Hiệp,934,934,Thị trấn Cây Dương,Thị trấn Cây Dương,31396,31396
+87,"Tổ 31, Hòa Hiệp Bắc, Liên Chiểu, Đà Nẵng",Tổ 31,old,False,Đà Nẵng,Thành phố Đà Nẵng,48,48,Liên Chiểu,Quận Liên Chiểu,490,490,Phường Hoà Hiệp Bắc,Phường Hoà Hiệp Bắc,20194,20194
+88,"Thôn Đặng Lộc 3, Cam Thủy, Lệ Thủy, Quảng Bình",Thôn Đặng Lộc 3,old,False,Quảng Bình,Tỉnh Quảng Bình,44,44,Lệ Thuỷ,Huyện Lệ Thuỷ,457,457,Xã Cam Thuỷ,Xã Cam Thuỷ,19270,19270
+89,"223/25 Ông Ích Khiêm, Hải Châu II, Hải Châu, Đà Nẵng",223/25 Ông Ích Khiêm,old,False,Đà Nẵng,Thành phố Đà Nẵng,48,48,Hải Châu,Quận Hải Châu,492,492,Phường Hải Châu II,Phường Hải Châu II,20239,20239
+90,"Tổ 22, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng",Tổ 22,old,False,Đà Nẵng,Thành phố Đà Nẵng,48,48,Ngũ Hành Sơn,Quận Ngũ Hành Sơn,494,494,Phường Hoà Quý,Phường Hoà Quý,20287,20287
+91,"Thôn Gò Hà, Hòa Khương, Hòa Vang, Đà Nẵng",Thôn Gò Hà,old,False,Đà Nẵng,Thành phố Đà Nẵng,48,48,Hoà Vang,Huyện Hoà Vang,497,497,Xã Hoà Khương,Xã Hoà Khương,20332,20332
+92,"Đông Trà Hòa Thuận, Thành phố Tam Kỳ, Quảng Nam",Đông Trà Hòa Thuận,old,False,Quảng Nam,Tỉnh Quảng Nam,49,49,Tam Kỳ,Thành phố Tam Kỳ,502,502,,,,
+93,"Tổ 23, Thanh Khê Tây, Thanh Khê, Đà Nẵng",Tổ 23,old,False,Đà Nẵng,Thành phố Đà Nẵng,48,48,Thanh Khê,Quận Thanh Khê,491,491,Phường Thanh Khê Tây,Phường Thanh Khê Tây,20206,20206
+94,"Thôn Bình An, Lộc Vĩnh, Phú Lộc, Thừa Thiên Huế",Thôn Bình An,old,False,Huế,Thành phố Huế,46,46,Phú Lộc,Huyện Phú Lộc,482,482,Xã Lộc Vĩnh,Xã Lộc Vĩnh,20137,20137
+95,"Minh Thanh Hương Vinh, Hương Trà, Thừa Thiên Huế",Minh Thanh Hương Vinh,new,True,Huế,Thành phố Huế,46,46,,,,,Hương Trà,Phường Hương Trà,19996,19996
+96,"Ấp An Khương, An Thạnh Trung, Chợ Mới, An Giang",Ấp An Khương,old,False,An Giang,Tỉnh An Giang,89,89,Chợ Mới,Huyện Chợ Mới,893,893,Xã An Thạnh Trung,Xã An Thạnh Trung,30670,30670
+97,"Thời Hòa Thị trấn Nhà Bàng, Tỉnh Biên, An Giang",Thời Hòa Thị trấn Nhà Bàng,new,True,An Giang,Tỉnh An Giang,91,91,,,,,Tịnh Biên,Phường Tịnh Biên,30520,30520
+98,"Phú Vinh, Thị trấn Chợ Vàm, Phú Tân, An Giang",Phú Vinh,old,False,An Giang,Tỉnh An Giang,89,89,Phú Tân,Huyện Phú Tân,888,888,Thị trấn Chợ Vàm,Thị trấn Chợ Vàm,30409,30409
+99,"TDP Giáp Thượng 1, Hương Văn, Hương Trà, Thừa Thiên Huế",TDP Giáp Thượng 1,old,False,Huế,Thành phố Huế,46,46,Hương Trà,Thị xã Hương Trà,480,480,Phường Hương Vân,Phường Hương Vân,20008,20008
+100,"Trạch Thượng 1 TT. Phong Điền, Phong Điền, TT - Huế",Trạch Thượng 1 TT Phong Điền,new,True,Huế,Thành phố Huế,46,46,,,,,Phong Điền,Phường Phong Điền,19819,19819
+101,"15 Tổng Duy Tân, Thuận Thành, TP Huế, Thừa Thiên Huế",15 Tổng Duy Tân,old,False,Huế,Thành phố Huế,46,46,,,,,,,,
+102,"13 Phò Trạch, TT. Phong Điền, Phong Điền, TT - Huế",13 Phò Trạch,old,False,Huế,Thành phố Huế,46,46,Phong Điền,Thị xã Phong Điền,476,476,Phường Phong Thu,Phường Phong Thu,19819,19819
+103,"Khóm Vĩnh Bình, TT Vĩnh Thạnh Trung, Châu Phú, An Giang",Khóm Vĩnh Bình,old,False,An Giang,Tỉnh An Giang,89,89,Châu Phú,Huyện Châu Phú,889,889,Thị trấn Vĩnh Thạnh Trung,Thị trấn Vĩnh Thạnh Trung,30478,30478
+104,"Tân Hậu A1, Tân An, Thị xã Tân Châu, An Giang",Tân Hậu A1,old,False,An Giang,Tỉnh An Giang,89,89,Tân Châu,Thị xã Tân Châu,887,887,Xã Tân An,Xã Tân An,30388,30388
+105,"Ấp An Thuận, Hòa Bình, Chợ Mới, An Giang",Ấp An Thuận,old,False,An Giang,Tỉnh An Giang,89,89,Chợ Mới,Huyện Chợ Mới,893,893,Xã Hoà Bình,Xã Hoà Bình,30676,30676
+106,"Ấp Đông Sơn 1, Thị trấn Núi Sập, Thoại Sơn, An Giang",Ấp Đông Sơn 1,old,False,An Giang,Tỉnh An Giang,89,89,Thoại Sơn,Huyện Thoại Sơn,894,894,Thị trấn Núi Sập,Thị trấn Núi Sập,30682,30682
+107,"Tổ 15, Mỹ Lương, Thị trấn Phú Mỹ, Phú Tân, An Giang",Tổ 15 Mỹ Lương,old,False,An Giang,Tỉnh An Giang,89,89,Phú Tân,Huyện Phú Tân,888,888,Thị trấn Phú Mỹ,Thị trấn Phú Mỹ,30406,30406
+108,"81 Khóm 6, Mỹ Long, Long Xuyên, An Giang",81 Khóm 6,old,False,An Giang,Tỉnh An Giang,89,89,Long Xuyên,Thành phố Long Xuyên,883,883,Phường Mỹ Long,Phường Mỹ Long,30283,30283
+109,"Ấp Bình An, Bình Phú, Châu Phú, An Giang",Ấp Bình An,old,False,An Giang,Tỉnh An Giang,89,89,Châu Phú,Huyện Châu Phú,889,889,Xã Bình Phú,Xã Bình Phú,30496,30496
+110,"Khóm Long Thị A, Long Hưng, Tân Châu, An Giang",Khóm Long Thị A,old,False,An Giang,Tỉnh An Giang,89,89,Tân Châu,Thị xã Tân Châu,887,887,Phường Long Hưng,Phường Long Hưng,30377,30377
+111,"Khóm 2 Thị trấn Tri Tôn, Tri Tôn, An Giang",Khóm 2,new,True,An Giang,Tỉnh An Giang,91,91,,,,,Tri Tôn,Xã Tri Tôn,30544,30544
+112,"Thôn 1, Hòa Khánh, Tp. Buôn Ma Thuột, Đắk Lắk",Thôn 1,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Buôn Ma Thuột,Thành phố Buôn Ma Thuột,643,643,Xã Hoà Khánh,Xã Hoà Khánh,24175,24175
+113,"KP Phước Hòa, Phước Bửu, Xuyên Mộc, Bà Rịa - Vũng Tàu",KP Phước Hòa,old,False,Bà Rịa - Vũng Tàu,Tỉnh Bà Rịa - Vũng Tàu,77,77,Xuyên Mộc,Huyện Xuyên Mộc,751,751,Thị trấn Phước Bửu,Thị trấn Phước Bửu,26620,26620
+114,"Thôn Tân Giản, Phước Hòa, Tuy Phước, Bình Định",Thôn Tân Giản,old,False,Bình Định,Tỉnh Bình Định,52,52,Tuy Phước,Huyện Tuy Phước,550,550,Xã Phước Hoà,Xã Phước Hoà,21967,21967
+115,"An Khương Thị trấn Ngô Mây, Phù Cát, Bình Định",An Khương,old,False,Bình Định,Tỉnh Bình Định,52,52,Phù Cát,Huyện Phù Cát,548,548,Thị trấn Ngô Mây,Thị trấn Ngô Mây,21853,21853
+116,"228 Trần Phú, Thành Công, Buôn Ma Thuột, Đắk Lắk",228 Trần Phú,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Buôn Ma Thuột,Thành phố Buôn Ma Thuột,643,643,Phường Thành Công,Phường Thành Công,24133,24133
+117,"Tổ Dân Phố 4, Tân Thành, TP Buôn Ma Thuột, Đắk Lắk",Tổ Dân Phố 4,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Buôn Ma Thuột,Thành phố Buôn Ma Thuột,643,643,Phường Tân Thành,Phường Tân Thành,24142,24142
+118,"77 Y Jút, Thống Nhất, TP. Buôn Ma Thuột, Đắk Lắk",77 Y Jút,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Buôn Ma Thuột,Thành phố Buôn Ma Thuột,643,643,Phường Thống Nhất,Phường Thống Nhất,24127,24127
+119,"Tổ Dân Phố 6 Ea Tam, Thành phố Buôn Ma Thuột, Đắk Lắk",Tổ Dân Phố 6,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Buôn Ma Thuột,Thành phố Buôn Ma Thuột,643,643,Phường Ea Tam,Phường Ea Tam,24151,24151
+120,"Tổ Dân Phố 6, Krông Kmar, Krông Bông, Đắk Lắk",Tổ Dân Phố 6,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Krông Bông,Huyện Krông Bông,653,653,Thị trấn Krông Kmar,Thị trấn Krông Kmar,24448,24448
+121,"Thôn 13, Vu Bồn, Krông Pắc, Đắk Lắk",Thôn 13,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Krông Pắc,Huyện Krông Pắc,654,654,Xã Vụ Bổn,Xã Vụ Bổn,24529,24529
+122,"Tổ 2, Khu Phố 3, Phường An Thới, TP. Phú Quốc, Kiên Giang",Tổ 2 Khu Phố 3,old,False,Kiên Giang,Tỉnh Kiên Giang,91,91,Phú Quốc,Thành phố Phú Quốc,911,911,Phường An Thới,Phường An Thới,31081,31081
+123,"Thôn Phong Hậu, Hòa Hội, Phú Hòa, Phú Yên",Thôn Phong Hậu,old,False,Phú Yên,Tỉnh Phú Yên,54,54,Phú Hoà,Huyện Phú Hoà,563,563,Xã Hoà Hội,Xã Hoà Hội,22309,22309
+124,"Tổ 7, Khu Phố 5, P. An Thới, Thành phố Phú Quốc, Kiên Giang",Tổ 7 Khu Phố 5,old,False,Kiên Giang,Tỉnh Kiên Giang,91,91,Phú Quốc,Thành phố Phú Quốc,911,911,Phường An Thới,Phường An Thới,31081,31081
+125,"Thôn Phong Hậu, Hòa Hội, Phú Hòa, Phú Yên",Thôn Phong Hậu,old,False,Phú Yên,Tỉnh Phú Yên,54,54,Phú Hoà,Huyện Phú Hoà,563,563,Xã Hoà Hội,Xã Hoà Hội,22309,22309
+126,"Thôn 3 Hoàn Lão, Bố Trạch, Quảng Bình",Thôn 3,old,False,Quảng Bình,Tỉnh Quảng Bình,44,44,Bố Trạch,Huyện Bố Trạch,455,455,Thị trấn Hoàn Lão,Thị trấn Hoàn Lão,19111,19111
+127,"Tân Phong, Tân Biên, Tây Ninh, Áp Xóm Tháp",Tân Phong Áp Xóm Tháp,new,True,Tây Ninh,Tỉnh Tây Ninh,80,80,,,,,Xã Tân Biên,Xã Tân Biên,25486,25486
+128,"Ấp Nam Bến Sỏi, Thành Long, Châu Thành, Tây Ninh",Ấp Nam Bến Sỏi,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Châu Thành,Huyện Châu Thành,708,708,Xã Thành Long,Xã Thành Long,25621,25621
+129,"Ấp Phước Đức B, Phước Đông, Gò Dầu, Tây Ninh",Ấp Phước Đức B,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Gò Dầu,Huyện Gò Dầu,710,710,Xã Phước Đông,Xã Phước Đông,25672,25672
+130,"Tam Hạp, Thái Bình, Châu Thành, Tây Ninh",Tam Hạp,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Châu Thành,Huyện Châu Thành,708,708,Xã Thái Bình,Xã Thái Bình,25597,25597
+131,"Vịnh An Cơ, Châu Thành, Tây Ninh",Vịnh,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Châu Thành,Huyện Châu Thành,708,708,An Cơ,Xã An Cơ,25600,25600
+132,"T3, Phước Tân 3 Phan, Dương Minh Châu, Tây Ninh",T3 Phước Tân 3 Phan,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Dương Minh Châu,Huyện Dương Minh Châu,707,707,Xã Phan,Xã Phan,25558,25558
+133,"Khu Phố Gia Tân, P. Gia Lộc, Thị xã Trảng Bàng, Tây Ninh",Khu Phố Gia Tân,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Trảng Bàng,Thị xã Trảng Bàng,712,712,Phường Gia Lộc,Phường Gia Lộc,25720,25720
+134,"Áp Voi, An Thạnh, Bến Cầu, Tây Ninh",Áp Voi,old,False,Tây Ninh,Tỉnh Tây Ninh,72,72,Bến Cầu,Huyện Bến Cầu,711,711,Xã An Thạnh,Xã An Thạnh,25705,25705
+135,"51/13/3.Đ Số 18B, Bình Hưng Hòa A, Bình Tân, TP. Hồ Chí Minh",51/13/3 Đ Số 18B,old,False,Hồ Chí Minh,Thành phố Hồ Chí Minh,79,79,Bình Tân,Quận Bình Tân,777,777,Phường Bình Hưng Hoà A,Phường Bình Hưng Hoà A,27439,27439
+136,"62 Trịnh Hoài Đức, Phường 2, Thành phố Mỹ Tho, Tiền Giang",62 Trịnh Hoài Đức,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Mỹ Tho,Thành phố Mỹ Tho,815,815,Phường 2,Phường 2,28264,28264
+137,"Ấp Mỹ Thị B, Mỹ Trung, Cái Bè, Tiền Giang",Ấp Mỹ Thị B,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Cái Bè,Huyện Cái Bè,819,819,Xã Mỹ Trung,Xã Mỹ Trung,28369,28369
+138,"Ấp Hậu Hoa, Hậu Thành, Cái Bè, Tiền Giang",Ấp Hậu Hoa,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Cái Bè,Huyện Cái Bè,819,819,Xã Hậu Thành,Xã Hậu Thành,28393,28393
+139,"Ấp Mỹ Hưng C, Mỹ Đức Đông, Cái Bè, Tiền Giang",Ấp Mỹ Hưng C,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Cái Bè,Huyện Cái Bè,819,819,Xã Mỹ Đức Đông,Xã Mỹ Đức Đông,28405,28405
+140,"Tổ 14, Thị trấn Lộc Thắng, Bảo Lâm, Lâm Đồng",Tổ 14,old,False,Lâm Đồng,Tỉnh Lâm Đồng,68,68,Bảo Lâm,Huyện Bảo Lâm,680,680,Thị trấn Lộc Thắng,Thị trấn Lộc Thắng,25054,25054
+141,"Thôn Hàng Làng Gung Ré, Di Linh, Lâm Đồng",Thôn Hàng Làng,old,False,Lâm Đồng,Tỉnh Lâm Đồng,68,68,Di Linh,Huyện Di Linh,679,679,Xã Gung Ré,Xã Gung Ré,25030,25030
+142,"Ấp Thân Hòa, Thân Cửu Nghĩa, Châu Thành, Tiền Giang",Ấp Thân Hòa,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Châu Thành,Huyện Châu Thành,821,821,Xã Thân Cửu Nghĩa,Xã Thân Cửu Nghĩa,28534,28534
+143,"94, Đường 30/4, KP2, Phường 1, TX. Cai Lậy, Tiền Giang",94 Đường 30/4 KP2,old,False,Tiền Giang,Tỉnh Tiền Giang,82,82,Cai Lậy,Thị xã Cai Lậy,817,817,Phường 1,Phường 1,28435,28435
+144,"Hẻm 2/9A, TDP 2, TT. Di Linh, Di Linh, Lâm Đồng",Hẻm 2/9A TDP 2,old,False,Lâm Đồng,Tỉnh Lâm Đồng,68,68,Di Linh,Huyện Di Linh,679,679,Thị trấn Di Linh,Thị trấn Di Linh,25000,25000
+145,"Ấp 5, Bình Đức, Bến Lức, Long An",Ấp 5,old,False,Long An,Tỉnh Long An,80,80,Bến Lức,Huyện Bến Lức,803,803,Xã Bình Đức,Xã Bình Đức,28015,28015
+146,"Dục Nội, Việt Hùng, Đông Anh, Hà Nội",Dục Nội,old,False,Hà Nội,Thành phố Hà Nội,01,01,Đông Anh,Huyện Đông Anh,017,017,Phường Việt Hưng,Phường Việt Hưng,00127,00127
+147,"Xuân Thượng, Đạ Pal, Đạ Tẻh, Lâm Đồng",Xuân Thượng,old,False,Lâm Đồng,Tỉnh Lâm Đồng,68,68,Đạ Huoai,Huyện Đạ Huoai,682,682,Xã Đạ Pal,Xã Đạ Pal,25156,25156
+148,"48A Khương Trung, Khương Trung, Thanh Xuân, Hà Nội",48A Khương Trung,old,False,Hà Nội,Thành phố Hà Nội,01,01,Thanh Xuân,Quận Thanh Xuân,009,009,Phường Khương Trung,Phường Khương Trung,00349,00349
+149,"Tân Mỹ, Thụy Hương, Chương Mỹ, Hà Nội",Tân Mỹ,old,False,Hà Nội,Thành phố Hà Nội,01,01,Chương Mỹ,Huyện Chương Mỹ,277,277,Xã Thuỵ Hương,Xã Thuỵ Hương,10057,10057
+150,"đội 3, tê tiêu, Thị trấn Đại Nghĩa, Mỹ Đức, Hà Nội",đội 3 tê tiêu,old,False,Hà Nội,Thành phố Hà Nội,01,01,Mỹ Đức,Huyện Mỹ Đức,282,282,Thị trấn Đại Nghĩa,Thị trấn Đại Nghĩa,10441,10441
+151,"Đội 3, Thắng Đầu, Hòa Thạch, Quốc Oai, Hà Nội",Đội 3 Thắng Đầu,old,False,Hà Nội,Thành phố Hà Nội,01,01,Quốc Oai,Huyện Quốc Oai,275,275,Xã Hoà Thạch,Xã Hoà Thạch,09949,09949
+152,"Thôn Đồn Vận, Liên Sơn, Lương Sơn, Hòa Bình",Thôn Đồn Vận,old,False,Hoà Bình,Tỉnh Hoà Bình,17,17,Lương Sơn,Huyện Lương Sơn,152,152,Xã Liên Sơn,Xã Liên Sơn,04969,04969
+153,"Xóm Ngang, Thôn 1, Cộng Hòa, Quốc Oai, Hà Nội",Xóm Ngang Thôn 1,old,False,Hà Nội,Thành phố Hà Nội,01,01,Quốc Oai,Huyện Quốc Oai,275,275,Xã Cộng Hoà,Xã Cộng Hoà,09931,09931
+154,"Xóm Thượng, Cổ Loa, Đông Anh, Hà Nội",Xóm Thượng,old,False,Hà Nội,Thành phố Hà Nội,01,01,Đông Anh,Huyện Đông Anh,017,017,Xã Cổ Loa,Xã Cổ Loa,00505,00505
+155,"Phú Mỹ Trần Phú, Chương Mỹ, Hà Nội",Phú Mỹ,old,False,Hà Nội,Thành phố Hà Nội,01,01,Chương Mỹ,Huyện Chương Mỹ,277,277,Xã Trần Phú,Xã Trần Phú,10099,10099
+156,"Thôn Việt An, Tân Tiến, Chương Mỹ, Hà Nội",Thôn Việt An,old,False,Hà Nội,Thành phố Hà Nội,01,01,Chương Mỹ,Huyện Chương Mỹ,277,277,Xã Tân Tiến,Xã Tân Tiến,10066,10066
+157,"Thôn Hồng Phong, An Tràng, Quỳnh Phụ, Thái Bình",Thôn Hồng Phong,old,False,Thái Bình,Tỉnh Thái Bình,34,34,Quỳnh Phụ,Huyện Quỳnh Phụ,338,338,Xã An Tràng,Xã An Tràng,12580,12580
+158,"Tập Thể HVCTQS, Tổ 57 Cụm 9 Phú Thượng, Tây Hồ, Hà Nội",Tập Thể HVCTQS Tổ 57 Cụm 9,old,False,Hà Nội,Thành phố Hà Nội,01,01,Tây Hồ,Quận Tây Hồ,003,003,Phường Phú Thượng,Phường Phú Thượng,00091,00091
+159,"Đồng Viên, Phù Đổng, Gia Lâm, Hà Nội",Đồng Viên,old,False,Hà Nội,Thành phố Hà Nội,01,01,Gia Lâm,Huyện Gia Lâm,018,018,Xã Phù Đổng,Xã Phù Đổng,00544,00544
+160,"Xóm Trong Uy Nỗ, Đông Anh, Hà Nội",Xóm Trong,old,False,Hà Nội,Thành phố Hà Nội,01,01,Đông Anh,Huyện Đông Anh,017,017,Xã Uy Nỗ,Xã Uy Nỗ,00478,00478
+161,"Phố 1A, Yên Ninh, Yên Khánh, Ninh Bình",Phố 1A,old,False,Ninh Bình,Tỉnh Ninh Bình,37,37,Yên Khánh,Huyện Yên Khánh,375,375,Thị trấn Yên Ninh,Thị trấn Yên Ninh,14560,14560
+162,"Tổ 5, Mai Động, Hoàng Mai, Hà Nội",Tổ 5,old,False,Hà Nội,Thành phố Hà Nội,01,01,Hoàng Mai,Quận Hoàng Mai,008,008,Phường Mai Động,Phường Mai Động,00310,00310
+163,"Phù Đổng 1, Phù Đổng, Gia Lâm, Hà Nội",Phù Đổng 1,old,False,Hà Nội,Thành phố Hà Nội,01,01,Gia Lâm,Huyện Gia Lâm,018,018,Xã Phù Đổng,Xã Phù Đổng,00544,00544
+164,"Thôn 7, Trung Châu, Đan Phượng, Hà Nội",Thôn 7,old,False,Hà Nội,Thành phố Hà Nội,01,01,Đan Phượng,Huyện Đan Phượng,273,273,Xã Trung Châu,Xã Trung Châu,09787,09787
+165,"Thôn Minh Mỹ, Tỉnh Bắc, Sơn Tịnh, Quảng Ngãi.",Thôn Minh Mỹ,old,False,Quảng Ngãi,Tỉnh Quảng Ngãi,51,51,Sơn Tịnh,Huyện Sơn Tịnh,527,527,Xã Tịnh Bắc,Xã Tịnh Bắc,21205,21205
+166,"P106b Tt Mai Động C27a, Mai Động, Hoàng Mai, Hà Nội",,old,False,Hà Nội,Thành phố Hà Nội,01,01,Hoàng Mai,Quận Hoàng Mai,008,008,Phường Mai Động,Phường Mai Động,00310,00310
+167,"Đại Từ, Lam Điền, Chương Mỹ, Hà Nội",Đại Từ,old,False,Hà Nội,Thành phố Hà Nội,01,01,Chương Mỹ,Huyện Chương Mỹ,277,277,Xã Lam Điền,Xã Lam Điền,10063,10063
+168,"Chánh Lộ, Thành phố Quảng Ngãi, Quảng Ngãi",,old,False,Quảng Ngãi,Tỉnh Quảng Ngãi,51,51,Quảng Ngãi,Thành phố Quảng Ngãi,522,522,Phường Chánh Lộ,Phường Chánh Lộ,21031,21031
+169,"Thôn 1, Minh Tân, Thủy Nguyên, Hải Phòng",Thôn 1,old,False,Hải Phòng,Thành phố Hải Phòng,31,31,Kiến Thuỵ,Huyện Kiến Thuỵ,314,314,Xã Minh Tân,Xã Minh Tân,11725,11725
+170,"Tổ 50 Cụm 8 Phú Thượng, Tây Hồ, Hà Nội",Tổ 50 Cụm 8,old,False,Hà Nội,Thành phố Hà Nội,01,01,Tây Hồ,Quận Tây Hồ,003,003,Phường Phú Thượng,Phường Phú Thượng,00091,00091
+171,"Tổ 11 Thạch Bàn, Long Biên, Hà Nội",Tổ 11,old,False,Hà Nội,Thành phố Hà Nội,01,01,Long Biên,Quận Long Biên,004,004,Phường Thạch Bàn,Phường Thạch Bàn,00148,00148
+172,"Chánh Lô, Thành phố Quảng Ngãi, Quảng Ngãi",,old,False,Quảng Ngãi,Tỉnh Quảng Ngãi,51,51,Quảng Ngãi,Thành phố Quảng Ngãi,522,522,Phường Chánh Lộ,Phường Chánh Lộ,21031,21031
+173,"TDP Tân Bình, Thị trấn Xuân Mai, Chương Mỹ, Hà Nội",TDP Tân Bình,old,False,Hà Nội,Thành phố Hà Nội,01,01,Chương Mỹ,Huyện Chương Mỹ,277,277,Thị trấn Xuân Mai,Thị trấn Xuân Mai,10018,10018
+174,"Xóm 5, Thôn Thọ Tây, Tỉnh Thọ, Sơn Tịnh, Quảng Ngãi",Xóm 5 Thôn Thọ Tây,old,False,Quảng Ngãi,Tỉnh Quảng Ngãi,51,51,Sơn Tịnh,Huyện Sơn Tịnh,527,527,Xã Tịnh Thọ,Xã Tịnh Thọ,21175,21175
+175,"Thôn Hảo, Liêu Xá, Yên Mỹ, Hưng Yên",Thôn Hảo,old,False,Hưng Yên,Tỉnh Hưng Yên,33,33,Yên Mỹ,Huyện Yên Mỹ,327,327,Xã Liêu Xá,Xã Liêu Xá,12067,12067
+176,"Ngọc Vân, Tân Yên, Bắc Giang",,old,False,Bắc Giang,Tỉnh Bắc Giang,24,24,Tân Yên,Huyện Tân Yên,216,216,Xã Ngọc Vân,Xã Ngọc Vân,07351,07351
+177,"Thôn Nội Đình, Yên Sơn, Lục Nam, Bắc Giang",Thôn Nội Đình,old,False,Bắc Giang,Tỉnh Bắc Giang,24,24,Lục Nam,Huyện Lục Nam,218,218,Xã Yên Sơn,Xã Yên Sơn,07498,07498
+178,"Ấp 12A, Khánh Bình Đông, Trần Văn Thời, Cà Mau",Ấp 12A,old,False,Cà Mau,Tỉnh Cà Mau,96,96,Trần Văn Thời,Huyện Trần Văn Thời,968,968,Xã Khánh Bình Đông,Xã Khánh Bình Đông,32116,32116
+179,"Ấp 1 Hàng Vịnh, Năm Căn, Cà Mau",Ấp 1,old,False,Cà Mau,Tỉnh Cà Mau,96,96,Năm Căn,Huyện Năm Căn,971,971,Xã Hàng Vịnh,Xã Hàng Vịnh,32203,32203
+180,"Thôn Đông Mai, Trung Nghĩa, Yên Phong, Bắc Ninh",Thôn Đông Mai,old,False,Bắc Ninh,Tỉnh Bắc Ninh,27,27,Yên Phong,Huyện Yên Phong,258,258,Xã Trung Nghĩa,Xã Trung Nghĩa,09223,09223
+181,"Ấp 7 Khánh An, U Minh, Cà Mau",Ấp 7,old,False,Cà Mau,Tỉnh Cà Mau,96,96,U Minh,Huyện U Minh,966,966,Xã Khánh An,Xã Khánh An,32059,32059
+182,"Thôn Mai Thượng Hương Mai, Việt Yên, Bắc Giang",Thôn Mai Thượng,old,False,Bắc Giang,Tỉnh Bắc Giang,24,24,Việt Yên,Thị xã Việt Yên,222,222,Xã Hương Mai,Xã Hương Mai,07771,07771
+183,"Tổ 8B, KP Tân Tiến, Tân Xuân, Đồng Xoài, Bình Phước",Tổ 8B KP Tân Tiến,old,False,Bình Phước,Tỉnh Bình Phước,70,70,Đồng Xoài,Thành phố Đồng Xoài,689,689,Phường Tân Xuân,Phường Tân Xuân,25204,25204
+184,"Xóm Đồng Cả Xuân Đài, Tân Sơn, Phú Thọ",Xóm Đồng Cả,old,False,Phú Thọ,Tỉnh Phú Thọ,25,25,Tân Sơn,Huyện Tân Sơn,240,240,Xã Xuân Đài,Xã Xuân Đài,08590,08590
+185,"Thôn Nghĩa Xuyên, Trung Hòa, Yên Mỹ, Hưng Yên",Thôn Nghĩa Xuyên,old,False,Hưng Yên,Tỉnh Hưng Yên,33,33,Yên Mỹ,Huyện Yên Mỹ,327,327,Xã Trung Hoà,Xã Trung Hoà,12085,12085
+186,"Tổ Dân Phố 1 TT. Đắk Mil, Đắk Mil, Đắk Nông",Tổ Dân Phố 1,old,False,Đắk Nông,Tỉnh Đắk Nông,67,67,Đắk Mil,Huyện Đắk Mil,663,663,Thị trấn Đắk Mil,Thị trấn Đắk Mil,24664,24664
+187,"Thôn Sầm Khúc, Việt Hưng, Văn Lâm, Hưng Yên",Thôn Sầm Khúc,old,False,Hưng Yên,Tỉnh Hưng Yên,33,33,Văn Lâm,Huyện Văn Lâm,325,325,Xã Việt Hưng,Xã Việt Hưng,11998,11998
+188,"Thôn 10 Ea Ning, Cư Kuin, Đắk Lắk",Thôn 10,old,False,Đắk Lắk,Tỉnh Đắk Lắk,66,66,Cư Kuin,Huyện Cư Kuin,657,657,Xã Ea Ning,Xã Ea Ning,24540,24540
+189,"Ấp Bình Trung, Định Trung, Bình Đại, Bến Tre",Ấp Bình Trung,old,False,Bến Tre,Tỉnh Bến Tre,83,83,Bình Đại,Huyện Bình Đại,835,835,Xã Định Trung,Xã Định Trung,29080,29080
+190,"Thôn 8, Nam Bình, Đắk Song, Đắk Nông",Thôn 8,old,False,Đắk Nông,Tỉnh Đắk Nông,67,67,Đắk Song,Huyện Đắk Song,665,665,Xã Nam Bình,Xã Nam Bình,24721,24721
+191,"Tổ 15, Bằng Lũng, Chợ Đồn, Bắc Kạn",Tổ 15,old,False,Bắc Kạn,Tỉnh Bắc Kạn,06,06,Chợ Đồn,Huyện Chợ Đồn,064,064,Thị trấn Bằng Lũng,Thị trấn Bằng Lũng,02020,02020
+192,"Thôn Ngọc Đà, Tân Quang, Văn Lâm, Hưng Yên",Thôn Ngọc Đà,old,False,Hưng Yên,Tỉnh Hưng Yên,33,33,Văn Lâm,Huyện Văn Lâm,325,325,Xã Tân Quang,Xã Tân Quang,12001,12001
+193,"Thôn 10 Nam Bình, Đắk Song, Đắk Nông",Thôn 10,old,False,Đắk Nông,Tỉnh Đắk Nông,67,67,Đắk Song,Huyện Đắk Song,665,665,Xã Nam Bình,Xã Nam Bình,24721,24721
+194,"Hưng Đạo Đông, Đông Quang, Đông Hưng, Thái Bình",Hưng Đạo Đông,old,False,Thái Bình,Tỉnh Thái Bình,34,34,Đông Hưng,Huyện Đông Hưng,340,340,Xã Đông Quang,Xã Đông Quang,12796,12796
+195,"170/1, Khu phố 1 TT. Thạnh Phú, Thạnh Phú, Bến Tre",170/1 Khu phố 1,old,False,Bến Tre,Tỉnh Bến Tre,83,83,Thạnh Phú,Huyện Thạnh Phú,837,837,Thị trấn Thạnh Phú,Thị trấn Thạnh Phú,29182,29182
+196,"Thôn 2, Xuân Hải, Thị xã Sông Cầu, Phú Yên",Thôn 2,old,False,Phú Yên,Tỉnh Phú Yên,54,54,Sông Cầu,Thị xã Sông Cầu,557,557,Xã Xuân Hải,Xã Xuân Hải,22054,22054
+197,"Hoa Động, Thuỷ Nguyên, Hải Phòng",,old,False,Hải Phòng,Thành phố Hải Phòng,31,31,Thuỷ Nguyên,Thành phố Thuỷ Nguyên,311,311,Phường Hoa Động,Phường Hoa Động,11572,11572
+198,"22/24 Trần Hưng Đạo, Hoàng Văn Thụ, Hồng Bàng, Hải Phòng",22/24 Trần Hưng Đạo,old,False,Hải Phòng,Thành phố Hải Phòng,31,31,Hồng Bàng,Quận Hồng Bàng,303,303,Phường Hoàng Văn Thụ,Phường Hoàng Văn Thụ,11320,11320
+199,"Phú Khê 1, Hòa Xuân Đông, Thị xã Đông Hòa, Phú Yên",Phú Khê 1,old,False,Phú Yên,Tỉnh Phú Yên,54,54,Đông Hoà,Thị xã Đông Hoà,564,564,Xã Hoà Xuân Đông,Xã Hoà Xuân Đông,22291,22291
+200,"Xóm Trung Song Diễn Thịnh, Diễn Châu, Nghệ An",Xóm Trung Song,old,False,Nghệ An,Tỉnh Nghệ An,40,40,Diễn Châu,Huyện Diễn Châu,425,425,Xã Diễn Thịnh,Xã Diễn Thịnh,17479,17479
+201,"Khu Phố Vạn Lợi, Sầm Sơn, Thanh Hóa",Khu Phố Vạn Lợi,new,True,Thanh Hoá,Tỉnh Thanh Hoá,38,38,,,,,Sầm Sơn,Phường Sầm Sơn,16531,16531
+202,"Tổ 22, K. Mỹ Phú, Mỹ Phú, Thành phố Cao Lãnh, Đồng Tháp",Tổ 22,old,False,Đồng Tháp,Tỉnh Đồng Tháp,87,87,Cao Lãnh,Thành phố Cao Lãnh,866,866,Phường Mỹ Phú,Phường Mỹ Phú,29888,29888
+203,"Số 225A, Hưng Lợi Đông Long Hưng B, Lấp Vò, Đồng Tháp",Số 225A Hưng Lợi Đông Long Hưng B,old,False,Đồng Tháp,Tỉnh Đồng Tháp,87,87,Lấp Vò,Huyện Lấp Vò,875,875,Xã Long Hưng B,Xã Long Hưng B,30190,30190
+204,"Thị trấn Cổ Lễ, Trực Ninh, Nam Định",,old,False,Nam Định,Tỉnh Nam Định,36,36,Trực Ninh,Huyện Trực Ninh,363,363,Thị trấn Cổ Lễ,Thị trấn Cổ Lễ,14026,14026
+205,"Thôn Phù Quang, Hoằng Quang, TP. Thanh Hóa, Thanh Hóa",Thôn Phù Quang,old,False,Thanh Hoá,Tỉnh Thanh Hoá,38,38,Thanh Hoá,Thành phố Thanh Hoá,380,380,Phường Hoằng Quang,Phường Hoằng Quang,15925,15925
+206,"Tổ 16, Khóm 2 Thị trấn Sa Rài, Tân Hồng, Đồng Tháp",Tổ 16 Khóm 2 Thị trấn Sa Rài,new,True,Đồng Tháp,Tỉnh Đồng Tháp,82,82,,,,,Tân Hồng,Xã Tân Hồng,29926,29926
+207,"Thủy Hải, Thái Thụy, Thái Bình",,old,False,Thái Bình,Tỉnh Thái Bình,34,34,Thái Thuỵ,Huyện Thái Thuỵ,341,341,Xã Thuỵ Hải,Xã Thuỵ Hải,12880,12880
+208,"Thôn Soi Cờ Gia Phú, Bảo Thắng, Lào Cai",Thôn Soi Cờ,old,False,Lào Cai,Tỉnh Lào Cai,15,15,Bảo Thắng,Huyện Bảo Thắng,086,086,Xã Gia Phú,Xã Gia Phú,02923,02923
+209,"Thôn Văn Thủy, Võ Lao, Văn Bàn, Lào Cai",Thôn Văn Thủy,old,False,Lào Cai,Tỉnh Lào Cai,15,15,Văn Bàn,Huyện Văn Bàn,089,089,Xã Võ Lao,Xã Võ Lao,03061,03061
+210,"Tổ 6, TT Bát Xát, Bát Xát, Lào Cai",Tổ 6,old,False,Lào Cai,Tỉnh Lào Cai,10,10,Bát Xát,Huyện Bát Xát,082,082,Thị trấn Bát Xát,Thị trấn Bát Xát,02683,02683
+211,"Tổ 7, Phùng Chí Kiên, TP Bắc Kạn, Bắc Kạn",Tổ 7,old,False,Bắc Kạn,Tỉnh Bắc Kạn,06,06,Bắc Kạn,Thành phố Bắc Kạn,058,058,Phường Phùng Chí Kiên,Phường Phùng Chí Kiên,01843,01843
+212,"Thôn 1, Thi Sơn, Kim Bảng, Hà Nam",Thôn 1,old,False,Hà Nam,Tỉnh Hà Nam,35,35,Kim Bảng,Thị xã Kim Bảng,350,350,Phường Thi Sơn,Phường Thi Sơn,13435,13435
+213,"Tổ 5, Quyết Tiến, Thành phố Lai Châu, Lai Châu",Tổ 5,old,False,Lai Châu,Tỉnh Lai Châu,12,12,Lai Châu,Thành phố Lai Châu,105,105,Phường Quyết Tiến,Phường Quyết Tiến,03388,03388
+214,"Tổ 6, Sông Hiền, Thành phố Cao Bằng, Cao Bằng",Tổ 6,old,False,Cao Bằng,Tỉnh Cao Bằng,04,04,Cao Bằng,Thành phố Cao Bằng,040,040,Phường Sông Hiến,Phường Sông Hiến,01267,01267
+215,"Thôn Xuân Thọ Đông Cường, Đông Hưng, Thái Bình",Thôn Xuân Thọ,old,False,Thái Bình,Tỉnh Thái Bình,34,34,Đông Hưng,Huyện Đông Hưng,340,340,Xã Đông Cường,Xã Đông Cường,12706,12706
