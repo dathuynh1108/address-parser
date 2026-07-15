@@ -80,6 +80,43 @@ class AddressParser:
     _LIT_STRIP_CHARS: ClassVar[str] = " ,;.-"
     _RE_PROVINCE_PREFIX: ClassVar[str] = r"^(tinh|thanh pho|tp)\s+"
     _RE_WORD_TOKEN: ClassVar[str] = r"\b\w+\b"
+    _RE_PREFIX_PROVINCE_SEGMENTED: ClassVar[re.Pattern[str]] = re.compile(
+        r"(?:^|\|)\s*\btinh\b\s+([a-z0-9 ]+?)(?=(?:\||$))"
+    )
+    _RE_PREFIX_PROVINCE_INLINE: ClassVar[re.Pattern[str]] = re.compile(
+        r"\btinh\b\s+([a-z0-9 ]+?)(?=(?:\b(?:quan|q|huyen|h|thi xa|tx|thi tran|tt|"
+        r"phuong|p|xa|x|tp|tinh|thanh pho)\b|\||$))"
+    )
+    _RE_PREFIX_CITY_SEGMENTED: ClassVar[re.Pattern[str]] = re.compile(
+        r"(?:^|\|)\s*\b(?:thanh pho|tp)\b\s+([a-z0-9 ]+?)(?=(?:\||$))"
+    )
+    _RE_PREFIX_CITY_INLINE: ClassVar[re.Pattern[str]] = re.compile(
+        r"\b(?:thanh pho|tp)\b\s+([a-z0-9 ]+?)(?=(?:\b(?:quan|q|huyen|h|thi xa|tx|"
+        r"thi tran|tt|phuong|p|xa|x|tp|tinh|thanh pho)\b|\||$))"
+    )
+    _RE_PREFIX_DISTRICT_SEGMENTED: ClassVar[re.Pattern[str]] = re.compile(
+        r"(?:^|\|)\s*\b(?P<prefix>quan|q|huyen|h|thi xa|tx|thanh pho|tp)\b\s+"
+        r"(?P<fragment>[a-z0-9 ]+?)(?=(?:\||$))"
+    )
+    _RE_PREFIX_DISTRICT_INLINE: ClassVar[re.Pattern[str]] = re.compile(
+        r"\b(?P<prefix>quan|q|huyen|h|thi xa|tx|thanh pho|tp)\b\s+"
+        r"(?P<fragment>[a-z0-9 ]+?)(?=(?:\b(?:phuong|p|xa|x|thi tran|tt|quan|q|"
+        r"huyen|h|thi xa|tx|thanh pho|tinh|tp)\b|\||$))"
+    )
+    _RE_PREFIX_WARD_SEGMENTED: ClassVar[re.Pattern[str]] = re.compile(
+        r"(?:^|\|)\s*\b(?P<prefix>phuong|p|xa|x|tt|thi tran|dac\s*khu)\b\s+"
+        r"(?P<fragment>[a-z0-9 ]+?)(?=(?:\||$))"
+    )
+    _RE_PREFIX_WARD_INLINE: ClassVar[re.Pattern[str]] = re.compile(
+        r"\b(?P<prefix>phuong|p|xa|x|tt|thi tran|dac\s*khu)\b\s+"
+        r"(?P<fragment>[a-z0-9 ]+?)(?=(?:\b(?:phuong|p|xa|x|thi tran|tt|quan|q|"
+        r"huyen|h|thi xa|tx|thanh pho|tinh|tp)\b|\||$))"
+    )
+    _RE_NUMERIC_DISTRICT: ClassVar[re.Pattern[str]] = re.compile(
+        r"\b(?:quan|q\.?)\s*(\d{1,3})\b"
+    )
+    _RE_LOT_PREFIX: ClassVar[re.Pattern[str]] = re.compile(r"\b(?:lo|lot)\s*$")
+    _RE_WHITESPACE: ClassVar[re.Pattern[str]] = re.compile(r"\s+")
 
     _STATEFUL_ATTRS: ClassVar[Tuple[str, ...]] = (
         "address_node_list",
@@ -268,6 +305,9 @@ class AddressParser:
         self.province_names_std: Set[str] = set()
         self.district_names_std: Set[str] = set()
         self.ward_names_std: Set[str] = set()
+        self._province_detection_choices: Tuple[str, ...] = ()
+        self._district_detection_choices: Tuple[str, ...] = ()
+        self._ward_detection_choices: Tuple[str, ...] = ()
 
         # Lookup tables to attach IDs to normalized components at runtime
         self.province_lookup: Dict[str, Dict[str, Any]] = {}
@@ -5214,6 +5254,7 @@ class AddressParser:
                 node.ngram_list, index, self.invert_ngrams_idx
             )
 
+        self._refresh_detection_choices()
         self._rebuild_search_engine()
 
     def _dataset_signature(
@@ -5379,6 +5420,7 @@ class AddressParser:
                     self.search_engine = None
                 continue
             setattr(self, attr, value)
+        self._refresh_detection_choices()
         # Only rebuild if search engine wasn't restored from cache
         if self.search_engine is None:
             self._rebuild_search_engine()
@@ -11009,6 +11051,17 @@ class AddressParser:
     # --------------------
     # Prefix detection + prefilter
     # --------------------
+    def _refresh_detection_choices(self) -> None:
+        self._province_detection_choices = tuple(sorted(self.province_names_std))
+        self._district_detection_choices = tuple(
+            sorted(
+                candidate
+                for candidate in self.district_names_std
+                if not candidate.isdigit() and len(candidate) >= 3
+            )
+        )
+        self._ward_detection_choices = tuple(sorted(self.ward_names_std))
+
     def _detect_by_prefix(
         self, s: str
     ) -> Tuple[Optional[str], Optional[str], Optional[str]]:
@@ -11022,33 +11075,21 @@ class AddressParser:
         # causing premature truncation (e.g. "son" -> fuzzy-match "son la").
         has_segment_separators = "|" in s
         if has_segment_separators:
-            admin_boundary = r"(?:\||$)"
-            sub_admin_boundary = r"(?:\||$)"
-            prefix_anchor = r"(?:^|\|)\s*"
+            province_tinh_pref = self._RE_PREFIX_PROVINCE_SEGMENTED
+            city_pref = self._RE_PREFIX_CITY_SEGMENTED
+            district_pref = self._RE_PREFIX_DISTRICT_SEGMENTED
+            ward_pref = self._RE_PREFIX_WARD_SEGMENTED
         else:
-            admin_boundary = r"(?:\b(?:quan|q|huyen|h|thi xa|tx|thi tran|tt|phuong|p|xa|x|tp|tinh|thanh pho)\b|\||$)"
-            sub_admin_boundary = r"(?:\b(?:phuong|p|xa|x|thi tran|tt|quan|q|huyen|h|thi xa|tx|thanh pho|tinh|tp)\b|\||$)"
-            prefix_anchor = ""
-
-        # Compile once per call; small overhead compared to overall cost
-        province_tinh_pref = re.compile(
-            rf"{prefix_anchor}\btinh\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
-        )
-        province_pref = re.compile(
-            rf"{prefix_anchor}\b(?:thanh pho|tp|tinh)\b\s+([a-z0-9 ]+?)(?={admin_boundary})"
-        )
-        district_pref = re.compile(
-            rf"{prefix_anchor}\b(?P<prefix>quan|q|huyen|h|thi xa|tx|thanh pho|tp)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
-        )
-        ward_pref = re.compile(
-            rf"{prefix_anchor}\b(?P<prefix>phuong|p|xa|x|tt|thi tran|dac\s*khu)\b\s+(?P<fragment>[a-z0-9 ]+?)(?={sub_admin_boundary})"
-        )
+            province_tinh_pref = self._RE_PREFIX_PROVINCE_INLINE
+            city_pref = self._RE_PREFIX_CITY_INLINE
+            district_pref = self._RE_PREFIX_DISTRICT_INLINE
+            ward_pref = self._RE_PREFIX_WARD_INLINE
 
         def _digit_key(value: str) -> str:
             return "".join(ch for ch in value if ch.isdigit())
 
         def _pick_best(
-            fragment: str, choices: List[str], *, cutoff: int = 84
+            fragment: str, choices: Tuple[str, ...], *, cutoff: int = 84
         ) -> Optional[str]:
             fragment = fragment.strip()
             if not fragment:
@@ -11078,7 +11119,7 @@ class AddressParser:
 
         prov = dist = ward = None
         if self.province_names_std:
-            province_choices = sorted(self.province_names_std)
+            province_choices = self._province_detection_choices
 
             def _is_central_municipality(candidate_std: str) -> bool:
                 if not candidate_std:
@@ -11121,10 +11162,7 @@ class AddressParser:
                     break
 
             if not prov:
-                m_city = re.search(
-                    rf"{prefix_anchor}\b(?:thanh pho|tp)\b\s+([a-z0-9 ]+?)(?={admin_boundary})",
-                    s,
-                )
+                m_city = city_pref.search(s)
                 if m_city:
                     fragment = (m_city.group(1) or "").strip()
                     fragment = _trim_province_fragment(fragment)
@@ -11142,27 +11180,13 @@ class AddressParser:
                             prov = candidate
 
         dist_num = None
-        district_choices = (
-            sorted(
-                candidate
-                for candidate in self.district_names_std
-                if not candidate.isdigit() and len(candidate) >= 3
-            )
-            if self.district_names_std
-            else None
-        )
+        district_choices = self._district_detection_choices
         if district_choices:
-            m_num = re.search(r"\bquan\s*(\d{1,3})\b", s)
-            if not m_num:
-                m_num = re.search(r"\bquan(\d{1,3})\b", s)
-            if not m_num:
-                m_num = re.search(r"\bq\.?\s*(\d{1,3})\b", s)
-            if not m_num:
-                m_num = re.search(r"\bq(\d{1,3})\b", s)
+            m_num = self._RE_NUMERIC_DISTRICT.search(s)
             if m_num:
                 # Avoid false positives from lot codes like "Lô Q10-03" where "Q10" is not "Quận 10".
                 prefix_context = s[max(0, m_num.start() - 8) : m_num.start()]
-                if re.search(r"\b(lo|lot)\s*$", prefix_context):
+                if self._RE_LOT_PREFIX.search(prefix_context):
                     m_num = None
             if m_num:
                 raw = m_num.group(1).strip()
@@ -11317,7 +11341,7 @@ class AddressParser:
                         len(prefix_token) :
                     ].strip()
                 fused = f"{canonical} {normalized_fragment}".strip()
-                fused = re.sub(r"\s+", " ", fused)
+                fused = self._RE_WHITESPACE.sub(" ", fused)
                 if fused in self.ward_names_std:
                     return fused
                 if normalized_fragment.isdigit():
@@ -11363,7 +11387,7 @@ class AddressParser:
                 if not candidate:
                     candidate = _pick_best(
                         fragment,
-                        sorted(self.ward_names_std),
+                        self._ward_detection_choices,
                         cutoff=84,
                     )
                 if not candidate:
