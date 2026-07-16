@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from parser import AddressParser
+from address_parser import AddressParser
 
 
 def _is_province_level_city(parser: AddressParser, city_key: str) -> bool:
@@ -65,7 +65,7 @@ def _get_component_name(component: Optional[Dict[str, Any]]) -> Optional[str]:
 
 def _has_district_prefix(parser: AddressParser, address: str) -> bool:
     raw_lower = address.lower()
-    full_std = parser.standardize_name(address, False)
+    full_std = parser.standardize_name(address, "basic")
     tokens_full = [tok for tok in full_std.split() if tok]
     has_province_segment = False
     for segment_std, _ in parser._split_address_segments(address):
@@ -206,11 +206,19 @@ def main() -> int:
         # old metadata and mark the address as old format.
         if not has_prefix and is_new is not True and fmt != "new":
             ward_id = (parsed.get("ward") or {}).get("id")
-            ward_key = parser._normalize_id_token(ward_id)
             if (
-                ward_key
-                and ward_key in parser.old_ward_records
-                and ward_key not in parser.new_ward_records
+                parser.get_administrative_record(
+                    ward_id,
+                    level="ward",
+                    source="old",
+                )
+                is not None
+                and parser.get_administrative_record(
+                    ward_id,
+                    level="ward",
+                    source="new",
+                )
+                is None
             ):
                 continue
             failures.append(

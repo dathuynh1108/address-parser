@@ -35,10 +35,8 @@ def _load_reference_parser(repo_root: str):
         return None
 
 
-def _load_new_parser(repo_root: str):
-    if repo_root not in sys.path:
-        sys.path.insert(0, repo_root)
-    from fuzz.parser import AddressParser  # type: ignore
+def _load_new_parser():
+    from address_parser import AddressParser
 
     return AddressParser()
 
@@ -86,7 +84,7 @@ def evaluate(
     baseline_field: str,
 ) -> Dict:
     ref_parser = _load_reference_parser(repo_root) if baseline == "masothue" else None
-    new_parser = _load_new_parser(repo_root)
+    new_parser = _load_new_parser()
     summary = Counter()
     mismatches = []
     processed = 0

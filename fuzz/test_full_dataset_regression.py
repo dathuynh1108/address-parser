@@ -1,7 +1,7 @@
 import unittest
 
+from address_parser import AddressParser
 from full_dataset_regression_cases import build_regression_cases
-from parser import AddressParser
 
 
 class AddressParserFullDatasetRegressionTests(unittest.TestCase):

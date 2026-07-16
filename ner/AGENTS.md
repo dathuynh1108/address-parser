@@ -6,8 +6,8 @@
 - Generated data lands under `ner/datasets/` (e.g., `standard/`, `real/`, `combined/`), and training artifacts are stored in `ner/artifacts/`.
 
 ## Build, Test, and Development Commands
-- Generate synthetic data (expects administrative sources under `fuzz/data`):  
-  `python ner/build_standard_dataset.py --data-dir fuzz/data --output-dir ner/datasets/standard`
+- Generate synthetic data (expects administrative sources under `fuzz/address_parser/data`):
+  `python ner/build_standard_dataset.py --data-dir fuzz/address_parser/data --output-dir ner/datasets/standard`
 - Convert raw address dumps using the fuzzy parser:  
   `python ner/build_real_dataset.py --input <file> --output-dir ner/datasets/real`
 - Merge datasets into a single split:  

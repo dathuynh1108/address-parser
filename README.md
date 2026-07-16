@@ -2,7 +2,7 @@
 This repo combines a fuzzy address parser with a full synthetic/real dataset pipeline for training Electra-based Named Entity Recognition models that understand the Vietnamese administrative hierarchy (old 3-level + new 2-level).
 
 ## Highlights
-- **Hybrid parser** (`inexus/parser.py`): Fuzzy matching across wards/districts/provinces, aware of legacy→modern mappings.
+- **Installable address parser** (`fuzz/address_parser/`): Typed fuzzy matching across wards/districts/provinces, packaged as the `vn-address-parser` wheel with its administrative datasets.
 - **Synthetic dataset builder** (`ner/build_standard_dataset.py`): Generates millions of auto-labeled addresses (Street/Ward/District/Province) with configurable variants (accentless, abbreviations, compact forms, etc.).
 - **Real dataset ingester** (`ner/build_real_dataset.py`): Parses raw address dumps (JSON/JSONL), labels street + administrative spans, and supports `--load-mode memory|batch|stream` so you can toggle between full RAM, chunked batches, or low-RAM streaming.
 - **Dataset merger** (`ner/merge_datasets.py`): Concatenates any number of JSONL splits and re-splits with deterministic shuffling.
@@ -31,7 +31,7 @@ Model on HuggingFace:
 https://huggingface.co/dathuynh1108/ner-address-electra-base-vn
 
 ## Directory Structure
-- `inexus/`: Address parser + `data/` (administrative dumps & mappings).
+- `fuzz/`: Standalone `vn-address-parser` distribution, including `pyproject.toml`, the `address_parser` package, type information, administrative data, and parser regressions.
 - `ner/`:
   - `build_standard_dataset.py`: synthetic data generator.
   - `build_real_dataset.py`: real address labeling.
@@ -45,6 +45,23 @@ https://huggingface.co/dathuynh1108/ner-address-electra-base-vn
 ```bash
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
+```
+
+The root requirements install `./fuzz` as a normal local distribution. To build
+or install only the parser library:
+
+```bash
+python -m pip wheel ./fuzz --wheel-dir /tmp/address-parser-wheel
+python -m pip install ./fuzz
+```
+
+Use the package through its public API:
+
+```python
+from address_parser import AddressParser
+
+parser = AddressParser()
+result = parser.process("Phường Quan Hoa, Quận Cầu Giấy, Hà Nội")
 ```
 
 ### 1b. Optional: Download public dataset
@@ -91,7 +108,20 @@ The Trainer will log to `ner/artifacts/`, save the best checkpoint, and print pr
 
 ## Testing / Debugging
 - Use `ner/debug.py` (or notebooks) to poke at tokenizer alignment, CLS/SEP handling, etc.
-- Parser-related tests live in `tests/`; run `pytest` after touching `inexus/` logic.
+- Parser package tests live in `fuzz/`. Run the focused and exhaustive suites from that directory after parser changes:
+
+```bash
+cd fuzz
+python -m venv .venv
+./.venv/bin/python -m pip install -r requirements-dev.txt
+./.venv/bin/python -m unittest \
+  test_parser_contract.py \
+  test_parser_regression.py \
+  test_parser_new_format.py \
+  test_street_prefix_guard.py
+./.venv/bin/python -m unittest test_wheel_package.py
+./.venv/bin/python -m unittest test_full_dataset_regression.py
+```
 
 ## License
 MIT unless noted otherwise in subdirectories. Refer to upstream datasets’ licenses if you redistribute derived data.

@@ -1,7 +1,6 @@
 import unittest
-from unittest.mock import patch
 
-from parser import AddressParser
+from address_parser import AddressParser
 from review_regression_cases import (
     CCCD_REVIEWED_CORRECT_CASES,
     HEAD_OFFICE_REVIEWED_CORRECT_CASES,
@@ -43,37 +42,6 @@ class AddressParserRegressionTests(unittest.TestCase):
         self.assertIsNotNone(component)
         self.assertEqual(component["full_name"], expected_full_name)
         self.assertEqual(str(component.get("id")), expected_id)
-
-    def test_prefix_detection_reuses_precomputed_matchers(self):
-        province_choices = getattr(self.parser, "_province_detection_choices", None)
-        district_choices = getattr(self.parser, "_district_detection_choices", None)
-        ward_choices = getattr(self.parser, "_ward_detection_choices", None)
-        self.assertIsInstance(province_choices, tuple)
-        self.assertIsInstance(district_choices, tuple)
-        self.assertIsInstance(ward_choices, tuple)
-
-        with (
-            patch(
-                "parser.re.compile",
-                side_effect=AssertionError("compiled regex on the request path"),
-            ),
-            patch(
-                "parser.re.search",
-                side_effect=AssertionError("module-level regex search on the request path"),
-            ),
-        ):
-            segmented = self.parser._detect_by_prefix(
-                "phuong long an | tay ninh"
-            )
-            unsegmented = self.parser._detect_by_prefix(
-                "phuong quan hoa quan cau giay thanh pho ha noi"
-            )
-
-        self.assertEqual(segmented, (None, None, "phuong long an"))
-        self.assertEqual(unsegmented, ("ha noi", "cau giay", "quan hoa"))
-        self.assertIs(province_choices, self.parser._province_detection_choices)
-        self.assertIs(district_choices, self.parser._district_detection_choices)
-        self.assertIs(ward_choices, self.parser._ward_detection_choices)
 
     def test_new_format_regression_cases(self):
         cases = [

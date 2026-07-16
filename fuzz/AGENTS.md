@@ -25,28 +25,44 @@ Use the repo virtualenv, not system Python:
 
 ## Primary Files
 
-- `parser.py`: main parser logic
+- `address_parser/parser.py`: main parser logic
+- `address_parser/contracts.py`: public input and result contracts
+- `address_parser/search_engine.py`: typed BM25 search implementation
 - `test_parser_regression.py`: curated regression cases
 - `test_parser_new_format.py`: focused new-format behavior
 - `test_street_prefix_guard.py`: street/locality false-positive guards
+- `test_wheel_package.py`: isolated wheel build/install/package-data smoke test
 - `full_dataset_regression_cases.py`: exhaustive synthetic-case builder
 - `test_full_dataset_regression.py`: full old/new dataset sweep
 
 ## Verification Workflow
 
+Install development-only type and lint tools when needed:
+
+```bash
+./.venv/bin/python -m pip install -r requirements-dev.txt
+```
+
+Run the strict type gate for library and corpus-builder code:
+
+```bash
+./.venv/bin/mypy
+```
+
 Run this first for fast feedback:
 
 ```bash
-./.venv/bin/python -m unittest test_parser_regression.py test_parser_new_format.py test_street_prefix_guard.py
+./.venv/bin/python -m unittest test_parser_contract.py test_parser_regression.py test_parser_new_format.py test_street_prefix_guard.py
 ```
 
 Run this before closing parser changes:
 
 ```bash
+./.venv/bin/python -m unittest test_wheel_package.py
 ./.venv/bin/python -m unittest test_full_dataset_regression.py
 ```
 
-Current exhaustive sweep size is about 13,802 cases and takes about 3.5 to 4 minutes on this machine.
+Current exhaustive sweep size is 14,082 cases and takes about 7.5 to 8.5 minutes on this machine.
 
 If you want to regenerate the synthetic corpus explicitly:
 

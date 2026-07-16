@@ -11,7 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from fuzz.parser import AddressParser
+from address_parser import AddressParser
 from ner.build_real_dataset import collect_aliases, extract_aliases, extract_address, iter_json_objects
 from ner.build_standard_dataset import label_tokens
 

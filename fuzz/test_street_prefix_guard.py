@@ -1,6 +1,6 @@
 import unittest
 
-from parser import AddressParser
+from address_parser import AddressParser
 
 
 class AddressParserStreetPrefixGuardTests(unittest.TestCase):

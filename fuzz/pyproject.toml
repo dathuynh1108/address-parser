@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vn-address-parser"
+version = "0.1.0"
+description = "Typed Vietnamese address parser for old and new administrative formats"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "rank-bm25>=0.2.2",
+    "rapidfuzz>=3.0.0",
+]
+
+[tool.setuptools]
+packages = ["address_parser", "address_parser.data"]
+
+[tool.setuptools.package-data]
+address_parser = [
+    "data/address_parser.preprocessed.v104.pkl",
+    "data/administrative_units.json",
+    "data/old_administrative_units.json",
+    "data/old_districts.json",
+    "data/old_provinces.json",
+    "data/old_wards.json",
+    "data/provinces.json",
+    "data/ward_mappings.json",
+    "data/ward_mappings_after_enrich.json",
+    "data/ward_mappings_enrich.json",
+    "data/ward_mappings_source.json",
+    "data/wards.json",
+    "py.typed",
+]
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = ["typing"]
+files = [
+    "address_parser/contracts.py",
+    "address_parser/parser.py",
+    "address_parser/search_engine.py",
+    "full_dataset_regression_cases.py",
+]
+strict = true
+disallow_any_expr = true
+disallow_any_explicit = true
+disallow_any_unimported = true
+show_error_codes = true
+warn_unused_configs = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP"]

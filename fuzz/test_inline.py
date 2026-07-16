@@ -7,7 +7,7 @@ import json
 import sys
 from typing import Dict, List
 
-from parser import AddressParser
+from address_parser import AddressParser
 
 
 tests = [
@@ -129,11 +129,19 @@ if __name__ == "__main__":
             )
         elif (not has_prefix) and parsed.get("is_new") is False:
             ward_id = (parsed.get("ward") or {}).get("id")
-            ward_key = parser._normalize_id_token(ward_id)
             is_legacy_only_ward = bool(
-                ward_key
-                and ward_key in parser.old_ward_records
-                and ward_key not in parser.new_ward_records
+                parser.get_administrative_record(
+                    ward_id,
+                    level="ward",
+                    source="old",
+                )
+                is not None
+                and parser.get_administrative_record(
+                    ward_id,
+                    level="ward",
+                    source="new",
+                )
+                is None
             )
             if not is_legacy_only_ward:
                 suspicious.append(

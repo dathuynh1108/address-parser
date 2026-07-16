@@ -1,0 +1,1 @@
+"""Packaged administrative registry data."""

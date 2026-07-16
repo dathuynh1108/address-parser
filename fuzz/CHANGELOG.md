@@ -4,6 +4,18 @@ All notable updates to the address parser are documented here. Examples show **b
 
 ---
 
+## Update 2026-07-15
+
+- Package is now installed and imported as `address_parser`.
+- Public parser, mapping, lookup, and search contracts are fully typed in
+  `address_parser.contracts` and distributed with `py.typed`.
+- Removed ambiguous top-level imports such as `from parser import AddressParser`;
+  use `from address_parser import AddressParser`.
+- Added explicit `normalize_address_code()` and `get_administrative_record()`
+  boundaries for consumers that need registry access.
+
+---
+
 ## Update 2026-03-07
 - Fix ward_code is None for case like this address:
 ```

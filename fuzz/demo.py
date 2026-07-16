@@ -1,4 +1,4 @@
-from parser import AddressParser
+from address_parser import AddressParser
 
 parser = AddressParser()
 

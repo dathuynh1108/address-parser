@@ -1,0 +1,8 @@
+-e .
+-r requirements.txt
+# NumPy 2.5 stubs use syntax newer than this package's Python 3.10 mypy target.
+numpy<2.5
+build>=1.2,<2
+setuptools>=77
+mypy>=1.16,<2
+ruff>=0.12,<1

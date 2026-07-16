@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Tuple
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = BASE_DIR / "address_parser" / "data"
 DEFAULT_OUTPUT = BASE_DIR / "list_addresses.jsonl"
 
 
