@@ -31,7 +31,7 @@ Use the repo virtualenv, not system Python:
 - `test_parser_regression.py`: curated regression cases
 - `test_parser_new_format.py`: focused new-format behavior
 - `test_street_prefix_guard.py`: street/locality false-positive guards
-- `test_wheel_package.py`: isolated wheel build/install/package-data smoke test
+- `test_wheel_package.py`: isolated native/fallback wheel build and install smoke
 - `full_dataset_regression_cases.py`: exhaustive synthetic-case builder
 - `test_full_dataset_regression.py`: full old/new dataset sweep
 
@@ -62,7 +62,8 @@ Run this before closing parser changes:
 ./.venv/bin/python -m unittest test_full_dataset_regression.py
 ```
 
-Current exhaustive sweep size is 14,082 cases and takes about 7.5 to 8.5 minutes on this machine.
+Current exhaustive sweep size is 14,082 cases. It takes about 1.5 minutes with
+the native kernel and 2 minutes with the typed Python fallback on this machine.
 
 If you want to regenerate the synthetic corpus explicitly:
 

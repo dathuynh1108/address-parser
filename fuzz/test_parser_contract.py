@@ -122,9 +122,7 @@ class AddressParserContractTests(unittest.TestCase):
                 side_effect=AssertionError("module-level regex search on the request path"),
             ),
         ):
-            segmented = self.parser._detect_by_prefix(
-                "phuong long an | tay ninh"
-            )
+            segmented = self.parser._detect_by_prefix("phuong long an | tay ninh")
             unsegmented = self.parser._detect_by_prefix(
                 "phuong quan hoa quan cau giay thanh pho ha noi"
             )
@@ -134,6 +132,43 @@ class AddressParserContractTests(unittest.TestCase):
         self.assertIs(province_choices, self.parser._province_detection_choices)
         self.assertIs(district_choices, self.parser._district_detection_choices)
         self.assertIs(ward_choices, self.parser._ward_detection_choices)
+
+    def test_fuzzy_match_preserves_second_query_prefix_pass(self) -> None:
+        self.assertEqual(
+            self.parser._fuzzy_match_component_key(
+                "phuong h ai duong",
+                ["h ai duong", "hai duong"],
+                cutoff=88,
+            ),
+            "h ai duong",
+        )
+
+    def test_fuzzy_match_preserves_duplicate_core_choice_order(self) -> None:
+        choices = ["phuong tan an", "xa tan an"]
+        self.assertEqual(
+            self.parser._fuzzy_match_component_key("tan ann", choices, cutoff=80),
+            choices[0],
+        )
+        choices.reverse()
+        self.assertEqual(
+            self.parser._fuzzy_match_component_key("tan ann", choices, cutoff=80),
+            choices[0],
+        )
+
+    def test_preprocess_rebuilds_derived_packed_index(self) -> None:
+        previous_index = self.parser._packed_ngram_index
+        expected = self.parser.process(
+            "Số 27 Nguyễn Khánh Toàn, Phường Quan Hoa, Quận Cầu Giấy, Hà Nội"
+        )
+
+        self.parser.preprocess_address()
+
+        self.assertIsNotNone(previous_index)
+        self.assertIsNot(previous_index, self.parser._packed_ngram_index)
+        self.assertEqual(
+            self.parser.process("Số 27 Nguyễn Khánh Toàn, Phường Quan Hoa, Quận Cầu Giấy, Hà Nội"),
+            expected,
+        )
 
     def test_component_lookup_rejects_invalid_identifier_types(self) -> None:
         invalid_identifiers: tuple[object, ...] = (True, 1.5, object())

@@ -47,12 +47,20 @@ python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The root requirements install `./fuzz` as a normal local distribution. To build
-or install only the parser library:
+The root requirements install `./fuzz` as a normal local distribution. For a
+published release, or to build and install only the parser library:
 
 ```bash
+python -m pip install vn-address-parser
 python -m pip wheel ./fuzz --wheel-dir /tmp/address-parser-wheel
 python -m pip install ./fuzz
+```
+
+For a production wheel that must contain the native Cython kernel:
+
+```bash
+VN_ADDRESS_PARSER_NATIVE=required \
+  python -m pip wheel ./fuzz --wheel-dir /tmp/address-parser-wheel
 ```
 
 Use the package through its public API:
@@ -118,7 +126,8 @@ python -m venv .venv
   test_parser_contract.py \
   test_parser_regression.py \
   test_parser_new_format.py \
-  test_street_prefix_guard.py
+  test_street_prefix_guard.py \
+  test_performance_kernels.py
 ./.venv/bin/python -m unittest test_wheel_package.py
 ./.venv/bin/python -m unittest test_full_dataset_regression.py
 ```

@@ -39,6 +39,7 @@ from .contracts import (
     DetectedComponents,
     ExternalNewDataset,
     ExternalWardMappingRow,
+    FuzzyChoiceProfile,
     ImmediateOldWardResult,
     LegacyAddressDataset,
     LegacyDistrictRecord,
@@ -64,6 +65,8 @@ from .contracts import (
     WardMappingRow,
     WardMappingsByCode,
 )
+from .ngram_index import PackedNgramIndex
+from .normalization import normalize_address_text
 from .search_engine import (
     AddressSearchEngine,
     validate_search_metadata,
@@ -158,9 +161,7 @@ class AddressParser:
         r"(?P<fragment>[a-z0-9 ]+?)(?=(?:\b(?:phuong|p|xa|x|thi tran|tt|quan|q|"
         r"huyen|h|thi xa|tx|thanh pho|tinh|tp)\b|\||$))"
     )
-    _RE_NUMERIC_DISTRICT: ClassVar[re.Pattern[str]] = re.compile(
-        r"\b(?:quan|q\.?)\s*(\d{1,3})\b"
-    )
+    _RE_NUMERIC_DISTRICT: ClassVar[re.Pattern[str]] = re.compile(r"\b(?:quan|q\.?)\s*(\d{1,3})\b")
     _RE_LOT_PREFIX: ClassVar[re.Pattern[str]] = re.compile(r"\b(?:lo|lot)\s*$")
     _RE_WHITESPACE: ClassVar[re.Pattern[str]] = re.compile(r"\s+")
 
@@ -352,6 +353,7 @@ class AddressParser:
 
         self.address_node_list: list[AddressParser.AddressNode] = []
         self.invert_ngrams_idx: dict[str, set[int]] = {}
+        self._packed_ngram_index: PackedNgramIndex | None = None
 
         # Name-level inverted indexes for fast prefiltering by known names
         self.invert_province_to_indices: defaultdict[str, set[int]] = defaultdict(set)
@@ -365,6 +367,7 @@ class AddressParser:
         self._province_detection_choices: tuple[str, ...] = ()
         self._district_detection_choices: tuple[str, ...] = ()
         self._ward_detection_choices: tuple[str, ...] = ()
+        self._fuzzy_choice_profiles: dict[str, FuzzyChoiceProfile] = {}
 
         # Lookup tables to attach IDs to normalized components at runtime
         self.province_lookup: dict[str, AdministrativeRecord] = {}
@@ -401,6 +404,9 @@ class AddressParser:
         self.search_engine: AddressSearchEngine | None = None
         self._old_ward_name_index: dict[str, list[str]] | None = None
         self._old_ward_raw_name_index: dict[str, list[str]] | None = None
+        self._canonical_province_key_by_alias: dict[str, str] = (
+            self._build_canonical_province_key_map()
+        )
 
         # Pre-process address data once when initializing the Solution object
         dataset_signature: DatasetSignature = self._dataset_signature()
@@ -5049,6 +5055,7 @@ class AddressParser:
             self.generate_ngram_inverted_index(node.ngram_list, index, self.invert_ngrams_idx)
 
         self._refresh_detection_choices()
+        self._rebuild_packed_ngram_index()
         self._rebuild_search_engine()
 
     def _dataset_signature(
@@ -5251,6 +5258,7 @@ class AddressParser:
         self.external_new_province_records = state["external_new_province_records"]
         self.external_new_ward_records = state["external_new_ward_records"]
         self._refresh_detection_choices()
+        self._rebuild_packed_ngram_index()
 
         self.search_engine = restored_search_engine
 
@@ -8017,7 +8025,9 @@ class AddressParser:
                     if expected_code and parent_code and expected_code != parent_code:
                         continue
 
-                parent_province_code = self.normalize_address_code(parent_district.get("parent_code"))
+                parent_province_code = self.normalize_address_code(
+                    parent_district.get("parent_code")
+                )
                 province_code = self.normalize_address_code(
                     province_info.get("id") or province_info.get("code")
                 )
@@ -9055,48 +9065,51 @@ class AddressParser:
         if not normalized:
             return None
 
+        if normalized in choices:
+            return normalized
+
         choice_list = [choice for choice in choices if choice]
         if not choice_list:
             return None
-        if normalized in choice_list:
-            return normalized
 
         normalized_core = self._strip_generic_prefix(normalized) or normalized
         if len(normalized_core) < 4:
             return None
 
-        def _digit_key(text: str) -> str:
-            return "".join(ch for ch in text if ch.isdigit())
-
-        fragment_digits = _digit_key(normalized)
-        token_count = len(normalized_core.split())
+        normalized_tokens = normalized_core.split()
+        fragment_digits = "".join(ch for ch in normalized if ch.isdigit())
+        token_count = len(normalized_tokens)
 
         narrowed_choices: list[str] = []
+        narrowed_cores: list[str] = []
         for choice in choice_list:
-            choice_core = self._strip_generic_prefix(choice) or choice
+            choice_core, choice_digits, choice_token_count, choice_length, _, _ = (
+                self._fuzzy_choice_profile(choice)
+            )
             if not choice_core:
                 continue
             if fragment_digits:
-                choice_digits = _digit_key(choice)
                 if choice_digits and choice_digits != fragment_digits:
                     continue
-            token_delta = abs(len(choice_core.split()) - token_count)
+            token_delta = abs(choice_token_count - token_count)
             if token_delta > 1:
                 continue
-            len_delta = abs(len(choice_core) - len(normalized_core))
+            len_delta = abs(choice_length - len(normalized_core))
             if len_delta > max(5, len(normalized_core) // 2):
                 continue
             narrowed_choices.append(choice)
+            narrowed_cores.append(choice_core)
 
         if not narrowed_choices:
             if fragment_digits:
-                digit_matches = [
-                    choice for choice in choice_list if _digit_key(choice) == fragment_digits
-                ]
-                if digit_matches:
-                    narrowed_choices = digit_matches
+                for choice in choice_list:
+                    choice_core, choice_digits, _, _, _, _ = self._fuzzy_choice_profile(choice)
+                    if choice_digits == fragment_digits:
+                        narrowed_choices.append(choice)
+                        narrowed_cores.append(choice_core)
             if not narrowed_choices:
                 narrowed_choices = choice_list
+                narrowed_cores = [self._fuzzy_choice_profile(choice)[0] for choice in choice_list]
 
         effective_cutoff = cutoff
         if len(normalized_core) <= 5:
@@ -9106,16 +9119,17 @@ class AddressParser:
         elif len(normalized_core) <= 10:
             effective_cutoff = max(effective_cutoff, 87)
 
-        def _process_choice(item: str) -> str:
-            return self._strip_generic_prefix(item) or item
-
+        # ``process.extract`` used to apply the prefix processor to the query as
+        # well as each choice. Preserve that second query pass while feeding
+        # precomputed choice cores directly.
+        scorer_query = self._strip_generic_prefix(normalized_core) or normalized_core
         candidates = cast(
             list[tuple[str, float, int]],
             rf_process.extract(
-                normalized_core,
-                narrowed_choices,
+                scorer_query,
+                narrowed_cores,
                 scorer=rf_fuzz.WRatio,
-                processor=_process_choice,
+                processor=None,
                 score_cutoff=max(72, effective_cutoff - 8),
                 limit=8,
             ),
@@ -9123,7 +9137,6 @@ class AddressParser:
         if not candidates:
             return None
 
-        normalized_tokens = normalized_core.split()
         first_token = normalized_tokens[0] if normalized_tokens else ""
         last_token = normalized_tokens[-1] if normalized_tokens else ""
 
@@ -9131,16 +9144,24 @@ class AddressParser:
         best_score = float("-inf")
         second_score = float("-inf")
 
-        for candidate, wratio_score, _ in candidates:
-            candidate_core = self._strip_generic_prefix(candidate) or candidate
+        for _, wratio_score, candidate_index in candidates:
+            candidate = narrowed_choices[candidate_index]
+            (
+                candidate_core,
+                candidate_digits,
+                candidate_token_count,
+                candidate_length,
+                candidate_first,
+                candidate_last,
+            ) = self._fuzzy_choice_profile(candidate)
             if not candidate_core:
                 continue
 
             direct_ratio = ratio(normalized_core, candidate_core)
             token_ratio = rf_fuzz.token_sort_ratio(normalized_core, candidate_core)
             partial = partial_ratio(normalized_core, candidate_core)
-            len_delta = abs(len(candidate_core) - len(normalized_core))
-            token_delta = abs(len(candidate_core.split()) - token_count)
+            len_delta = abs(candidate_length - len(normalized_core))
+            token_delta = abs(candidate_token_count - token_count)
 
             effective_score = max(
                 wratio_score,
@@ -9152,12 +9173,11 @@ class AddressParser:
             if token_delta > 1:
                 effective_score -= (token_delta - 1) * 10
 
-            candidate_tokens = candidate_core.split()
-            if first_token and candidate_tokens and candidate_tokens[0] == first_token:
+            if first_token and candidate_first == first_token:
                 effective_score += 1.5
-            if last_token and candidate_tokens and candidate_tokens[-1] == last_token:
+            if last_token and candidate_last == last_token:
                 effective_score += 2.5
-            if fragment_digits and _digit_key(candidate) == fragment_digits:
+            if fragment_digits and candidate_digits == fragment_digits:
                 effective_score += 1.5
 
             if effective_score > best_score:
@@ -9172,6 +9192,12 @@ class AddressParser:
         if second_score >= best_score - 1.5 and best_score < effective_cutoff + 3:
             return None
         return best_choice
+
+    def _fuzzy_choice_profile(self, choice: str) -> FuzzyChoiceProfile:
+        cached = self._fuzzy_choice_profiles.get(choice)
+        if cached is not None:
+            return cached
+        return self._build_fuzzy_choice_profile(choice)
 
     def _derive_ward_names(
         self,
@@ -9996,23 +10022,22 @@ class AddressParser:
         if not key:
             return ""
         key = re.sub(self._RE_PROVINCE_PREFIX, "", key).strip()
-        # Map known synonyms to canonical province keys.
+        return self._canonical_province_key_by_alias.get(key, key)
+
+    def _build_canonical_province_key_map(self) -> dict[str, str]:
+        aliases: dict[str, str] = {}
         for synonyms, canonical in SPECIAL_PROVINCE_MAP.items():
-            canonical_std = self.standardize_name(canonical, "basic")
-            if canonical_std:
-                canonical_std = re.sub(self._RE_PROVINCE_PREFIX, "", canonical_std).strip()
-            if not canonical_std:
+            canonical_key = normalize_address_text(canonical, "basic")
+            canonical_key = re.sub(self._RE_PROVINCE_PREFIX, "", canonical_key).strip()
+            if not canonical_key:
                 continue
-            if key == canonical_std:
-                return canonical_std
-            alias_iter = synonyms if isinstance(synonyms, (list, tuple, set)) else (synonyms,)
-            for alias in alias_iter:
-                alias_std = self.standardize_name(alias, "basic")
-                if alias_std:
-                    alias_std = re.sub(self._RE_PROVINCE_PREFIX, "", alias_std).strip()
-                if alias_std and key == alias_std:
-                    return canonical_std
-        return key
+            aliases[canonical_key] = canonical_key
+            for alias in synonyms:
+                alias_key = normalize_address_text(alias, "basic")
+                alias_key = re.sub(self._RE_PROVINCE_PREFIX, "", alias_key).strip()
+                if alias_key:
+                    aliases[alias_key] = canonical_key
+        return aliases
 
     def _prefer_hierarchical_ward_entry(
         self,
@@ -10269,177 +10294,7 @@ class AddressParser:
         }:
             raise ValueError("mode must be 'basic', 'search', or 'aggressive'")
 
-        return self._standardize_name_with_mode(name, mode)
-
-    def _standardize_name_with_mode(self, name: str, mode: NormalizationMode) -> str:
-        if not name:
-            return ""
-
-        # --- Bước 1: Đưa về chữ thường ---
-        s = name.lower()
-
-        # --- Bước 1.1: Loại bỏ dấu chấm và dấu phẩy ở đầu và cuối chuỗi ---
-        s = re.sub(r"^[\.,]+", "", s)  # xóa tất cả . hoặc , ở đầu
-        s = re.sub(r"[\.,]+$", "", s)  # xóa tất cả . hoặc , ở cuối
-        # --- Bước 1.2: Xóa hẳn ký tự "/" ---
-        s = s.replace("/", "")
-        # # --- Bước 1.3: Thay các dấu "." và "-" bằng space ---
-        # s = s.replace(".", " ").replace("-", " ")
-
-        if mode in {"search", "aggressive"}:
-            s = re.sub(r"\b(t.t.h)\b", " thua thien hue ", s, flags=re.IGNORECASE)
-
-            s = re.sub(r"\b(h.c.m|h.c.minh)\b", " ho chi minh ", s, flags=re.IGNORECASE)
-
-            s = re.sub(r"\b(hn|h.noi|ha ni)\b", " ha noi ", s, flags=re.IGNORECASE)
-
-            # --- Bước 2: Thay cụm từ thừa bằng space (thay chính xác 100%) ---
-            redundant_phrases = [
-                "thành phố",
-                "thành phô",
-                "thành fhố",
-                "thanh fho",
-                "thanh pho ",
-                "thành. phố",
-                "thành.phố",
-                "tp.",
-                "t.p",
-                "tp ",
-                "t.phố",
-                "t. phố",
-                "tỉnh",
-                "tinh",
-                "tt.",
-                "t.",
-                " t ",
-                "quận",
-                "qận",
-                "qun",
-                "q.",
-                "q ",
-                "huyện",
-                "h.",
-                " h ",
-                ".h ",
-                "district",
-                "dist.",
-                "dist ",
-                "ward",
-                "w.",
-                "w ",
-                "city",
-                "province",
-                "municipality",
-                "town",
-                "village",
-                "commune",
-                "thị xã",
-                "thị.xã",
-                "tx.",
-                "t.xã",
-                "tx ",
-                "thị trấn",
-                "thị.trấn",
-                "tt ",
-                "xã",
-                "x.",
-                "x ",
-                "phường",
-                "kp.",
-                "p.",
-                " p ",
-                ".p ",
-                "phường.",
-                "phường ",
-                "f",
-                "j",
-                "z",
-                "w",
-            ]
-
-            for phrase in redundant_phrases:
-                s = s.replace(phrase, " ")
-
-            if mode == "aggressive":
-                s = re.sub(
-                    r"\b("
-                    r"|tiểu\s*khu(\s*\d+\w*)?"  # tiểu khu 3, tiểu khu12a
-                    r"|khu\s*pho(\s*\d+\w*)?"  # khu phố, khu phố 3
-                    r"|khu\s*phố(\s*\d+\w*)?"  # khu phố, khu phố 3
-                    r"|khu\s*vuc(\s*\d+\w*)?"  # khu vực, khu vực 2
-                    r"|khu\s*vực(\s*\d+\w*)?"  # khu vực, khu vực 2
-                    r"|khu(\s*\d+\w*)?"  # khu, khu 3, khu12a
-                    r"|kp(\s*\d+\w*)?"  # kp2, kp 3
-                    r"|tổ\s*dân\s*phố(\s*\d+\w*)?"  # tổ dân phố 5, tổ dân phố12a
-                    r"|tổ(\s*\d+\w*)?"  # tổ 1
-                    r"|thôn(\s*\d+\w*)?"  # thôn 3
-                    r"|xóm(\s*\d+\w*)?"  # xóm 2
-                    r"|cụm(\s*\d+\w*)?"  # cụm 3
-                    r"|phố(\s*\d+\w*)?"  # phố 5
-                    r"|khóm(\s*\d+\w*)?"  # khóm 2
-                    r"|số\s*nhà(\s*\d+\w*)?"  # số nhà 12
-                    r"|số(\s*\d+\w*)?"  # số 12
-                    r"|nhà(\s*\d+\w*)?"  # nhà 12
-                    r"|ấp(\s*\d+\w*)?"  # ấp 1, ấp2
-                    r"|ngách\s*\d+\w*"  # ngách 12, ngách12a
-                    r"|ngõ\s*\d+\w*"  # ngõ 12, ngõ12a
-                    r"|hẻm\s*\d+\w*"
-                    r")\b",
-                    "",
-                    s,
-                    flags=re.IGNORECASE,
-                )
-
-            # --- Bước 3: Loại các cụm "tp" dính liền chữ, ví dụ "tpbao loc" → "bao loc" ---
-            s = re.sub(r"\btp([a-z0-9]+)", r"\1", s)
-
-        # --- Bước 4: Chuẩn hóa Unicode & bỏ dấu ---
-        s = s.replace("đ", "d")
-        s = unicodedata.normalize("NFD", s)
-        s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
-
-        # --- Bước 5: Giữ lại a-z, 0-9, space ---
-        s = re.sub(r"[^a-z0-9\s]+", " ", s)
-
-        if mode in {"search", "aggressive"}:
-            s = re.sub(
-                r"\b(hochi\s*minh|ho\s*chiminh|hcm|hcminh)\b",
-                "ho chi minh",
-                s,
-                flags=re.IGNORECASE,
-            )
-            if re.search(r"\bho chi minh\b", s, flags=re.IGNORECASE):
-                mapping = {
-                    "bc": "binh chanh",
-                    "tb": "tan binh",
-                    "bt": "binh thanh",
-                    "gv": "go vap",
-                    "pn": "phu nhuan",
-                    "cc": "cu chi",
-                    "hm": "hoc mon",
-                    "nb": "nha be",
-                }
-
-                # Thay từng viết tắt bằng tên đầy đủ (chỉ thay khi là từ riêng biệt)
-                for abbr, full in mapping.items():
-                    s = re.sub(rf"\b{abbr}\b", full, s, flags=re.IGNORECASE)
-
-            if mode == "aggressive":
-                # --- Bước 7: Loại bỏ các chuỗi chứa từ 3 chữ số trở lên ---
-                # Bỏ số 0 ở đầu của mọi cụm số
-                s = re.sub(r"\b0+(\d+)\b", r"\1", s)
-                # Tức là "abc123xyz" hoặc "123" đều bị loại bỏ phần chứa "123"
-                s = re.sub(r"\d{3,}", "", s)
-
-                # --- Bước 8: Bỏ 'p' hoặc 'q' trước số (vd: p1 → 1, q10 → 10) ---
-                s = re.sub(r"\b[pq](\d+)\b", r"\1", s)
-
-            # --- Bước X: Loại bỏ các cụm địa chỉ thừa ---
-
-        # --- Bước 9: Gom space ---
-        s = re.sub(r"\s+", " ", s).strip()
-        # print(s)
-        return s
+        return normalize_address_text(name, mode)
 
     def _raw_name_variant_candidates(self, value: str | None) -> list[str]:
         if not isinstance(value, str):
@@ -11239,16 +11094,16 @@ class AddressParser:
             invert_ngram_to_index_dict[ngram].add(index)
 
     def ngram_address_piece_list(self, input_ngram_list: list[str], top_k: int) -> list[NgramHit]:
-        counter: Counter[int] = Counter()
-        invert_dict = self.invert_ngrams_idx
+        packed_index = self._packed_ngram_index
+        if packed_index is None:
+            raise RuntimeError("packed n-gram index is not initialized")
+        return packed_index.top_hits(input_ngram_list, top_k)
 
-        # Iterate unique ngrams to avoid redundant counting
-        for ngram in sorted(set(input_ngram_list)):
-            if ngram in invert_dict:
-                counter.update(invert_dict[ngram])  # ✅ xử lý hàng loạt
-
-        # Return only top-K candidates to cap cost (heap-based in CPython)
-        return counter.most_common(top_k)
+    def _rebuild_packed_ngram_index(self) -> None:
+        self._packed_ngram_index = PackedNgramIndex(
+            self.invert_ngrams_idx,
+            len(self.address_node_list),
+        )
 
     # --------------------
     # Prefix detection + prefilter
@@ -11263,6 +11118,23 @@ class AddressParser:
             )
         )
         self._ward_detection_choices = tuple(sorted(self.ward_names_std))
+        self._fuzzy_choice_profiles = {
+            choice: self._build_fuzzy_choice_profile(choice)
+            for choice in (self.province_names_std | self.district_names_std | self.ward_names_std)
+            if choice
+        }
+
+    def _build_fuzzy_choice_profile(self, choice: str) -> FuzzyChoiceProfile:
+        core = self._strip_generic_prefix(choice) or choice
+        tokens = core.split()
+        return (
+            core,
+            "".join(character for character in choice if character.isdigit()),
+            len(tokens),
+            len(core),
+            tokens[0] if tokens else "",
+            tokens[-1] if tokens else "",
+        )
 
     def _detect_by_prefix(self, s: str) -> DetectedComponents:
         # s should be standardized without advanced removal (to keep prefix words)
@@ -11747,29 +11619,19 @@ class AddressParser:
             detected_components if detected_components else (None, None, None)
         )
 
-        input_set = input_ngram_set
-        input_set_length = len(input_set)
+        input_set_length = len(input_ngram_set)
         filtered_entries: list[tuple[int, float]] = []
         dice_entries: list[tuple[int, float]] = []
 
-        index = 0
-        for idx_count in ngram_address_piece_list:
-            idx = idx_count[0]
+        for position, (idx, intersection) in enumerate(ngram_address_piece_list, start=1):
             candidate_ngrams = self.address_node_list[idx].ngram_list
-
-            # Fast overlap count without building set
-            intersection = 0
-            for gram in input_set:
-                if gram in candidate_ngrams:
-                    intersection += 1
 
             dice_score = (2 * intersection) / (input_set_length + len(candidate_ngrams))
             dice_entries.append((idx, dice_score))
-            index += 1
 
             if dice_score >= self.DICE_GATE:
                 filtered_entries.append((idx, dice_score))
-            elif index >= 200:
+            elif position >= 200:
                 # Counter is ordered by frequency; dice will only go down after this point
                 break
         if not filtered_entries:

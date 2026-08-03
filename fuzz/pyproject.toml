@@ -1,45 +1,68 @@
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools>=77", "Cython>=3.2,<4"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "vn-address-parser"
-version = "0.1.0"
+version = "0.2.0"
 description = "Typed Vietnamese address parser for old and new administrative formats"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE", "DATA_SOURCES.md", "THIRD_PARTY_NOTICES.md"]
+authors = [
+    { name = "Huynh Thanh Dat", email = "huynhthanhdat1108@gmail.com" },
+]
+keywords = ["address", "parser", "vietnam", "vietnamese", "cython"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+]
 dependencies = [
     "rank-bm25>=0.2.2",
     "rapidfuzz>=3.0.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/dathuynh1108/address-parser"
+Repository = "https://github.com/dathuynh1108/address-parser.git"
+Issues = "https://github.com/dathuynh1108/address-parser/issues"
+
 [tool.setuptools]
+include-package-data = false
 packages = ["address_parser", "address_parser.data"]
 
 [tool.setuptools.package-data]
 address_parser = [
     "data/address_parser.preprocessed.v104.pkl",
-    "data/administrative_units.json",
-    "data/old_administrative_units.json",
     "data/old_districts.json",
     "data/old_provinces.json",
     "data/old_wards.json",
     "data/provinces.json",
     "data/ward_mappings.json",
-    "data/ward_mappings_after_enrich.json",
-    "data/ward_mappings_enrich.json",
-    "data/ward_mappings_source.json",
     "data/wards.json",
+    "*.pyi",
     "py.typed",
 ]
-
 [tool.mypy]
 python_version = "3.10"
 mypy_path = ["typing"]
 files = [
+    "address_parser/_python_kernels.py",
     "address_parser/contracts.py",
+    "address_parser/kernels.py",
+    "address_parser/ngram_index.py",
+    "address_parser/normalization.py",
     "address_parser/parser.py",
     "address_parser/search_engine.py",
+    "benchmarks/benchmark_parser.py",
     "full_dataset_regression_cases.py",
 ]
 strict = true

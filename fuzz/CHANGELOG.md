@@ -4,6 +4,19 @@ All notable updates to the address parser are documented here. Examples show **b
 
 ---
 
+## Update 2026-08-03
+
+- Added an optional Cython native wheel kernel for packed n-gram candidate
+  ranking; the public parser input and `ParseResult` contracts are unchanged.
+- Moved deterministic normalization into a strict typed module with a bounded
+  cache and precomputed stable fuzzy-match/province alias profiles.
+- Added explicit native availability and startup requirement checks. Production
+  builds can fail fast with `VN_ADDRESS_PARSER_NATIVE=required`.
+- Bumped the wheel version to `0.2.0` so native and earlier Python-only artifacts
+  cannot collide in package caches.
+
+---
+
 ## Update 2026-07-15
 
 - Package is now installed and imported as `address_parser`.

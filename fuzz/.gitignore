@@ -2,6 +2,9 @@ venv
 .venv
 __pycache__/
 *.egg-info/
+*.so
+*.pyd
+address_parser/_native_kernels.c
 build/
 dist/
 .env

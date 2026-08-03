@@ -24,6 +24,7 @@ DatasetSignature: TypeAlias = tuple[DatasetFileSignature, ...]
 DetectedComponents: TypeAlias = tuple[str | None, str | None, str | None]
 NgramHit: TypeAlias = tuple[int, int]
 CandidateHit: TypeAlias = tuple[int, float, str]
+FuzzyChoiceProfile: TypeAlias = tuple[str, str, int, int, str, str]
 
 
 class _AdministrativeRecordOptionalFields(TypedDict, total=False):
@@ -520,6 +521,7 @@ __all__ = [
     "DetectedComponents",
     "ExternalNewDataset",
     "ExternalWardMappingRow",
+    "FuzzyChoiceProfile",
     "ImmediateOldWardResult",
     "LegacyAddressDataset",
     "LegacyDistrictRecord",
